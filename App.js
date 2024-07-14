@@ -7,6 +7,7 @@ import Home from './pages/Home';
 import ForgotPassword from './pages/ForgotPassword';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
+import MainPage from './pages/MainPage';
 
 
 const Stack = createNativeStackNavigator();
@@ -20,6 +21,7 @@ function App() {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Signup" component={Signup} />
         <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+        <Stack.Screen name="MainPage" component={MainPage} />
       </Stack.Navigator>
     </NavigationContainer>
   );

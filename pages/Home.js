@@ -5,10 +5,10 @@ export default function Home({ navigation }) {
   return (
     <View className="flex flex-col  justify-center items-center h-full bg-white relative">
       <Pressable
-        className="absolute top-4 right-4 bg-red p-2"
+        className="absolute top-4 right-4 bg-red p-2 rounded-lg"
         onPress={() => navigation.navigate("MainPage")}
       >
-        <Text className="text-white text-xl font-semibold">Skip</Text>
+        <Text className="text-white text-xl font-semibold">Skip </Text>
       </Pressable>
       <Image
         source={require("../assets/images/logo.png")}

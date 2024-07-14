@@ -1,0 +1,14 @@
+// tailwind.config.js
+
+module.exports = {
+  content: ["./App.{js,jsx,ts,tsx}", "./pages/**/*.{js,jsx,ts,tsx}"],
+    theme: {
+      extend: {
+        colors: {
+          red: "#e33b38",
+          blue: "#10d1b2",
+        },
+      },
+    },
+    plugins: [],
+  }

@@ -1,18 +1,24 @@
-import { Text, View, Image, Pressable } from 'react-native';
-import React, { Component } from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome'; // or any other icon library you prefer
+// src/screens/MainPage.js
+import React from 'react';
+import { View, Text, Pressable } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { useSelector, useDispatch } from 'react-redux';
+import { clearUser } from '../store/userSlice';
 import Header from '../components/Header';
 
-export default class MainPage extends Component {
-  render() {
-    return (
-      <View className="flex-1">
-        <Header />
+const MainPage = () => {
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
 
-        <View className="flex-1 justify-center items-center">
-          <Text>MainPage</Text>
-        </View>
-      </View>
-    );
-  }
-}
+  return (
+    <>
+      <Header/>
+    <View className="flex-1 justify-center items-center bg-white p-4">
+      <Text className="text-3xl font-bold text-red mb-8">Main Page</Text>
+    </View>
+    </>
+  );
+};
+
+export default MainPage;

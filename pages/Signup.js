@@ -3,10 +3,12 @@ import React, { useState } from 'react';
 import { FIREBASE_AUTH, FIREBASE_DB } from '../FirebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import Toast from 'react-native-toast-message';
 
 const Signup = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
   const [username, setUsername] = useState("");
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -16,6 +18,16 @@ const Signup = ({ navigation }) => {
     setLoading(true);
     setError('');
     setSuccess('');
+
+    if (password !== password2) {
+      setLoading(false);
+      Toast.show({
+        type: 'error',
+        text1: 'Signup Error',
+        text2: 'Passwords do not match',
+      });
+      return;
+    }
     try {
       const userCredential = await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password);
       const uid = userCredential.user.uid;
@@ -36,9 +48,20 @@ const Signup = ({ navigation }) => {
       setEmail('');
       setPassword('');
       setSuccess('Signup successful! You can now log in.');
+
+      Toast.show({
+        type: 'success',
+        text1: 'Signup Successful',
+        text2: 'You can now log in.',
+      });
+
     } catch (error) {
       setError(error.message);
-      console.log(error.message)
+      Toast.show({
+        type: 'error',
+        text1: 'Signup Error',
+        text2: error.message,
+      });
     } finally {
       setLoading(false);
     }
@@ -70,6 +93,14 @@ const Signup = ({ navigation }) => {
         value={password}
         onChangeText={(pass) => setPassword(pass)}
       />
+      <TextInput 
+        placeholder="Password" 
+        placeholderTextColor="#ccc"
+        secureTextEntry 
+        className="w-full bg-white border-2 border-blue p-4 rounded-2xl mb-4"
+        value={password2}
+        onChangeText={(pass) => setPassword2(pass)}
+      />
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
@@ -80,8 +111,6 @@ const Signup = ({ navigation }) => {
           <Text className="text-white text-lg">Signup</Text>
         </Pressable>
       )}
-      {error ? <Text className='text-red text-xl'>{error}</Text> : null}
-      {success ? <Text className='text-green text-xl'>{success}</Text> : null}
       <Pressable 
         onPress={() => navigation.navigate('Login')}
         className="mt-4"

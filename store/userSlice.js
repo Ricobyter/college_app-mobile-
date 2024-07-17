@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { FIREBASE_AUTH, FIREBASE_DB } from '../FirebaseConfig';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 // Create an async thunk for user login
 export const loginUser = createAsyncThunk(
@@ -41,6 +41,16 @@ export const getUser = createAsyncThunk(
   }
 );
 
+export const updateUser = createAsyncThunk('user/updateUser', async ({ uid, userData }, thunkAPI) => {
+  try {
+    const userRef = doc(FIREBASE_DB, 'users', uid);
+    await setDoc(userRef, userData, { merge: true });
+    return userData;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
+
 const initialState = {
   userEmail: '',
   uid: '',
@@ -49,9 +59,11 @@ const initialState = {
   educationQualifications: [],
   birthPlace: '',
   designation: '',
+  bio:'',
   loading: false,
   error: '',
   isLoading: false,
+  phone: ''
 };
 
 const userSlice = createSlice({
@@ -111,6 +123,20 @@ const userSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         state.isLoading = false;
+      })
+
+      //Update User
+      .addCase(updateUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        // Merge the updated user data into the state
+        Object.assign(state, action.payload);
+      })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
       });
   },
 });

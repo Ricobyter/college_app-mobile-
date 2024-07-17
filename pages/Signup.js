@@ -19,6 +19,16 @@ const Signup = ({ navigation }) => {
     setError('');
     setSuccess('');
 
+    if(!email || !password || !username || !password2){
+      setLoading(false);
+      Toast.show({
+        type: 'error',
+        text1: 'Signup Error',
+        text2: 'Please fill all the fields',
+      });
+      return;
+    }
+
     if (password !== password2) {
       setLoading(false);
       Toast.show({
@@ -94,7 +104,7 @@ const Signup = ({ navigation }) => {
         onChangeText={(pass) => setPassword(pass)}
       />
       <TextInput 
-        placeholder="Password" 
+        placeholder="Confirm Password" 
         placeholderTextColor="#ccc"
         secureTextEntry 
         className="w-full bg-white border-2 border-blue p-4 rounded-2xl mb-4"
@@ -115,8 +125,10 @@ const Signup = ({ navigation }) => {
         onPress={() => navigation.navigate('Login')}
         className="mt-4"
       >
+        {error ? <Text>{error}</Text>: null}
         <Text className="text-blue text-sm">Already have an account? Login</Text>
       </Pressable>
+      <Toast />
     </View>
   );
 }

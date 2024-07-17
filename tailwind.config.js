@@ -8,6 +8,9 @@ module.exports = {
           red: "#e33b38",
           blue: "#10d1b2",
         },
+        flexCenter: {
+          '@apply flex items-center justify-center': {},
+        },
       },
     },
     plugins: [],

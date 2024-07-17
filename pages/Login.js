@@ -3,6 +3,7 @@ import { View, Text, TextInput, Pressable, ActivityIndicator } from 'react-nativ
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../store/userSlice';
+import Toast from 'react-native-toast-message';
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -11,8 +12,25 @@ const Login = ({ navigation }) => {
   const { loading, error } = useSelector((state) => state.user);
 
   const handleLogin = () => {
+    if(!email || !password){
+      Toast.show({
+        type: 'error',
+        text1: 'Login Error',
+        text2: 'Please fill all the fields',
+      });
+      return;
+    }
     dispatch(loginUser({ email, password }));
-    navigation.navigate('MainPage')
+    if(error){
+      Toast.show({
+        type: 'error',
+        text1: 'Login Error',
+        text2: 'Invalid Credentials',
+      });
+      return;
+    } else{
+    
+    navigation.navigate('MainPage')}
   };
 
   return (
@@ -40,7 +58,7 @@ const Login = ({ navigation }) => {
           <Text className="text-white text-lg">Login</Text>
         </Pressable>
       )}
-      {error ? <Text className="text-red text-lg mt-4">{error}</Text> : null}
+  
       <Pressable onPress={() => navigation.navigate('ForgotPassword')} className="mt-4">
         <Text className="text-blue text-sm">Forgot Password</Text>
       </Pressable>

@@ -16,6 +16,7 @@ const MainPage = () => {
       <Header/>
     <View className="flex-1 justify-center items-center bg-white p-4">
       <Text className="text-3xl font-bold text-red mb-8">Main Page</Text>
+
     </View>
     </>
   );

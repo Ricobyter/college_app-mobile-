@@ -27,7 +27,7 @@ const App = () => {
       <NavigationContainer>
 
         <Suspense fallback={<LoadingScreen />}>
-          <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName='Home'>
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Signup" component={Signup} />
@@ -38,7 +38,7 @@ const App = () => {
           </Stack.Navigator>
         </Suspense>
         
-        <Toast ref={(ref) => Toast.setRef(ref)} />
+        <Toast />
       </NavigationContainer>
       </ErrorBoundary>
     </Provider>

@@ -15,7 +15,7 @@
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.10.0",
     "@reduxjs/toolkit": "^2.2.6",
-    "expo": "~51.0.20",
+    "expo": "^51.0.21",
     "expo-status-bar": "~1.12.1",
     "firebase": "^10.12.3",
     "nativewind": "^2.0.11",

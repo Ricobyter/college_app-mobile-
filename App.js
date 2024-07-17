@@ -23,7 +23,7 @@ const Stack = createNativeStackNavigator();
 const App = () => {
   return (
     <Provider store={store}>
-      <ErrorBoundary >
+  
       <NavigationContainer>
 
         <Suspense fallback={<LoadingScreen />}>
@@ -40,7 +40,7 @@ const App = () => {
         
         <Toast />
       </NavigationContainer>
-      </ErrorBoundary>
+    
     </Provider>
   );
 };

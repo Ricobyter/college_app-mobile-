@@ -14,8 +14,11 @@ const MainPage = () => {
   return (
     <>
       <Header/>
-    <View className="flex-1 justify-center items-center bg-white p-4">
+    <View className="flex-1 min-h-screen justify-center items-center bg-white p-4">
       <Text className="text-3xl font-bold text-red mb-8">Main Page</Text>
+      <Pressable onPress={()=> navigation.navigate('GetProfessors')}>
+        <Text>Signup</Text>
+      </Pressable>
 
     </View>
     </>

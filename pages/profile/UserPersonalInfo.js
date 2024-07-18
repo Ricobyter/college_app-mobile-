@@ -17,6 +17,7 @@ const UserPersonalInfo = ({ navigation }) => {
     phone: '',
     bio: '',
     photoURL: '',
+    designation: '',
   });
 
   const [isUpgrading, setIsUpgrading] = useState(false);
@@ -34,8 +35,9 @@ const UserPersonalInfo = ({ navigation }) => {
       phone,
       bio,
       photoURL,
+      designation
     });
-  }, [username, userEmail, phone, bio, photoURL]);
+  }, [username, userEmail, phone, bio, photoURL, designation]);
 
   const handleInputChange = (name, value) => {
     setFormState({
@@ -48,7 +50,7 @@ const UserPersonalInfo = ({ navigation }) => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [5, 4],
       quality: 1,
     });
 
@@ -90,63 +92,82 @@ const UserPersonalInfo = ({ navigation }) => {
           <Icon name="chevron-left" size={24} color="black" />
         </Pressable>
         <Pressable onPress={() => setIsUpgrading(!isUpgrading)}>
-          <Text className="text-xl font-bold text-blue">{isUpgrading ? 'Update Profile' : 'Edit Profile'}</Text>
+          <Text className="text-xl font-bold text-blue">{isUpgrading ? <Pressable onPress={saveProfile} className="bg-blue-500 p-3 rounded mt-6">
+          <Text className="text-red text-xl font-bold">Update Profile</Text>
+        </Pressable> : 'Edit Profile'}</Text>
         </Pressable>
         <Text className="text-blue text-lg"></Text>
       </View>
       <View className="w-full items-center">
+        {isLoading ? <LoadingPage /> : 
+        
         <Image
           source={{ uri: formState.photoURL || photoURL }}
           style={{ width: 200, height: 200 }}
           className="rounded-full mt-[50px]"
         />
+      }
         {isUpgrading && (
           <Pressable onPress={handleImageChange}>
             <Text className="text-blue mt-2">Change Photo</Text>
           </Pressable>
         )}
       </View>
-      {isUpgrading ? (
+
         <View className="mt-10 px-6">
-          <TextInput
-            placeholder="Name"
-            value={formState.username}
-            onChangeText={(value) => handleInputChange('username', value)}
-            className="border border-gray-300 p-2 rounded"
+        <Text className="text-gray-700 mb-2">Name</Text>
+        <TextInput
+          placeholder="Name"
+          value={formState.username}
+          editable={isUpgrading}
+          onChangeText={(value) => handleInputChange('username', value)}
+          className={`border-b  border-gray-300 rounded ${!isUpgrading ? 'text-gray-700' : 'text-blue'}`} 
           />
-          <TextInput
-            placeholder="Email"
-            value={formState.userEmail}
-            editable={false}
-            className="border border-gray-300 p-2 rounded mt-4"
-          />
-          <TextInput
-            placeholder="Phone"
-            value={formState.phone}
-            onChangeText={(value) => handleInputChange('phone', value)}
-            className="border border-gray-300 p-2 rounded mt-4"
-          />
-          <TextInput
-            placeholder="Bio"
-            value={formState.bio}
-            onChangeText={(value) => handleInputChange('bio', value)}
-            multiline
-            numberOfLines={4}
-            className="border border-gray-300 p-2 rounded mt-4"
-          />
-          <Pressable onPress={saveProfile} className="bg-blue-500 p-3 rounded mt-6">
-            <Text className="text-red text-center">Update Profile</Text>
-          </Pressable>
-        </View>
-      ) : (
-        <View className="mt-10 px-6">
-          <Text className="text-red text-2xl">{username}</Text>
-          <Text className="text-gray-700 text-sm">{designation}</Text>
-          <Text className="text-gray-700 text-sm mt-2">{userEmail}</Text>
-          <Text className="text-gray-700 text-sm mt-2">{phone}</Text>
-          <Text className="text-gray-700 text-sm mt-2">{bio}</Text>
-        </View>
-      )}
+        
+        <Text className="text-gray-700 mb-2 mt-4">Email</Text>
+        <TextInput
+          placeholder="Email"
+          value={formState.userEmail}
+          editable={false}
+          className={`border-b  border-gray-300 rounded ${!isUpgrading ? 'text-gray-700' : 'text-blue'}`}
+        />
+
+<Text className="text-gray-700 mb-2 mt-4">Designation</Text>
+        <TextInput
+          placeholder="Phone"
+          value={formState.designation}
+          onChangeText={(value) => handleInputChange('phone', value)}
+          className={`border-b  border-gray-300 rounded text-gray-500`}
+          editable={false}
+        />
+        
+        <Text className="text-gray-700 mb-2 mt-4">Phone</Text>
+        <TextInput
+          placeholder="Phone"
+          value={formState.phone}
+          onChangeText={(value) => handleInputChange('phone', value)}
+          className={`border-b  border-gray-300 rounded ${!isUpgrading ? 'text-gray-700' : 'text-blue'}`}
+          editable={isUpgrading}
+        />
+
+        
+        <Text className="text-gray-700 mb-2 mt-4">Bio</Text>
+        <TextInput
+          placeholder="Bio"
+          value={formState.bio}
+          onChangeText={(value) => handleInputChange('bio', value)}
+          multiline
+          editable={isUpgrading}
+          numberOfLines={4}
+          className={`border-b  border-gray-300 rounded ${!isUpgrading ? 'text-gray-700' : 'text-blue'}`}
+        />
+        
+        {/* <Pressable onPress={saveProfile} className="bg-blue-500 p-3 rounded mt-6">
+          <Text className="text-red text-center">Update Profile</Text>
+        </Pressable> */}
+      </View>
+      
+
     </ScrollView>
   );
 };

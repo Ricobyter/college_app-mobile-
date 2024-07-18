@@ -29,7 +29,7 @@ const UserProfile = ({navigation}) => {
       
       <View className="flex-row justify-between py-6 px-6">
         <Pressable onPress={() => navigation.goBack()}>
-          <Icon name="chevron-left" size={24} color="black" />
+          <Icon name="chevron-left" size={24} color="#10d1b2" />
         </Pressable>
 
         <Text className="text-xl font-bold">Profile</Text>
@@ -47,34 +47,34 @@ const UserProfile = ({navigation}) => {
         <Text className="text-red text-2xl text-center">{username}</Text>
         <Text className="text-gray-700 text-sm text-center">{designation}</Text>
       </View>
-      <View className="px-4 mt-12 flex-col gap-4">
+      <View className="px-4 mt-12 flex-col gap-4 ">
         <Pressable className="py-6 px-3 rounded-lg bg-gray-50 flex-row justify-between items-center" onPress={()=> navigation.navigate('UserPersonalInfo')}>
           <View className="flex-row items-center" >
-            <Icon name="user" size={24} color="black" className="mr-2" />
-            <Text className="text-md font-semibold ml-3">Personal Details</Text>
+            <Icon name="user" size={24} color='#10d1b2'  className="mr-2" />
+            <Text className="text-md font-semibold ml-3 text-blue">Personal Details</Text>
           </View>
-          <FontAwesome name="chevron-right" size={20} color="black" />
+          <FontAwesome name="chevron-right" size={20} color="#10d1b2" />
         </Pressable>
         <Pressable className="py-6 px-3 rounded-lg bg-gray-50 flex-row justify-between items-center">
           <View className="flex-row items-center">
-            <Icon name="graduation-cap" size={24} color="black" className="mr-2" />
-            <Text className="text-md font-semibold ml-3">Education</Text>
+            <Icon name="graduation-cap" size={24} color="#10d1b2" className="mr-2" />
+            <Text className="text-md font-semibold ml-3 text-blue">Education</Text>
           </View>
-          <FontAwesome name="chevron-right" size={20} color="black" />
+          <FontAwesome name="chevron-right" size={20} color="#10d1b2" />
         </Pressable>
         <Pressable className="py-6 px-3 rounded-lg bg-gray-50 flex-row justify-between items-center">
           <View className="flex-row items-center">
-            <Icon name="key" size={24} color="black" className="mr-2" />
-            <Text className="text-md font-semibold ml-3">Security</Text>
+            <Icon name="key" size={24} color="#10d1b2" className="mr-2" />
+            <Text className="text-md font-semibold ml-3 text-blue">Security</Text>
           </View>
-          <FontAwesome name="chevron-right" size={20} color="black" />
+          <FontAwesome name="chevron-right" size={20} color="#10d1b2" />
         </Pressable>
         <Pressable className="py-6 px-3 rounded-lg bg-gray-50 flex-row justify-between items-center">
           <View className="flex-row items-center">
-            <Icon name="cog" size={24} color="black" className="mr-2" />
-            <Text className="text-md font-semibold ml-3">Other</Text>
+            <Icon name="cog" size={24} color="#10d1b2" className="mr-2" />
+            <Text className="text-md font-semibold ml-3 text-blue">Signout</Text>
           </View>
-          <FontAwesome name="chevron-right" size={20} color="black" />
+          <FontAwesome name="chevron-right" size={20} color="#10d1b2" />
         </Pressable>
       </View>
     </View>

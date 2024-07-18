@@ -30,7 +30,7 @@ const GetProfessors = () => {
       <Header />
       <ScrollView className="p-10 bg-white">
         <Text className="text-2xl font-bold mb-4 text-center text-red mt-4">
-          Our Professors
+          Professors
         </Text>
         {professors &&
           professors.map((professor) => (

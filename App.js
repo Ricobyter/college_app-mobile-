@@ -17,6 +17,7 @@ import MainPage from './pages/MainPage';
 import LoginPage from './pages/LoginPage';
 import UserProfile from './pages/UserProfile';
 import GetProfessors from './pages/GetProfessors';
+import ProfessorProfile from './pages/ProfessorProfile';
 
 const Stack = createNativeStackNavigator();
 
@@ -43,6 +44,7 @@ const Navigator = () => {
       <Stack.Screen name="UserProfile" component={UserProfile} />
       <Stack.Screen name="UserPersonalInfo" component={UserPersonalInfo} />
       <Stack.Screen name="GetProfessors" component={GetProfessors} />
+      <Stack.Screen name="ProfessorProfile" component={ProfessorProfile} />
     </Stack.Navigator>
   );
 };

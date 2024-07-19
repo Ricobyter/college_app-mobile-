@@ -29,6 +29,7 @@ export const getUser = createAsyncThunk(
       if (userDoc.exists()) {
         const userData = userDoc.data();
         return {
+          userEmail: userData.email, // Ensure this field is included
           ...userData,
           createdAt: userData.createdAt.toDate().toISOString(), // Convert Timestamp to ISO string
         };
@@ -40,6 +41,7 @@ export const getUser = createAsyncThunk(
     }
   }
 );
+
 
 export const updateUser = createAsyncThunk('user/updateUser', async ({ uid, userData }, thunkAPI) => {
   try {
@@ -147,8 +149,9 @@ const userSlice = createSlice({
         state.designation = action.payload.designation;
         state.bio = action.payload.bio;
         state.phone = action.payload.phone;
+        state.userEmail = action.payload.userEmail; // Ensure this field is updated
         state.isLoading = false;
-      })
+      })      
       .addCase(getUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;

@@ -28,8 +28,7 @@ const Login = ({ navigation }) => {
         text2: 'Invalid Credentials',
       });
       return;
-    } else{
-    
+    } else{ 
     navigation.navigate('MainPage')}
   };
 

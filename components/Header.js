@@ -39,7 +39,7 @@ const Header = () => {
                   style={{ width: 50, height: 50, borderRadius: 20 }}
                 />
               ) : (
-                <Text className="text-gray-900 text-md font-medium">{username || userEmail}</Text>
+                <Text className="text-gray-900 text-md font-medium">{username}</Text>
               )}
             </Pressable>
           ) : (

@@ -18,6 +18,9 @@ import LoginPage from './pages/LoginPage';
 import UserProfile from './pages/UserProfile';
 import GetProfessors from './pages/GetProfessors';
 import ProfessorProfile from './pages/ProfessorProfile';
+import ChangePassword from './pages/profile/ChangePassword';
+import UserSecurity from './pages/profile/UserSecurity';
+import PasswordChangeConfirmation from './pages/profile/PasswordChangeConfirmation';
 
 const Stack = createNativeStackNavigator();
 
@@ -45,6 +48,9 @@ const Navigator = () => {
       <Stack.Screen name="UserPersonalInfo" component={UserPersonalInfo} />
       <Stack.Screen name="GetProfessors" component={GetProfessors} />
       <Stack.Screen name="ProfessorProfile" component={ProfessorProfile} />
+      <Stack.Screen name="ChangePassword" component={ChangePassword} />
+      <Stack.Screen name="PasswordChangeConfirmation" component={PasswordChangeConfirmation} />
+      <Stack.Screen name="UserSecurity" component={UserSecurity} />
     </Stack.Navigator>
   );
 };

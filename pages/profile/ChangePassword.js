@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button } from 'react-native';
+import { View, Text, TextInput, Button, Pressable, ActivityIndicator } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { useNavigation } from '@react-navigation/native';
 import { updatePassword, signOut } from 'firebase/auth';
-import { FIREBASE_AUTH } from '../../FirebaseConfig'; // Adjust the path as necessary
+import { FIREBASE_AUTH } from '../../FirebaseConfig'; 
+import PageHeader from '../../components/PageHeader';
 
 const ChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState('');
@@ -35,7 +36,7 @@ const ChangePassword = () => {
             text1: 'Password Updated',
             text2: 'Your password has been updated successfully. Please log in again.',
           });
-          
+
         await signOut(FIREBASE_AUTH); // Log out the user
 
 
@@ -56,8 +57,9 @@ const ChangePassword = () => {
   };
 
   return (
+    <>
+    <PageHeader name='Change password' navigation={navigation}/>
     <View className="flex-1 justify-center p-4 bg-white">
-      <Text className="text-2xl font-bold mb-4 text-center">Change Password</Text>
       <TextInput
         placeholder="Current Password"
         secureTextEntry
@@ -79,13 +81,17 @@ const ChangePassword = () => {
         onChangeText={setConfirmPassword}
         className="border-b border-gray-400 mb-4 py-2 px-4"
       />
-      <Button
+      {/* <Button
         title={loading ? 'Updating...' : 'Update Password'}
         onPress={handlePasswordChange}
         disabled={loading}
-      />
+      /> */}
+      <Pressable className='py-3 w-full bg-red rounded-lg' onPress={handlePasswordChange}>
+        <Text className="text-white font-medium text-center">{loading ? <ActivityIndicator color='#fff'/> : 'Update Password'}</Text>
+      </Pressable>
       <Toast />
     </View>
+    </>
   );
 };
 

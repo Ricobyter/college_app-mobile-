@@ -4,8 +4,8 @@ import Icon from 'react-native-vector-icons/Entypo'; // Import Entypo icons
 
 const PageHeader = ({ name, navigation }) => {
   return (
-    <View className="flex-row justify-between items-center py-6 px-6 bg-white shadow-md">
-      <Pressable onPress={() => navigation.goBack()} className="flex-row items-center ">
+    <View className="flex-row justify-between items-center py-6 px-6 bg-none shadow-md">
+      <Pressable onPress={() => navigation.navigate('MainPage')} className="flex-row items-center ">
         <Icon name="chevron-left" size={26} color="#10d1b2" />
       </Pressable>
       <Text className="text-xl text-red font-bold">{name}</Text>

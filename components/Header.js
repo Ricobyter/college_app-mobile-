@@ -1,5 +1,5 @@
 import { Text, View, Image, Pressable, ActivityIndicator } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUser } from '../store/userSlice';
@@ -7,20 +7,24 @@ import { useNavigation } from '@react-navigation/native';
 
 
 const Header = () => {
-  const dispatch = useDispatch();
   const navigation = useNavigation()
-  const { uid, username, photoURL, isLoading, userEmail } = useSelector((state) => state.user);
+  const { uid } = useSelector((state) => state.user);
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
   useEffect(() => {
     if (uid) {
-      dispatch(getUser(uid));
+      setIsLoggedIn(true)
     }
-  }, [dispatch, uid]);
+    setIsLoggedIn(false)
+  }, [uid]);
 
   return (
     <>
       <View className="flex-row justify-between items-center px-4 py-3 bg-white">
         <View className=''>
+          <Pressable
+           onPress={() => navigation.toggleDrawer()}>
           <Icon name="bars" size={24} className="" />
+          </Pressable>
         </View>
         <View>
           <Image
@@ -29,27 +33,11 @@ const Header = () => {
           />
         </View>
         <View>
-          {isLoading ? (
-            <ActivityIndicator size="small" className='text-red' />
-          ) : uid ? (
-            <Pressable onPress={() => navigation.navigate('UserProfile')}>
-              {photoURL ? (
-                <Image
-                  source={{ uri: photoURL }}
-                  style={{ width: 50, height: 50, borderRadius: 20 }}
-                />
-              ) : (
-                <Text className="text-gray-900 text-md font-medium">{username}</Text>
-              )}
-            </Pressable>
-          ) : (
-            <Pressable
-              className="bg-red py-2 px-3 rounded-xl"
-              onPress={() => navigation.navigate('Login')}
-            >
-              <Text className="text-gray-200 text-md font-medium">Login</Text>
-            </Pressable>
-          )}
+{!isLoggedIn ? (<Pressable onPress={()=> navigation.navigate('Login')}>
+  <Text className='text-white hover:scale-105 bg-red py-2 px-3 rounded-md'>
+    Login
+  </Text>
+</Pressable>): (<View></View>)}
         </View>
       </View>
     </>

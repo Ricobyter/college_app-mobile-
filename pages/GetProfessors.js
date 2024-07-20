@@ -8,10 +8,12 @@ import Icon from 'react-native-vector-icons/MaterialIcons'; // Import the icon l
 
 const GetProfessors = ({navigation}) => {
   const dispatch = useDispatch();
-  const { professors, loading, error } = useSelector((state) => state.user);
+  const { professors, loading, error, isLoading } = useSelector((state) => state.user);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredProfessors, setFilteredProfessors] = useState([]);
 
+  
+ 
   useEffect(() => {
     dispatch(getProfessors());
   }, [dispatch]);
@@ -29,9 +31,10 @@ const GetProfessors = ({navigation}) => {
     }
   }, [searchQuery, professors]);
 
-  if (loading) {
-    return <LoadingScreen />;
-  }
+
+  // if (isLoading) {
+  //   return <LoadingScreen />;
+  // }
 
   if (error) {
     return (

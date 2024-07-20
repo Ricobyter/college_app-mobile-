@@ -29,9 +29,9 @@ export const getUser = createAsyncThunk(
       if (userDoc.exists()) {
         const userData = userDoc.data();
         return {
-          userEmail: userData.email, // Ensure this field is included
+          userEmail: userData.email,
           ...userData,
-          createdAt: userData.createdAt.toDate().toISOString(), // Convert Timestamp to ISO string
+          createdAt: userData.createdAt.toDate().toISOString(),
         };
       } else {
         return rejectWithValue('User not found');
@@ -42,17 +42,21 @@ export const getUser = createAsyncThunk(
   }
 );
 
-
-export const updateUser = createAsyncThunk('user/updateUser', async ({ uid, userData }, thunkAPI) => {
-  try {
-    const userRef = doc(FIREBASE_DB, 'users', uid);
-    await setDoc(userRef, userData, { merge: true });
-    return userData;
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error.message);
+// Create an async thunk for updating user details
+export const updateUser = createAsyncThunk(
+  'user/updateUser',
+  async ({ uid, userData }, thunkAPI) => {
+    try {
+      const userRef = doc(FIREBASE_DB, 'users', uid);
+      await setDoc(userRef, userData, { merge: true });
+      return userData;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
   }
-});
+);
 
+// Create an async thunk for getting professors
 export const getProfessors = createAsyncThunk(
   'user/getProfessors',
   async (_, { rejectWithValue }) => {
@@ -66,7 +70,6 @@ export const getProfessors = createAsyncThunk(
       const professors = [];
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        // Remove or omit non-serializable fields
         const { createdAt, ...rest } = data;
         professors.push({ id: doc.id, ...rest });
       });
@@ -77,6 +80,29 @@ export const getProfessors = createAsyncThunk(
     }
   }
 );
+
+// Create an async thunk for getting all users
+export const getAllUsers = createAsyncThunk(
+  'user/getAllUsers',
+  async (_, { rejectWithValue }) => {
+    try {
+      const usersQuery = query(collection(FIREBASE_DB, 'users'));
+      const querySnapshot = await getDocs(usersQuery);
+
+      const users = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const { createdAt, ...rest } = data;
+        users.push({ id: doc.id, ...rest });
+      });
+
+      return users;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const initialState = {
   userEmail: '',
   uid: '',
@@ -85,12 +111,13 @@ const initialState = {
   educationQualifications: [],
   birthPlace: '',
   designation: '',
-  bio:'',
+  bio: '',
   loading: false,
   error: '',
   isLoading: false,
   phone: '',
-  professors: []
+  professors: [],
+  allUsers: []  // Add allUsers to the state
 };
 
 const userSlice = createSlice({
@@ -111,6 +138,7 @@ const userSlice = createSlice({
       state.bio = '';
       state.phone = '';
       state.professors = [];
+      state.allUsers = []; // Clear allUsers
     },
     setUser(state, action) {
       state.userEmail = action.payload.userEmail;
@@ -149,44 +177,55 @@ const userSlice = createSlice({
         state.designation = action.payload.designation;
         state.bio = action.payload.bio;
         state.phone = action.payload.phone;
-        state.userEmail = action.payload.userEmail; // Ensure this field is updated
+        state.userEmail = action.payload.userEmail;
         state.isLoading = false;
-      })      
+      })
       .addCase(getUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         state.isLoading = false;
       })
-
-      //Update User
       .addCase(updateUser.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(updateUser.fulfilled, (state, action) => {
         state.isLoading = false;
-        // Merge the updated user data into the state
         Object.assign(state, action.payload);
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       })
-          // Get Professors
-    .addCase(getProfessors.pending, (state) => {
-      state.loading = true;
-      state.error = '';
-      state.isLoading = true;
-    })
-    .addCase(getProfessors.fulfilled, (state, action) => {
-      state.loading = false;
-      state.professors = action.payload;  // Add this line to store professors
-      state.isLoading = false;
-    })
-    .addCase(getProfessors.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-      state.isLoading = false;
-    });
+      .addCase(getProfessors.pending, (state) => {
+        state.loading = true;
+        state.error = '';
+        state.isLoading = true;
+      })
+      .addCase(getProfessors.fulfilled, (state, action) => {
+        state.loading = false;
+        state.professors = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(getProfessors.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(getAllUsers.pending, (state) => {
+        state.loading = true;
+        state.error = '';
+        state.isLoading = true;
+      })
+      .addCase(getAllUsers.fulfilled, (state, action) => {
+        state.loading = false;
+        state.allUsers = action.payload; // Update state with all users
+        state.isLoading = false;
+      })
+      .addCase(getAllUsers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.isLoading = false;
+      });
   },
 });
 

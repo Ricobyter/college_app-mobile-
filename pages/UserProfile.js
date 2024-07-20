@@ -80,8 +80,10 @@ const UserProfile = ({ navigation }) => {
           </View>
           <FontAwesome name="chevron-right" size={20} color="#10d1b2" />
         </Pressable>
+
         <Pressable
           className="py-6 px-3 rounded-lg bg-gray-50 flex-row justify-between items-center"
+          onPress={() => navigation.navigate("UserEducation")}
         >
           <View className="flex-row items-center">
             <Icon

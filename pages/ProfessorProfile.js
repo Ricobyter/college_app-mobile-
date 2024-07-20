@@ -4,9 +4,9 @@ import { getUser } from '../store/userSlice'; // Adjust the path as necessary
 import LoadingScreen from '../components/LoadingScreen'; // Adjust the path as necessary
 import { View, Text, Image, ScrollView } from 'react-native';
 import { useRoute } from '@react-navigation/native';
-import Header from '../components/Header';
+import PageHeader from '../components/PageHeader';
 
-const ProfessorProfile = () => {
+const ProfessorProfile = ({navigation}) => {
   const dispatch = useDispatch();
   const route = useRoute();
   const { professorId } = route.params;
@@ -33,7 +33,7 @@ const ProfessorProfile = () => {
 
   return (
     <>
-      <Header />
+      <PageHeader name='Change password' navigation={navigation}/>
       <ScrollView className="p-10 bg-white">
         <View className="flex flex-col items-center">
           <Image

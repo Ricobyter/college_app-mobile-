@@ -1,10 +1,11 @@
-// src/pages/AddProfessor.js
 import React, { useState } from 'react';
 import { View, Text, TextInput, Pressable, Image, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { launchImageLibrary } from 'react-native-image-picker';
-import { useDispatch } from 'react-redux';
-import { addProfessor } from '../store/userSlice'; // Ensure you have this action in your slice
+import * as ImagePicker from 'expo-image-picker';
+// import { sendWelcomeEmail } from '../email/sendEmail';
+import { sendEmail, sendWelcomeEmail } from '../store/emailSlice';
+import { useDispatch, useSelector } from 'react-redux';
+
 
 const AddProfessor = ({ navigation }) => {
   const [name, setName] = useState('');
@@ -16,43 +17,45 @@ const AddProfessor = ({ navigation }) => {
   const [profilePic, setProfilePic] = useState(null);
 
   const dispatch = useDispatch();
+  const emailState = useSelector((state) => state.email);
 
-  const handleImagePicker = () => {
-    const options = {
-      mediaType: 'photo',
-      includeBase64: false,
+  const handleImagePicker = async () => {
+    // Request permission to access media library
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permission to access media library is required!');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
       quality: 1,
-    };
-
-    launchImageLibrary(options, (response) => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.errorCode) {
-        console.log('ImagePicker Error: ', response.errorMessage);
-      } else if (response.assets) {
-        const { uri } = response.assets[0];
-        setProfilePic(uri);
-      }
     });
+
+    if (!result.canceled) {
+      const { uri } = result.assets[0];
+      setProfilePic(uri);
+    }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (password !== confirmPassword) {
       Alert.alert('Passwords do not match');
       return;
     }
 
-    // Dispatch the action to add the professor
-    dispatch(addProfessor({
-      name,
-      email,
-      password,
-      about,
-      phone,
-      profilePic,
-    }));
-    // Navigate back or to another page
-    navigation.goBack();
+    try {
+      const emailData ={
+        name, email, password
+      }
+      await dispatch(sendWelcomeEmail({ name, email, password })).unwrap();
+
+    } catch (err) {
+      console.error('Error sending email:', err);
+      Alert.alert('Error sending email',emailState.error);
+    }
   };
 
   return (
@@ -60,9 +63,9 @@ const AddProfessor = ({ navigation }) => {
       <Text className="text-2xl font-bold mb-4">Add Professor</Text>
 
       <Pressable onPress={handleImagePicker} className="mb-4">
-        <View className="bg-gray-200 p-4 rounded-full justify-center items-center">
+        <View className=" justify-center items-center">
           {profilePic ? (
-            <Image source={{ uri: profilePic }} style={{ width: 100, height: 100, borderRadius: 50 }} />
+            <Image source={{ uri: profilePic }} style={{ width: 150, height: 150, borderRadius: 150 }} />
           ) : (
             <Icon name="user" size={100} color="#ccc" />
           )}
@@ -119,7 +122,7 @@ const AddProfessor = ({ navigation }) => {
 
       <Pressable
         onPress={handleSubmit}
-        className="bg-blue-500 p-4 rounded-lg shadow-md"
+        className="bg-blue p-4 rounded-lg shadow-md"
       >
         <Text className="text-white text-center text-lg">Add Professor</Text>
       </Pressable>

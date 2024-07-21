@@ -16,6 +16,7 @@
     "@react-navigation/native": "^6.1.18",
     "@react-navigation/native-stack": "^6.10.0",
     "@reduxjs/toolkit": "^2.2.6",
+    "axios": "^1.7.2",
     "expo": "^51.0.21",
     "expo-image-picker": "^15.0.7",
     "expo-status-bar": "~1.12.1",

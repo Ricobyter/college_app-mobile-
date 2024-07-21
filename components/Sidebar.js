@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Pressable, Image } from "react-native";
+import { View, Text, Pressable, Image, ActivityIndicator } from "react-native";
 import {
   DrawerContentScrollView,
 } from "@react-navigation/drawer";
@@ -53,12 +53,15 @@ const Sidebar = (props) => {
           ) : (
             <View className="flex-row justify-around items-center h-[200px] w-full bg-red mb-6">
                 <View>
-                    
+                  {isLoading ? (<ActivityIndicator size='large'/>): (
               <Image
-                source={{ uri: photoURL }}
-                // style={{ width: 50, height: 50, borderRadius: 20 }}
-                className='h-32 w-32 rounded-full'
-              />
+              source={{ uri: photoURL }}
+              // style={{ width: 50, height: 50, borderRadius: 20 }}
+              className='h-32 w-32 rounded-full'
+            />
+                  )}
+                    
+
               </View>
               <View className='flex flex-col gap-2 h-full justify-center items-start'>
                 <Text className='text-white'>{username}</Text>
@@ -100,7 +103,7 @@ const Sidebar = (props) => {
           onPress={() => navigation.navigate('Faculties')}
         >
           <Icon name="graduation-cap" size={28} color="#000" />
-          <Text className='text-xl'>Faculties</Text>
+          <Text className='text-xl'>Faculty</Text>
         </Pressable>
         
         <Pressable
@@ -108,7 +111,7 @@ const Sidebar = (props) => {
           onPress={() => navigation.navigate('Galleries')}
         >
           <Icon name="photo" size={28} color="#000" />
-          <Text className='text-xl'>Galleries</Text>
+          <Text className='text-xl'>Gallery</Text>
         </Pressable>
         <Pressable
           className='pl-4 flex-row items-center gap-4 py-3'
@@ -124,7 +127,7 @@ const Sidebar = (props) => {
       <View className='absolute bottom-0 border-t-2 border-red w-full'>
 
       <Pressable
-        className="py-2 bg-red-500 mt-4 rounded-md "
+        className="py-2 bg-red mt-4 rounded-md "
         onPress={handleSignOut}
         >
         <Text className="text-red text-center text-lg">Sign Out</Text>

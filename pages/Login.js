@@ -1,5 +1,4 @@
-// src/screens/Login.js
-import { View, Text, TextInput, Pressable, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, Pressable, ActivityIndicator, StyleSheet } from 'react-native';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../store/userSlice';
@@ -29,17 +28,18 @@ const Login = ({ navigation }) => {
       });
       return;
     } else{ 
-    navigation.navigate('MainPage')}
+      navigation.navigate('MainPage');
+    }
   };
 
   return (
-    <View className="flex-1 justify-center items-center bg-white p-4">
-      <Text className="text-3xl font-bold text-red mb-8">Login</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Login</Text>
       <TextInput
         value={email}
         placeholder="Email"
         placeholderTextColor="#ccc"
-        className="w-full bg-white border-2 border-blue p-4 rounded-2xl mb-4"
+        style={styles.input}
         onChangeText={(text) => setEmail(text)}
       />
       <TextInput
@@ -47,22 +47,66 @@ const Login = ({ navigation }) => {
         placeholder="Password"
         placeholderTextColor="#ccc"
         secureTextEntry
-        className="w-full bg-white border-2 border-blue p-4 rounded-2xl mb-8"
+        style={styles.input}
         onChangeText={(pass) => setPassword(pass)}
       />
       {loading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#00796b" />
       ) : (
-        <Pressable onPress={handleLogin} className="bg-red w-full p-4 rounded-3xl items-center">
-          <Text className="text-white text-lg">Login</Text>
+        <Pressable onPress={handleLogin} style={styles.loginButton}>
+          <Text style={styles.loginButtonText}>Login</Text>
         </Pressable>
       )}
-  
-      <Pressable onPress={() => navigation.navigate('ForgotPassword')} className="mt-4">
-        <Text className="text-blue text-sm">Forgot Password</Text>
+      <Pressable onPress={() => navigation.navigate('ForgotPassword')} style={styles.forgotPasswordLink}>
+        <Text style={styles.forgotPasswordLinkText}>Forgot Password?</Text>
       </Pressable>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#e0f2f1', // Background color matching the theme
+    padding: 16,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#00796b', // Title color matching the theme
+    marginBottom: 16,
+  },
+  input: {
+    width: '100%',
+    backgroundColor: '#ffffff',
+    borderColor: '#00796b', // Border color matching the theme
+    borderWidth: 2,
+    padding: 12,
+    borderRadius: 10,
+    marginBottom: 12,
+    fontSize: 16,
+  },
+  loginButton: {
+    backgroundColor: '#00796b', // Button color matching the theme
+    width: '100%',
+    padding: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  loginButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  forgotPasswordLink: {
+    marginTop: 16,
+  },
+  forgotPasswordLinkText: {
+    color: '#00796b', // Link color matching the theme
+    fontSize: 14,
+  },
+});
 
 export default Login;

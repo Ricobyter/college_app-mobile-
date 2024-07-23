@@ -1,24 +1,18 @@
-// src/pages/AdminDashboard.js
 import React, { useEffect } from "react";
-import { View, Text, Pressable, ActivityIndicator } from "react-native";
+import { View, Text, Pressable, StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllUsers } from "../store/userSlice";
-import PageHeader from "../components/PageHeader";
-import Icon from 'react-native-vector-icons/FontAwesome5'; // Import the icon library
+import Icon from 'react-native-vector-icons/MaterialIcons'; // Using MaterialIcons
 import { useNavigation } from "@react-navigation/native";
 
-  const AdminDashboard = () => {
-    const navigation = useNavigation();
+const AdminDashboard = () => {
+  const navigation = useNavigation();
   const dispatch = useDispatch();
-  const { allUsers, isLoading } = useSelector((state) => state.user);
+  const { allUsers } = useSelector((state) => state.user);
 
   useEffect(() => {
     dispatch(getAllUsers());
   }, [dispatch]);
-
-  if (isLoading) {
-    return <ActivityIndicator size="large" color="#000" />;
-  }
 
   const totalUsers = allUsers.length;
   const professors = allUsers.filter(
@@ -32,72 +26,157 @@ import { useNavigation } from "@react-navigation/native";
   ).length;
 
   return (
-    <>
-      <PageHeader name='Admin Dashboard' navigation={navigation}/>
-      <View className="flex-1 p-4 bg-gray-100">
-        <View className="flex justify-around flex-row mb-8">
-          <View className="bg-blue p-4 w-[44vw] rounded-lg flex flex-col gap-2 justify-center items-center">
-            <Icon name="users" size={30} color="white" />
-            <Text className="text-lg font-semibold  mb-[-6px]  text-white">Total</Text>
-            <Text className="text-lg font-semibold mb-2 text-white">{totalUsers}</Text>
-          </View>
-          <View className="bg-blue p-4 w-[44vw] rounded-lg flex flex-col gap-2 justify-center items-center">
-            <Icon name="user-tie" size={30} color="white" />
-            <Text className="text-lg font-semibold  mb-[-6px]  text-white">Professors</Text>
-            <Text className="text-lg font-semibold mb-2 text-white">{professors}</Text>
-          </View>
+    <View style={styles.container}>
+      <View style={styles.headerContainer}>
+        <Text style={styles.headerText}>Admin Dashboard</Text>
+      </View>
+
+      <View style={styles.statsContainer}>
+        <View style={styles.statItem}>
+          <Icon name="people" size={30} color="#00796b" />
+          <Text style={styles.statTitle}>Total</Text>
+          <Text style={styles.statValue}>{totalUsers}</Text>
         </View>
-        <View className="flex justify-around flex-row">
-          <View className="bg-blue w-[44vw] p-4 rounded-lg flex flex-col gap-2 justify-center items-center">
-            <Icon name="user" size={30} color="white" />
-            <Text className="text-lg font-semibold mb-[-6px] text-white">Students</Text>
-            <Text className="text-lg font-semibold mb-2 text-white">{students}</Text>
-          </View>
-          <View className="bg-blue w-[44vw] p-4 rounded-lg flex flex-col gap-2 justify-center items-center">
-            <Icon name="user-plus" size={30} color="white" />
-            <Text className="text-lg font-semibold  mb-[-6px] text-white">V.F.</Text>
-            <Text className="text-lg font-semibold mb-2 text-white">{visitingFaculty}</Text>
-          </View>
-        </View>
-
-        <Text className='mt-12 text-2xl font-semibold underline text-red'>
-          More actions
-        </Text>
-
-        <View className="flex-1 mt-4">
-          <Pressable
-            className="bg-blue p-6 rounded-lg shadow-md mb-4"
-            onPress={() => navigation.navigate("AddProfessor")}
-          >
-            <View className="flex-row items-center justify-between">
-              <Text className="text-white text-lg">Add Professor</Text>
-              <Icon name="user-tie" size={24} color="white" />
-            </View>
-          </Pressable>
-
-          <Pressable
-            className="bg-green-500 p-6 rounded-lg shadow-md mb-4"
-            onPress={() => navigation.navigate("AddStudent")}
-          >
-            <View className="flex-row items-center justify-between">
-              <Text className="text-white text-lg">Add Student</Text>
-              <Icon name="user-graduate" size={24} color="white" />
-            </View>
-          </Pressable>
-
-          <Pressable
-            className="bg-yellow-500 p-6 rounded-lg shadow-md"
-            onPress={() => navigation.navigate("AddVisitingFaculty")}
-          >
-            <View className="flex-row items-center justify-between">
-              <Text className="text-white text-lg">Add Visiting Faculty</Text>
-              <Icon name="user-plus" size={24} color="white" />
-            </View>
-          </Pressable>
+        <View style={styles.statItem}>
+          <Icon name="person" size={30} color="#00796b" />
+          <Text style={styles.statTitle}>Professors</Text>
+          <Text style={styles.statValue}>{professors}</Text>
         </View>
       </View>
-    </>
+      <View style={styles.statsContainer}>
+        <View style={styles.statItem}>
+          <Icon name="person" size={30} color="#00796b" />
+          <Text style={styles.statTitle}>Students</Text>
+          <Text style={styles.statValue}>{students}</Text>
+        </View>
+        <View style={styles.statItem}>
+          <Icon name="person-add" size={30} color="#00796b" />
+          <Text style={styles.statTitle}>V.F.</Text>
+          <Text style={styles.statValue}>{visitingFaculty}</Text>
+        </View>
+      </View>
+
+      <Text style={styles.actionsTitle}>More actions</Text>
+
+      <View style={styles.actionsContainer}>
+        <Pressable
+          style={styles.actionButtonBlue}
+          onPress={() => navigation.navigate("AddProfessor")}
+        >
+          <View style={styles.actionButtonContent}>
+            <Text style={styles.actionButtonText}>Add Professor</Text>
+            <Icon name="person-add" size={24} color="white" />
+          </View>
+        </Pressable>
+
+        <Pressable
+          style={styles.actionButtonGreen}
+          onPress={() => navigation.navigate("AddStudent")}
+        >
+          <View style={styles.actionButtonContent}>
+            <Text style={styles.actionButtonText}>Add Student</Text>
+            <Icon name="person-add" size={24} color="white" />
+          </View>
+        </Pressable>
+
+        <Pressable
+          style={styles.actionButtonYellow}
+          onPress={() => navigation.navigate("AddVisitingFaculty")}
+        >
+          <View style={styles.actionButtonContent}>
+            <Text style={styles.actionButtonText}>Add Visiting Faculty</Text>
+            <Icon name="person-add" size={24} color="white" />
+          </View>
+        </Pressable>
+      </View>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    paddingTop: 50,
+    backgroundColor: '#e0f2f1', // Light teal background
+  },
+  headerContainer: {
+    marginBottom: 20,
+    backgroundColor: '#00796b', // Header background color
+    paddingVertical: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  headerText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  statsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  statItem: {
+    backgroundColor: '#ffffff', // Dark teal background
+    padding: 15,
+    borderRadius: 10,
+    width: '44%',
+    alignItems: 'center',
+    elevation: 3, // Shadow effect
+  },
+  statTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#00796b',
+    marginBottom: 5,
+  },
+  statValue: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#00796b',
+  },
+  actionsTitle: {
+    marginTop: 20,
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#004d40', // Dark teal
+    textDecorationLine: 'underline',
+  },
+  actionsContainer: {
+    flex: 1,
+    marginTop: 10,
+  },
+  actionButtonBlue: {
+    backgroundColor: '#00796b', // Dark teal
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 10,
+    elevation: 3, // Shadow effect
+  },
+  actionButtonGreen: {
+    backgroundColor: '#4CAF50', // Green
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 10,
+    elevation: 3, // Shadow effect
+  },
+  actionButtonYellow: {
+    backgroundColor: '#FF9800', // Orange
+    padding: 15,
+    borderRadius: 10,
+    elevation: 3, // Shadow effect
+  },
+  actionButtonContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  actionButtonText: {
+    fontSize: 16,
+    color: '#ffffff',
+    fontWeight: 'bold',
+  },
+});
 
 export default AdminDashboard;

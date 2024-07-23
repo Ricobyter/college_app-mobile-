@@ -1,15 +1,27 @@
-// pages/LoadingPage.js
-
 import React from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 
 const LoadingPage = () => {
   return (
-    <View className="flex-1 justify-center items-center bg-white">
-      <ActivityIndicator size='large' color="#e33b38" />
-      <Text className="mt-4 text-gray-500">Loading...</Text>
+    <View style={styles.container}>
+      <ActivityIndicator size="large" color="#00796b" />
+      <Text style={styles.text}>Loading...</Text>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#e0f2f1', // Background color matching the theme
+  },
+  text: {
+    marginTop: 16,
+    color: '#00796b', // Text color matching the theme
+    fontSize: 16,
+  },
+});
 
 export default LoadingPage;

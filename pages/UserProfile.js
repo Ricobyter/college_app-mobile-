@@ -1,10 +1,8 @@
-import { View, Text, Image, Pressable, Alert } from "react-native";
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getUser } from "../store/userSlice";
-import Icon from "react-native-vector-icons/Entypo"; // Import Entypo icons
-import FontAwesome from "react-native-vector-icons/FontAwesome"; // Import FontAwesome icons
-import LoadingPage from "../components/LoadingScreen";
+import React, { useEffect } from 'react';
+import { View, Text, Image, Pressable, Alert, StyleSheet } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUser } from '../store/userSlice';
+import Icon from 'react-native-vector-icons/FontAwesome'; // Import FontAwesome icons
 import { signOut } from 'firebase/auth'; // Import Firebase signOut
 import { FIREBASE_AUTH } from '../FirebaseConfig'; // Import your Firebase configuration
 import { clearUser } from '../store/userSlice'; // Import clearUser action
@@ -21,14 +19,15 @@ const UserProfile = ({ navigation }) => {
     }
   }, [dispatch, uid]);
 
-  if(uid === ''){
-    <View className='flex justify-center items-center h-screen'>
-      <Text>You are not logged in</Text>
-      <Pressable className='px-3 py-2 rounded-md bg-red' onPress={()=> navigation.navigate('Login')}>
-        <Text className='text-gray-100'>Login Now</Text>
-      </Pressable>
-    </View>
-
+  if (uid === '') {
+    return (
+      <View style={styles.centeredView}>
+        <Text style={styles.notLoggedInText}>You are not logged in</Text>
+        <Pressable style={styles.loginButton} onPress={() => navigation.navigate('Login')}>
+          <Text style={styles.loginButtonText}>Login Now</Text>
+        </Pressable>
+      </View>
+    );
   }
 
   const handleSignOut = async () => {
@@ -41,90 +40,159 @@ const UserProfile = ({ navigation }) => {
     }
   };
 
-  if (isLoading) {
-    return <LoadingPage />;
-  }
-
   return (
-    <View className="flex-col min-h-screen py-4">
-      <View className="flex-row justify-between py-6 px-6">
-        <Pressable onPress={() => navigation.goBack()}>
-          <Icon name="chevron-left" size={24} color="#10d1b2" />
-        </Pressable>
-
-        <Text className="text-xl font-bold">Profile</Text>
-        <Text className="text-blue text-lg"></Text>
+    <View style={styles.container}>
+      <View style={styles.headerContainer}>
+        <Text style={styles.headerText}>User Profile</Text>
       </View>
-      <View className="w-full items-center">
+      <View style={styles.imageContainer}>
         <Image
           source={{ uri: photoURL }}
-          style={{ width: 180, height: 180 }}
-          className="rounded-full mt-[50px]"
+          style={styles.profileImage}
         />
       </View>
-
-      <View className="mt-2 mb-10">
-        <Text className="text-red text-2xl text-center">{username}</Text>
-        <Text className="text-gray-700 text-sm text-center">{designation}</Text>
+      <View style={styles.detailsContainer}>
+        <Text style={styles.username}>{username}</Text>
+        <Text style={styles.designation}>{designation}</Text>
       </View>
-      <View className="px-4 mt-12 flex-col gap-4 ">
+      <View style={styles.menuContainer}>
         <Pressable
-          className="py-6 px-3 rounded-lg bg-gray-50 flex-row justify-between items-center"
+          style={styles.menuItem}
           onPress={() => navigation.navigate("UserPersonalInfo")}
         >
-          <View className="flex-row items-center">
-            <Icon name="user" size={24} color="#10d1b2" className="mr-2" />
-            <Text className="text-md font-semibold ml-3 text-blue">
-              Personal Details
-            </Text>
+          <View style={styles.menuIconTextContainer}>
+            <Icon name="user" size={28} color="#004d40" style={styles.menuIcon} />
+            <Text style={styles.menuText}>Personal Details</Text>
           </View>
-          <FontAwesome name="chevron-right" size={20} color="#10d1b2" />
         </Pressable>
 
         <Pressable
-          className="py-6 px-3 rounded-lg bg-gray-50 flex-row justify-between items-center"
+          style={styles.menuItem}
           onPress={() => navigation.navigate("UserEducation")}
         >
-          <View className="flex-row items-center">
-            <Icon
-              name="graduation-cap"
-              size={24}
-              color="#10d1b2"
-              className="mr-2"
-            />
-            <Text className="text-md font-semibold ml-3 text-blue">
-              Education
-            </Text>
+          <View style={styles.menuIconTextContainer}>
+            <Icon name="graduation-cap" size={28} color="#004d40" style={styles.menuIcon} />
+            <Text style={styles.menuText}>Education</Text>
           </View>
-          <FontAwesome name="chevron-right" size={20} color="#10d1b2" />
         </Pressable>
+
         <Pressable
-          className="py-6 px-3 rounded-lg bg-gray-50 flex-row justify-between items-center"
+          style={styles.menuItem}
           onPress={() => navigation.navigate("UserSecurity")}
         >
-          <View className="flex-row items-center">
-            <Icon name="key" size={24} color="#10d1b2" className="mr-2" />
-            <Text className="text-md font-semibold ml-3 text-blue">
-              Security
-            </Text>
+          <View style={styles.menuIconTextContainer}>
+            <Icon name="key" size={28} color="#004d40" style={styles.menuIcon} />
+            <Text style={styles.menuText}>Security</Text>
           </View>
-          <FontAwesome name="chevron-right" size={20} color="#10d1b2" />
         </Pressable>
+
         <Pressable
-          className="py-6 px-3 rounded-lg bg-gray-50 flex-row justify-between items-center"
+          style={styles.menuItem}
           onPress={handleSignOut}
         >
-          <View className="flex-row items-center">
-            <Icon name="cog" size={24} color="#10d1b2" className="mr-2" />
-            <Text className="text-md font-semibold ml-3 text-blue">
-              Signout
-            </Text>
+          <View style={styles.menuIconTextContainer}>
+            <Icon name="cog" size={28} color="#004d40" style={styles.menuIcon} />
+            <Text style={styles.menuText}>Signout</Text>
           </View>
-          <FontAwesome name="chevron-right" size={20} color="#10d1b2" />
         </Pressable>
       </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    paddingTop: 10,
+    backgroundColor: '#e0f2f1', // Background color matching the theme
+    alignItems: 'center', // Center content horizontally
+    justifyContent: 'center', // Center content vertically
+  },
+  headerContainer: {
+    marginBottom: 70,
+    backgroundColor: '#00796b', // Header background color matching the Gallery header
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    width: '100%',
+  },
+  headerText: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  imageContainer: {
+    alignItems: 'center',
+    marginTop: 30,
+  },
+  profileImage: {
+    width: 180,
+    height: 180,
+    borderRadius: 90,
+  },
+  detailsContainer: {
+    alignItems: 'center',
+    marginVertical: 20,
+  },
+  username: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    color: '#004d40',
+  },
+  designation: {
+    fontSize: 18,
+    color: '#004d40',
+  },
+  menuContainer: {
+    marginTop: 30,
+    width: '100%',
+  },
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    backgroundColor: '#ffffff', // Matching menu item background
+    borderRadius: 8,
+    marginBottom: 15,
+    elevation: 2, // Shadow effect for Android
+  },
+  menuIconTextContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  menuIcon: {
+    marginRight: 15,
+  },
+  menuText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#004d40',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#e0f2f1', // Background color matching the theme
+  },
+  notLoggedInText: {
+    fontSize: 20,
+    color: '#004d40',
+    marginBottom: 20,
+  },
+  loginButton: {
+    backgroundColor: '#00796b',
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 8,
+  },
+  loginButtonText: {
+    color: '#fff',
+    fontSize: 18,
+  },
+});
 
 export default UserProfile;

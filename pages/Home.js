@@ -1,42 +1,87 @@
-import { View, Text, Image, Button, Pressable } from "react-native";
+import { View, Text, Image, Pressable, StyleSheet } from "react-native";
 import React from "react";
 
 export default function Home({ navigation }) {
   return (
-    <View className="flex flex-col  justify-center items-center h-full bg-white relative">
+    <View style={styles.container}>
       <Pressable
-        className="absolute top-4 right-4 bg-red p-2 rounded-lg"
+        style={styles.skipButton}
         onPress={() => navigation.navigate("MainPage")}
       >
-        <Text className="text-white text-xl font-semibold">Skip </Text>
+        <Text style={styles.skipText}>Skip</Text>
       </Pressable>
       <Image
         source={require("../assets/images/logo.png")}
-        style={{ width: 110, height: 110 }}
-        className="mb-10"
+        style={styles.logo}
       />
-      <Text className="text-[#e33b38] text-3xl italic font-bold">
-        IIITDMJ App
-      </Text>
+      <Text style={styles.title}>IIITDMJ App</Text>
 
-      <View className="mt-10">
+      <View style={styles.buttonContainer}>
         <Pressable
-          className="bg-[#0fd2b2] rounded-3xl py-3 mb-3 w-[75vw]"
+          style={styles.loginButton}
           onPress={() => navigation.navigate("Login")}
         >
-          <Text className="text-white text-xl font-semibold text-center">
-            Login
-          </Text>
-        </Pressable>
-        <Pressable
-          className="bg-[#e33b38] rounded-3xl py-3 mb-3 w-[75vw]"
-          onPress={() => navigation.navigate("Signup")}
-        >
-          <Text className="text-white text-xl font-semibold text-center">
-            Signup
-          </Text>
+          <Text style={styles.buttonText}>Login</Text>
         </Pressable>
       </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#e0f2f1', // Background color matching the theme
+    position: 'relative',
+    padding: 20, // Added padding to avoid clipping
+  },
+  skipButton: {
+    position: 'absolute',
+    top: 50, // Adjusted top position
+    right: 20,
+    backgroundColor: '#00796b', // Button color matching the theme
+    padding: 10,
+    borderRadius: 10,
+  },
+  skipText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  logo: {
+    width: 120,
+    height: 120,
+    marginBottom: -10,
+  },
+  title: {
+    fontSize: 32,
+    color: '#00796b', // Text color matching the theme
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  buttonContainer: {
+    marginTop: 20,
+    width: '80%',
+  },
+  loginButton: {
+    backgroundColor: '#004d40', // Button color matching the theme
+    borderRadius: 30,
+    paddingVertical: 15,
+    marginBottom: 15,
+    alignItems: 'center',
+  },
+  signupButton: {
+    backgroundColor: '#00796b', // Button color matching the theme
+    borderRadius: 30,
+    paddingVertical: 15,
+    marginBottom: 15,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+});

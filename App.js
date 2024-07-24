@@ -19,7 +19,7 @@ import ProfessorProfile from './pages/ProfessorProfile';
 import ChangePassword from './pages/profile/ChangePassword';
 import UserSecurity from './pages/profile/UserSecurity';
 import PasswordChangeConfirmation from './pages/profile/PasswordChangeConfirmation';
-// import UserEducation from './pages/profile/UserEducation';
+import Usereducation from './pages/profile/Usereducation';
 import UserPersonalInfo from './pages/profile/UserPersonalInfo';
 import AdminDashboard from './pages/AdminDashboard';
 import AddProfessor from './pages/AddProfessor';
@@ -71,7 +71,6 @@ const Navigator = () => {
       <Drawer.Screen name="ChangePassword" component={ChangePassword} />
       <Drawer.Screen name="PasswordChangeConfirmation" component={PasswordChangeConfirmation} />
       <Drawer.Screen name="UserSecurity" component={UserSecurity} />
-      {/* <Drawer.Screen name="UserEducation" component={UserEducation} /> */}
       <Drawer.Screen name="AdminDashboard" component={AdminDashboard} />
       <Drawer.Screen name="AddProfessor" component={AddProfessor} />
       <Drawer.Screen name="Programs" component={Programs} />
@@ -89,6 +88,7 @@ const Navigator = () => {
       <Drawer.Screen name="Gallery" component={Gallery} />
       <Drawer.Screen name="Info" component={Info} />
       <Drawer.Screen name="Notification" component={Notification} />
+      <Drawer.Screen name="Usereducation" component={Usereducation} />
     </Drawer.Navigator>
   );
 };

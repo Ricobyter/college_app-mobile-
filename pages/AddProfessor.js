@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Pressable, Image, Alert, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Pressable, Image, Alert, StyleSheet, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Use MaterialIcons for consistency
 import * as ImagePicker from 'expo-image-picker';
 import { useDispatch, useSelector } from 'react-redux';
 import { sendWelcomeEmail } from '../store/emailSlice';
+import Toast from 'react-native-toast-message'; // Import Toast
 
 const AddProfessor = ({ navigation }) => {
   const [name, setName] = useState('');
@@ -15,7 +16,7 @@ const AddProfessor = ({ navigation }) => {
   const [profilePic, setProfilePic] = useState(null);
 
   const dispatch = useDispatch();
-  const emailState = useSelector((state) => state.email);
+  const { isSending, isSent, isNotSent, message } = useSelector((state) => state.email);
 
   const handleImagePicker = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -44,17 +45,29 @@ const AddProfessor = ({ navigation }) => {
     }
 
     try {
+      // Trigger email sending action
       await dispatch(sendWelcomeEmail({ name, email, password })).unwrap();
+      // Show success toast
+
+
+      if(isSent){
+        Toast.show({
+          type: 'success',
+          position: 'bottom',
+          text1: 'Success',
+          text2: 'Professor added successfully!',
+        });
+      }
+      // Optionally navigate or reset form here
+      // navigation.goBack();
     } catch (err) {
       console.error('Error sending email:', err);
-      Alert.alert('Error sending email', emailState.error);
+      Alert.alert('Error sending email', message || 'Failed to send email');
     }
   };
 
   return (
     <View style={styles.container}>
-      
-
       <Pressable onPress={handleImagePicker} style={styles.imagePicker}>
         <View style={styles.imageContainer}>
           {profilePic ? (
@@ -113,12 +126,19 @@ const AddProfessor = ({ navigation }) => {
         style={styles.input}
       />
 
-      <Pressable
-        onPress={handleSubmit}
-        style={styles.submitButton}
-      >
-        <Text style={styles.submitButtonText}>Add Professor</Text>
-      </Pressable>
+      {isSending ? (
+        <ActivityIndicator size="large" color="#00796b" style={styles.activityIndicator} />
+      ) : (
+        <Pressable
+          onPress={handleSubmit}
+          style={styles.submitButton}
+        >
+          <Text style={styles.submitButtonText}>Add Professor</Text>
+        </Pressable>
+      )}
+
+      {/* Include Toast component */}
+      <Toast />
     </View>
   );
 };
@@ -129,13 +149,6 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 50, // Increased paddingTop for additional space at the top
     backgroundColor: '#e0f2f1', // Matching background color from Gallery page
-  },
-  headerText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#00796b', // Matching color from Gallery page header
-    marginBottom: 20,
-    marginTop: 10, // Add top margin for additional spacing
   },
   imagePicker: {
     marginBottom: 20,
@@ -182,6 +195,9 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  activityIndicator: {
+    marginVertical: 20,
   },
 });
 

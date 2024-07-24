@@ -11,7 +11,6 @@ import ProfessorProfile from './pages/ProfessorProfile';
 import ChangePassword from './pages/profile/ChangePassword';
 import UserSecurity from './pages/profile/UserSecurity';
 import PasswordChangeConfirmation from './pages/profile/PasswordChangeConfirmation';
-import Usereducation from './pages/profile/Usereducation';
 import UserPersonalInfo from './pages/profile/UserPersonalInfo';
 import AdminDashboard from './pages/AdminDashboard';
 import AddProfessor from './pages/AddProfessor';
@@ -64,7 +63,7 @@ const AppStack = () => (
     <Stack.Screen name="Gallery" component={Gallery} />
     <Stack.Screen name="Info" component={Info} />
     <Stack.Screen name="Notification" component={Notification} />
-    <Stack.Screen name="Usereducation" component={Usereducation} />
+
   </Stack.Navigator>
 );
 

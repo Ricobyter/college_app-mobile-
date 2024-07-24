@@ -2,8 +2,8 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { FIREBASE_AUTH, FIREBASE_DB } from '../FirebaseConfig';
 import { collection, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore';
+import { sendPasswordResetEmail } from 'firebase/auth';
 
-// Create an async thunk for user login
 export const loginUser = createAsyncThunk(
   'user/loginUser',
   async ({ email, password }, { rejectWithValue }) => {
@@ -20,7 +20,6 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-// Create an async thunk for getting user details
 export const getUser = createAsyncThunk(
   'user/getUser',
   async (uid, { rejectWithValue }) => {
@@ -42,7 +41,6 @@ export const getUser = createAsyncThunk(
   }
 );
 
-// Create an async thunk for updating user details
 export const updateUser = createAsyncThunk(
   'user/updateUser',
   async ({ uid, userData }, thunkAPI) => {
@@ -56,7 +54,6 @@ export const updateUser = createAsyncThunk(
   }
 );
 
-// Create an async thunk for getting professors
 export const getProfessors = createAsyncThunk(
   'user/getProfessors',
   async (_, { rejectWithValue }) => {
@@ -81,7 +78,6 @@ export const getProfessors = createAsyncThunk(
   }
 );
 
-// Create an async thunk for getting all users
 export const getAllUsers = createAsyncThunk(
   'user/getAllUsers',
   async (_, { rejectWithValue }) => {
@@ -97,6 +93,19 @@ export const getAllUsers = createAsyncThunk(
       });
 
       return users;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const sendResetEmail = createAsyncThunk(
+  'user/sendResetEmail',
+  async (email, { rejectWithValue }) => {
+    try {
+      const auth = FIREBASE_AUTH;
+      await sendPasswordResetEmail(auth, email);
+      return 'Password reset email sent successfully';
     } catch (error) {
       return rejectWithValue(error.message);
     }

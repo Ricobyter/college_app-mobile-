@@ -6,10 +6,10 @@ const Info = () => {
     <View style={styles.container}>
       <Text style={styles.title}>App Information</Text>
       <Text style={styles.text}>
-        This application is developed by IIITDM Jabalpur.
+        This application is developed by IIITDM Jabalpur students.
       </Text>
       <Text style={styles.text}>
-        All rights reserved © {new Date().getFullYear()} IIITDM Jabalpur.
+        All rights reserved by their team.
       </Text>
     </View>
   );

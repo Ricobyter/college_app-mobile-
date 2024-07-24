@@ -1,13 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUser } from '../store/userSlice'; // Adjust the path as necessary
-import { View, Text, Image, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, Image, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 
 const ProfessorProfile = ({ navigation }) => {
   const dispatch = useDispatch();
   const route = useRoute();
   const { professorId } = route.params;
+  const [imageLoading, setImageLoading] = useState(true);
 
   useEffect(() => {
     if (professorId) {
@@ -32,12 +33,17 @@ const ProfessorProfile = ({ navigation }) => {
       </View>
 
       <View style={styles.contentContainer}>
-        <Image
-          source={{
-            uri: photoURL || 'https://via.placeholder.com/150',
-          }}
-          style={styles.profileImage}
-        />
+        <View style={styles.imageContainer}>
+          {imageLoading && <ActivityIndicator size="large" color="#00796b" style={styles.activityIndicator} />}
+          <Image
+            source={{
+              uri: photoURL || 'https://via.placeholder.com/150',
+            }}
+            style={styles.profileImage}
+            onLoad={() => setImageLoading(false)}
+            onError={() => setImageLoading(false)}
+          />
+        </View>
         <Text style={styles.username}>{username}</Text>
         <Text style={styles.designation}>{designation}</Text>
         <Text style={styles.bio}>{bio}</Text>
@@ -82,11 +88,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 60,
   },
-  profileImage: {
+  imageContainer: {
+    position: 'relative',
     width: 180,
     height: 180,
-    borderRadius: 90,
     marginBottom: 20,
+  },
+  profileImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 90,
+    position: 'absolute',
+  },
+  activityIndicator: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   username: {
     fontSize: 26,

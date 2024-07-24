@@ -28,6 +28,10 @@ const GetProfessors = ({ navigation }) => {
     }
   }, [searchQuery, professors]);
 
+  if (loading) {
+    return <LoadingScreen />;
+  }
+
   if (error) {
     return (
       <View style={styles.centeredView}>
@@ -37,7 +41,7 @@ const GetProfessors = ({ navigation }) => {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} >
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Professors</Text>
       </View>
@@ -64,6 +68,7 @@ const GetProfessors = ({ navigation }) => {
             key={professor.id}
             style={styles.professorCard}
             onPress={() => navigation.navigate("ProfessorProfile", { professorId: professor.id })}
+            className =''
           >
             <View style={styles.imageContainer}>
               <Image
@@ -90,6 +95,7 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 50,
     backgroundColor: '#e0f2f1',
+    paddingBottom: 50
   },
   headerContainer: {
     marginBottom: 20,

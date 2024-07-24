@@ -15,16 +15,14 @@ const Sidebar = (props) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    if (uid) {
-      setIsLoggedIn(true);
-    } else setIsLoggedIn(false);
+    setIsLoggedIn(!!uid);
   }, [uid]);
 
   const handleSignOut = async () => {
     try {
       await signOut(FIREBASE_AUTH);
       dispatch(clearUser());
-      props.navigation.navigate("Login");
+      navigation.navigate("Login");
     } catch (error) {
       console.error("Log Out Error", error.message);
     }
@@ -86,15 +84,14 @@ const Sidebar = (props) => {
           <Icon name="info-circle" size={24} color="#004d40" />
           <Text style={styles.menuItemText}>About App</Text>
         </Pressable>
-        <View style={styles.logoutContainer}>
         {isLoggedIn && (
-          <Pressable style={styles.logoutButton} onPress={handleSignOut}>
-            <Icon name="sign-out" size={24} color="#00796b" />
-            <Text style={styles.logoutButtonText}>Log Out</Text>
-          </Pressable>
+          <View style={styles.logoutContainer}>
+            <Pressable style={styles.logoutButton} onPress={handleSignOut}>
+              <Icon name="sign-out" size={24} color="#00796b" />
+              <Text style={styles.logoutButtonText}>Log Out</Text>
+            </Pressable>
+          </View>
         )}
-        
-        </View>
       </View>
     </DrawerContentScrollView>
   );
@@ -103,7 +100,7 @@ const Sidebar = (props) => {
 const styles = StyleSheet.create({
   drawerContent: {
     flex: 1,
-    backgroundColor: '#e0f2f1', // Light cyan background
+    backgroundColor: '#e0f2f1',
   },
   sidebarContainer: {
     flex: 1,
@@ -139,7 +136,7 @@ const styles = StyleSheet.create({
   loggedInContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#b2ebf2', // Light cyan background for user info
+    backgroundColor: '#b2ebf2',
     padding: 10,
     borderRadius: 5,
   },
@@ -165,7 +162,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 10,
     paddingHorizontal: 10,
-    backgroundColor: '#b2ebf2', // Light cyan background for menu items
+    backgroundColor: '#b2ebf2',
     borderRadius: 5,
     marginBottom: 10,
   },

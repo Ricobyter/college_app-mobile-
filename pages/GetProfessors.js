@@ -3,17 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { getProfessors } from "../store/userSlice"; // Adjust the path as necessary
 import LoadingScreen from "../components/LoadingScreen"; // Adjust the path as necessary
 import { View, Text, TextInput, ScrollView, StyleSheet, Image, TouchableOpacity } from "react-native";
-import Header from "../components/Header";
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Import the icon library
 
-const GetProfessors = ({navigation}) => {
+const GetProfessors = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { professors, loading, error, isLoading } = useSelector((state) => state.user);
+  const { professors, loading, error } = useSelector((state) => state.user);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredProfessors, setFilteredProfessors] = useState([]);
 
-  
- 
   useEffect(() => {
     dispatch(getProfessors());
   }, [dispatch]);
@@ -31,86 +28,90 @@ const GetProfessors = ({navigation}) => {
     }
   }, [searchQuery, professors]);
 
-
-  // if (isLoading) {
-  //   return <LoadingScreen />;
-  // }
-
   if (error) {
     return (
-      <View className="p-4 min-h-screen flex justify-center items-center">
-        <Text className="text-red-500">Error: {error}</Text>
+      <View style={styles.centeredView}>
+        <Text style={styles.errorText}>Error: {error}</Text>
       </View>
     );
   }
 
   return (
-    <>
-      <Header />
-      <ScrollView className="p-10 bg-white">
-        <Text className="text-2xl font-bold mb-4 text-center text-red mt-4">
-          Professors
-        </Text>
-        
-        {/* Search Input with Icon */}
-        <View style={styles.searchContainer}>
-          <Icon
-            name="search"
-            size={20}
-            color="#999" // Adjust color as needed
-            style={styles.searchIcon}
-          />
-          <TextInput
-            placeholder="Search Professors"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            style={styles.searchInput}
-          />
-        </View>
+    <ScrollView style={styles.container}>
+      <View style={styles.headerContainer}>
+        <Text style={styles.headerText}>Professors</Text>
+      </View>
 
-        {filteredProfessors && filteredProfessors.length > 0 ? (
-          filteredProfessors.map((professor) => (
-            <TouchableOpacity
-              key={professor.id}
-              className="bg-white p-6 mb-8 rounded-lg shadow-lg shadow-gray-600"
-              onPress={() => navigation.navigate("ProfessorProfile", {professorId: professor.id})}
-            >
-              <View className="flex flex-col items-center mb-2">
-                <Image
-                  source={{
-                    uri:
-                      professor.photoURL || "https://via.placeholder.com/100",
-                  }}
-                  className="w-32 h-32 rounded-full"
-                />
-                <View className='mt-4'>
-                  <Text className="text-xl font-semibold text-center text-red">
-                    {professor.username}
-                  </Text>
-                  <Text className="text-blue italic font-semibold">
-                    {professor.email}
-                  </Text>
-                </View>
-              </View>
-            </TouchableOpacity>
-          ))
-        ) : (
-          <Text className="text-center text-gray-500">No professors found</Text>
-        )}
-      </ScrollView>
-    </>
+      {/* Search Input with Icon */}
+      <View style={styles.searchContainer}>
+        <Icon
+          name="search"
+          size={20}
+          color="#004d40"
+          style={styles.searchIcon}
+        />
+        <TextInput
+          placeholder="Search Professors"
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          style={styles.searchInput}
+        />
+      </View>
+
+      {filteredProfessors && filteredProfessors.length > 0 ? (
+        filteredProfessors.map((professor) => (
+          <TouchableOpacity
+            key={professor.id}
+            style={styles.professorCard}
+            onPress={() => navigation.navigate("ProfessorProfile", { professorId: professor.id })}
+          >
+            <View style={styles.imageContainer}>
+              <Image
+                source={{ uri: professor.photoURL || "https://via.placeholder.com/100" }}
+                style={styles.profileImage}
+              />
+            </View>
+            <View style={styles.detailsContainer}>
+              <Text style={styles.professorName}>{professor.username}</Text>
+              <Text style={styles.professorEmail}>{professor.email}</Text>
+            </View>
+          </TouchableOpacity>
+        ))
+      ) : (
+        <Text style={styles.noProfessorsText}>No professors found</Text>
+      )}
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    paddingTop: 50,
+    backgroundColor: '#e0f2f1',
+  },
+  headerContainer: {
+    marginBottom: 20,
+    backgroundColor: '#00796b', // Header background color matching Gallery
+    paddingVertical: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  headerText: {
+    fontSize: 24, // Same as in Gallery
+    fontWeight: 'bold',
+    color: '#fff',
+  },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#ffffff',
     borderRadius: 8,
     paddingHorizontal: 10,
     paddingVertical: 5,
-    marginBottom: 10,
+    marginBottom: 20,
+    elevation: 2,
   },
   searchIcon: {
     marginRight: 10,
@@ -118,6 +119,51 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 16,
+    color: '#004d40',
+  },
+  professorCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+    borderRadius: 8,
+    padding: 15,
+    marginBottom: 15,
+    elevation: 2,
+  },
+  imageContainer: {
+    marginRight: 15,
+  },
+  profileImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+  },
+  detailsContainer: {
+    flex: 1,
+  },
+  professorName: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#004d40',
+  },
+  professorEmail: {
+    fontSize: 16,
+    color: '#004d40',
+  },
+  noProfessorsText: {
+    fontSize: 16,
+    color: '#004d40',
+    textAlign: 'center',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#e0f2f1',
+  },
+  errorText: {
+    fontSize: 18,
+    color: '#004d40',
   },
 });
 

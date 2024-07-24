@@ -1,29 +1,74 @@
-import { View, Text, TextInput, Pressable } from 'react-native';
 import React from 'react';
+import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
 
 const ForgotPassword = ({ navigation }) => {
   return (
-    <View className="flex-1 justify-center items-center bg-white p-4">
-      <Text className="text-3xl font-bold text-red mb-8">Forgot Password</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Forgot Password</Text>
       <TextInput 
         placeholder="Enter your email" 
         placeholderTextColor="#ccc"
-        className="w-full bg-white border-2 border-blue p-4 rounded-2xl mb-8"
+        style={styles.input}
       />
       <Pressable 
         onPress={() => {}} 
-        className="bg-red w-full py-4 rounded-3xl items-center"
+        style={styles.sendEmailButton}
       >
-        <Text className="text-white text-lg">Send email</Text>
+        <Text style={styles.sendEmailButtonText}>Send email</Text>
       </Pressable>
       <Pressable 
         onPress={() => navigation.goBack()}
-        className="mt-4"
+        style={styles.backToLoginLink}
       >
-        <Text className="text-blue text-sm">Back to Login</Text>
+        <Text style={styles.backToLoginLinkText}>Back to Login</Text>
       </Pressable>
     </View>
-  )
+  );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#e0f2f1', // Background color matching the theme
+    padding: 16,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#00796b', // Title color matching the theme
+    marginBottom: 16,
+  },
+  input: {
+    width: '100%',
+    backgroundColor: '#ffffff',
+    borderColor: '#00796b', // Border color matching the theme
+    borderWidth: 2,
+    padding: 12,
+    borderRadius: 10,
+    marginBottom: 12,
+    fontSize: 16,
+  },
+  sendEmailButton: {
+    backgroundColor: '#00796b', // Button color matching the theme
+    width: '100%',
+    padding: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  sendEmailButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  backToLoginLink: {
+    marginTop: 16,
+  },
+  backToLoginLinkText: {
+    color: '#00796b', // Link color matching the theme
+    fontSize: 14,
+  },
+});
 
 export default ForgotPassword;

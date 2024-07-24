@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Pressable, Image, Alert } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { View, Text, TextInput, Pressable, Image, Alert, StyleSheet } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons'; // Use MaterialIcons for consistency
 import * as ImagePicker from 'expo-image-picker';
-// import { sendWelcomeEmail } from '../email/sendEmail';
-import { sendEmail, sendWelcomeEmail } from '../store/emailSlice';
 import { useDispatch, useSelector } from 'react-redux';
-
+import { sendWelcomeEmail } from '../store/emailSlice';
 
 const AddProfessor = ({ navigation }) => {
   const [name, setName] = useState('');
@@ -20,7 +18,6 @@ const AddProfessor = ({ navigation }) => {
   const emailState = useSelector((state) => state.email);
 
   const handleImagePicker = async () => {
-    // Request permission to access media library
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
       Alert.alert('Permission to access media library is required!');
@@ -47,29 +44,25 @@ const AddProfessor = ({ navigation }) => {
     }
 
     try {
-      const emailData ={
-        name, email, password
-      }
       await dispatch(sendWelcomeEmail({ name, email, password })).unwrap();
-
     } catch (err) {
       console.error('Error sending email:', err);
-      Alert.alert('Error sending email',emailState.error);
+      Alert.alert('Error sending email', emailState.error);
     }
   };
 
   return (
-    <View className="flex-1 p-4 bg-gray-100">
-      <Text className="text-2xl font-bold mb-4">Add Professor</Text>
+    <View style={styles.container}>
+      
 
-      <Pressable onPress={handleImagePicker} className="mb-4">
-        <View className=" justify-center items-center">
+      <Pressable onPress={handleImagePicker} style={styles.imagePicker}>
+        <View style={styles.imageContainer}>
           {profilePic ? (
-            <Image source={{ uri: profilePic }} style={{ width: 150, height: 150, borderRadius: 150 }} />
+            <Image source={{ uri: profilePic }} style={styles.profileImage} />
           ) : (
-            <Icon name="user" size={100} color="#ccc" />
+            <Icon name="account-circle" size={100} color="#004d40" />
           )}
-          <Text className="mt-2 text-gray-600">Select Profile Picture</Text>
+          <Text style={styles.imageText}>Select Profile Picture</Text>
         </View>
       </Pressable>
 
@@ -77,7 +70,7 @@ const AddProfessor = ({ navigation }) => {
         placeholder="Name"
         value={name}
         onChangeText={setName}
-        className="border p-3 mb-4 rounded"
+        style={styles.input}
       />
 
       <TextInput
@@ -85,7 +78,7 @@ const AddProfessor = ({ navigation }) => {
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
-        className="border p-3 mb-4 rounded"
+        style={styles.input}
       />
 
       <TextInput
@@ -93,7 +86,7 @@ const AddProfessor = ({ navigation }) => {
         value={password}
         onChangeText={setPassword}
         secureTextEntry
-        className="border p-3 mb-4 rounded"
+        style={styles.input}
       />
 
       <TextInput
@@ -101,7 +94,7 @@ const AddProfessor = ({ navigation }) => {
         value={confirmPassword}
         onChangeText={setConfirmPassword}
         secureTextEntry
-        className="border p-3 mb-4 rounded"
+        style={styles.input}
       />
 
       <TextInput
@@ -109,7 +102,7 @@ const AddProfessor = ({ navigation }) => {
         value={about}
         onChangeText={setAbout}
         multiline
-        className="border p-3 mb-4 rounded h-32"
+        style={styles.textArea}
       />
 
       <TextInput
@@ -117,17 +110,79 @@ const AddProfessor = ({ navigation }) => {
         value={phone}
         onChangeText={setPhone}
         keyboardType="phone-pad"
-        className="border p-3 mb-4 rounded"
+        style={styles.input}
       />
 
       <Pressable
         onPress={handleSubmit}
-        className="bg-blue p-4 rounded-lg shadow-md"
+        style={styles.submitButton}
       >
-        <Text className="text-white text-center text-lg">Add Professor</Text>
+        <Text style={styles.submitButtonText}>Add Professor</Text>
       </Pressable>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    paddingTop: 50, // Increased paddingTop for additional space at the top
+    backgroundColor: '#e0f2f1', // Matching background color from Gallery page
+  },
+  headerText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#00796b', // Matching color from Gallery page header
+    marginBottom: 20,
+    marginTop: 10, // Add top margin for additional spacing
+  },
+  imagePicker: {
+    marginBottom: 20,
+    alignItems: 'center',
+  },
+  imageContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  profileImage: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    marginBottom: 10,
+  },
+  imageText: {
+    marginTop: 10,
+    color: '#004d40', // Matching text color
+  },
+  input: {
+    borderColor: '#00796b', // Matching border color
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 15,
+    backgroundColor: '#ffffff', // White background for input fields
+  },
+  textArea: {
+    borderColor: '#00796b',
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 15,
+    height: 100,
+    backgroundColor: '#ffffff',
+  },
+  submitButton: {
+    backgroundColor: '#00796b', // Matching button color
+    padding: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  submitButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+});
 
 export default AddProfessor;

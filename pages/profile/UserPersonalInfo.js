@@ -1,15 +1,13 @@
-import { Text, View, Image, Pressable, TextInput, ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react';
+import { Text, View, Image, Pressable, TextInput, ScrollView, StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUser, updateUser } from '../../store/userSlice';
 import * as ImagePicker from 'expo-image-picker';
-import Icon from 'react-native-vector-icons/Entypo';
-import LoadingPage from '../../components/LoadingScreen';
 import Toast from 'react-native-toast-message';
 
 const UserPersonalInfo = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { uid, username, photoURL, isLoading, designation, userEmail, phone, bio, error } = useSelector((state) => state.user);
+  const { uid, username, photoURL, designation, userEmail, phone, bio, error } = useSelector((state) => state.user);
 
   const [formState, setFormState] = useState({
     username: '',
@@ -62,114 +60,173 @@ const UserPersonalInfo = ({ navigation }) => {
   const saveProfile = async () => {
     dispatch(updateUser({ uid, userData: formState }));
 
-    if(error){
-        Toast.show({
-            type: "error",
-            text1: "Updation Error",
-            text2: "Error Updating User",
-          });
-          return;
-    }else{
-        Toast.show({
-            type: "success",
-            text1: "Updation Sucess",
-            text2: "Profile Updated Successfully",
-          });
-        setIsUpgrading(false);
+    if (error) {
+      Toast.show({
+        type: "error",
+        text1: "Updation Error",
+        text2: "Error Updating User",
+      });
+      return;
+    } else {
+      Toast.show({
+        type: "success",
+        text1: "Updation Success",
+        text2: "Profile Updated Successfully",
+      });
+      setIsUpgrading(false);
     }
-
-
   };
 
-  if (isLoading) {
-    return <LoadingPage />;
-  }
-
   return (
-    <ScrollView className="flex-col min-h-screen py-4">
-      <View className="flex-row justify-between py-6 px-6">
-        <Pressable onPress={() => navigation.goBack()}>
-          <Icon name="chevron-left" size={24} color="black" />
-        </Pressable>
-        <Pressable onPress={() => setIsUpgrading(!isUpgrading)}>
-          <Text className="text-xl font-bold text-blue">{isUpgrading ? <Pressable onPress={saveProfile} className="bg-blue-500 p-3 rounded mt-6">
-          <Text className="text-red text-xl font-bold">Update Profile</Text>
-        </Pressable> : 'Edit Profile'}</Text>
-        </Pressable>
-        <Text className="text-blue text-lg"></Text>
+    <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+      <View style={styles.headerContainer}>
+        <Text style={styles.headerText}>Edit Profile</Text>
       </View>
-      <View className="w-full items-center">
-        {isLoading ? <LoadingPage /> : 
-        
+      <View style={styles.imageContainer}>
         <Image
           source={{ uri: formState.photoURL || photoURL }}
-          style={{ width: 200, height: 200 }}
-          className="rounded-full mt-[50px]"
+          style={styles.profileImage}
         />
-      }
         {isUpgrading && (
-          <Pressable onPress={handleImageChange}>
-            <Text className="text-blue mt-2">Change Photo</Text>
+          <Pressable onPress={handleImageChange} style={styles.changePhotoButton}>
+            <Text style={styles.changePhotoText}>Change Photo</Text>
           </Pressable>
         )}
       </View>
-
-        <View className="mt-10 px-6">
-        <Text className="text-gray-700 mb-2">Name</Text>
+      <View style={styles.formContainer}>
+        <Text style={styles.label}>Name</Text>
         <TextInput
           placeholder="Name"
           value={formState.username}
           editable={isUpgrading}
           onChangeText={(value) => handleInputChange('username', value)}
-          className={`border-b  border-gray-300 rounded ${!isUpgrading ? 'text-gray-700' : 'text-blue'}`} 
-          />
-        
-        <Text className="text-gray-700 mb-2 mt-4">Email</Text>
+          style={[styles.input, isUpgrading ? styles.inputEditable : styles.inputNonEditable]}
+        />
+        <Text style={styles.label}>Email</Text>
         <TextInput
           placeholder="Email"
           value={formState.userEmail}
           editable={false}
-          className={`border-b  border-gray-300 rounded ${!isUpgrading ? 'text-gray-700' : 'text-blue'}`}
+          style={[styles.input, styles.inputNonEditable]}
         />
-
-<Text className="text-gray-700 mb-2 mt-4">Designation</Text>
+        <Text style={styles.label}>Designation</Text>
         <TextInput
-          placeholder="Phone"
+          placeholder="Designation"
           value={formState.designation}
-          onChangeText={(value) => handleInputChange('phone', value)}
-          className={`border-b  border-gray-300 rounded text-gray-500`}
           editable={false}
+          style={[styles.input, styles.inputNonEditable]}
         />
-        
-        <Text className="text-gray-700 mb-2 mt-4">Phone</Text>
+        <Text style={styles.label}>Phone</Text>
         <TextInput
           placeholder="Phone"
           value={formState.phone}
-          onChangeText={(value) => handleInputChange('phone', value)}
-          className={`border-b  border-gray-300 rounded ${!isUpgrading ? 'text-gray-700' : 'text-blue'}`}
           editable={isUpgrading}
+          onChangeText={(value) => handleInputChange('phone', value)}
+          style={[styles.input, isUpgrading ? styles.inputEditable : styles.inputNonEditable]}
         />
-
-        
-        <Text className="text-gray-700 mb-2 mt-4">Bio</Text>
+        <Text style={styles.label}>Bio</Text>
         <TextInput
           placeholder="Bio"
           value={formState.bio}
           onChangeText={(value) => handleInputChange('bio', value)}
           multiline
           editable={isUpgrading}
-          numberOfLines={4}
-          className={`border-b  border-gray-300 rounded ${!isUpgrading ? 'text-gray-700' : 'text-blue'}`}
+          numberOfLines={3}
+          style={[styles.input, isUpgrading ? styles.inputEditable : styles.inputNonEditable]}
         />
-        
-        {/* <Pressable onPress={saveProfile} className="bg-blue-500 p-3 rounded mt-6">
-          <Text className="text-red text-center">Update Profile</Text>
-        </Pressable> */}
       </View>
-      
-
+      <View style={styles.buttonContainer}>
+        <Pressable onPress={() => {
+          if (isUpgrading) {
+            saveProfile();
+          } else {
+            setIsUpgrading(true);
+          }
+        }} style={styles.editButton}>
+          <Text style={styles.editButtonText}>{isUpgrading ? 'Save Profile' : 'Edit Profile'}</Text>
+        </Pressable>
+      </View>
     </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  scrollViewContainer: {
+    flexGrow: 1,
+    backgroundColor: '#e0f2f1',
+  },
+  headerContainer: {
+    backgroundColor: '#00796b',
+    paddingVertical: 20,
+    alignItems: 'center',
+    borderRadius: 10,
+    marginHorizontal: 20,
+    marginTop: 50,
+  },
+  headerText: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  imageContainer: {
+    alignItems: 'center',
+    marginVertical: 30,
+  },
+  profileImage: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+  },
+  changePhotoButton: {
+    marginTop: 15,
+    backgroundColor: '#fff',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#00796b',
+  },
+  changePhotoText: {
+    color: '#00796b',
+    fontSize: 16,
+  },
+  formContainer: {
+    paddingHorizontal: 20,
+  },
+  label: {
+    fontSize: 18,
+    color: '#004d40',
+    marginBottom: 8,
+  },
+  input: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    marginBottom: 20,
+    fontSize: 16,
+    paddingVertical: 8,
+  },
+  inputEditable: {
+    color: '#00796b',
+  },
+  inputNonEditable: {
+    color: '#004d40',
+    backgroundColor: '#f5f5f5',
+  },
+  buttonContainer: {
+    alignItems: 'center',
+    marginVertical: 30,
+  },
+  editButton: {
+    backgroundColor: '#00796b',
+    paddingVertical: 12,
+    paddingHorizontal: 40,
+    borderRadius: 8,
+  },
+  editButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+});
 
 export default UserPersonalInfo;

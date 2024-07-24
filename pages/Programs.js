@@ -11,6 +11,9 @@ const Programs = ({ navigation }) => {
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Explore Our Programs</Text>
+        <Pressable onPress={()=> navigation.goBack()}>
+          <Text>GO back</Text>
+        </Pressable>
         <Text style={styles.sectionText}>
           Discover the range of programs we offer, including undergraduate, 
           postgraduate, and doctoral degrees. Click on any program to learn more.

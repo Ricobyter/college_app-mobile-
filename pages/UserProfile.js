@@ -68,7 +68,7 @@ const UserProfile = ({ navigation }) => {
 
         <Pressable
           style={styles.menuItem}
-          onPress={() => navigation.navigate("UserEducation")}
+          onPress={() => navigation.navigate("Usereducation")}
         >
           <View style={styles.menuIconTextContainer}>
             <Icon name="graduation-cap" size={28} color="#004d40" style={styles.menuIcon} />

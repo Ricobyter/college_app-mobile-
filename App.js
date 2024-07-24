@@ -20,7 +20,7 @@ import ProfessorProfile from './pages/ProfessorProfile';
 import ChangePassword from './pages/profile/ChangePassword';
 import UserSecurity from './pages/profile/UserSecurity';
 import PasswordChangeConfirmation from './pages/profile/PasswordChangeConfirmation';
-// import UserEducation from './pages/profile/UserEducation';
+import Usereducation from './pages/profile/Usereducation';
 import UserPersonalInfo from './pages/profile/UserPersonalInfo';
 import AdminDashboard from './pages/AdminDashboard';
 import AddProfessor from './pages/AddProfessor';
@@ -61,6 +61,7 @@ const Navigator = () => {
       initialRouteName='MainPage'
       StackContent={(props) => <Sidebar {...props} />}
     >
+<<<<<<< HEAD
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
@@ -92,6 +93,39 @@ const Navigator = () => {
       <Stack.Screen name="Info" component={Info} />
       <Stack.Screen name="Notification" component={Notification} />
     </Stack.Navigator>
+=======
+      <Drawer.Screen name="Home" component={Home} />
+      <Drawer.Screen name="Login" component={Login} />
+      <Drawer.Screen name="ForgotPassword" component={ForgotPassword} />
+      <Drawer.Screen name="MainPage" component={MainPage} />
+      <Drawer.Screen name="LoginPage" component={LoginPage} />
+      <Drawer.Screen name="UserProfile" component={UserProfile} />
+      <Drawer.Screen name="UserPersonalInfo" component={UserPersonalInfo} />
+      <Drawer.Screen name="GetProfessors" component={GetProfessors} />
+      <Drawer.Screen name="ProfessorProfile" component={ProfessorProfile} />
+      <Drawer.Screen name="ChangePassword" component={ChangePassword} />
+      <Drawer.Screen name="PasswordChangeConfirmation" component={PasswordChangeConfirmation} />
+      <Drawer.Screen name="UserSecurity" component={UserSecurity} />
+      <Drawer.Screen name="AdminDashboard" component={AdminDashboard} />
+      <Drawer.Screen name="AddProfessor" component={AddProfessor} />
+      <Drawer.Screen name="Programs" component={Programs} />
+      <Drawer.Screen name="Btech" component={Btech} />
+      <Drawer.Screen name="Mtech" component={Mtech} />
+      <Drawer.Screen name="Phd" component={Phd} />
+      <Drawer.Screen name="Research" component={Research} />
+      <Drawer.Screen name="Publications" component={Publications} />
+      <Drawer.Screen name="Projects" component={Projects} />
+      <Drawer.Screen name="ResearchW" component={ResearchW} />
+      <Drawer.Screen name="Placement" component={Placement} />
+      <Drawer.Screen name="NewsEvents" component={NewsEvents} />
+      <Drawer.Screen name="Contacts" component={Contacts} />
+      <Drawer.Screen name="Facilities" component={Facilities} />
+      <Drawer.Screen name="Gallery" component={Gallery} />
+      <Drawer.Screen name="Info" component={Info} />
+      <Drawer.Screen name="Notification" component={Notification} />
+      <Drawer.Screen name="Usereducation" component={Usereducation} />
+    </Drawer.Navigator>
+>>>>>>> f16417a4fe4b1ce4f87e01bbf39724aa6e59187d
   );
 };
 

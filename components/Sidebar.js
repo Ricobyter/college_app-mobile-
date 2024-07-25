@@ -76,6 +76,11 @@ const Sidebar = (props) => {
           <Icon name="photo" size={24} color="#004d40" />
           <Text style={styles.menuItemText}>Gallery</Text>
         </Pressable>
+        <Pressable style={styles.menuItem} onPress={() => navigation.navigate('Links')}>
+          <Icon name="rocket" size={24} color="#004d40" />
+          <Text style={styles.menuItemText}>Links</Text>
+        </Pressable>
+        
         <Pressable style={styles.menuItem} onPress={() => navigation.navigate('AdminDashboard')}>
           <Icon name="tachometer" size={24} color="#004d40" />
           <Text style={styles.menuItemText}>Dashboard</Text>

@@ -24,12 +24,13 @@ import Publications from './pages/Publications';
 import Projects from './pages/Projects';
 import ResearchW from './pages/ResearchW';
 import Placement from './pages/Placement';
-import NewsEvents from './pages/NewsEvents';
+import News from './pages/News';
 import Contacts from './pages/Contacts';
 import Facilities from './pages/Facilities';
 import Gallery from './pages/Gallery';
 import Info from './components/Info';
 import Notification from './components/Notification';
+import Links from './pages/Links';
 
 const Stack = createStackNavigator();
 
@@ -58,13 +59,14 @@ const AppStack = () => (
     <Stack.Screen name="Projects" component={Projects} />
     <Stack.Screen name="ResearchW" component={ResearchW} />
     <Stack.Screen name="Placement" component={Placement} />
-    <Stack.Screen name="NewsEvents" component={NewsEvents} />
+    <Stack.Screen name="News" component={News} />
     <Stack.Screen name="Contacts" component={Contacts} />
     <Stack.Screen name="Facilities" component={Facilities} />
     <Stack.Screen name="Gallery" component={Gallery} />
     <Stack.Screen name="Info" component={Info} />
     <Stack.Screen name="Notification" component={Notification} />
     <Stack.Screen name="Usereducation" component={Usereducation} />
+    <Stack.Screen name="Links" component={Links} />
   </Stack.Navigator>
 );
 

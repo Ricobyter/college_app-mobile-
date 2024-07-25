@@ -79,7 +79,7 @@ const MainPage = ({ navigation }) => {
             </Pressable>
           </View>
           <View style={styles.menuRow}>
-            <Pressable style={styles.menuItem} onPress={() => navigation.navigate('NewsEvents')}>
+            <Pressable style={styles.menuItem} onPress={() => navigation.navigate('News')}>
               <Icon name="newspaper-o" size={40} color="#00796b" />
               <Text style={styles.menuText}>News & Events</Text>
             </Pressable>

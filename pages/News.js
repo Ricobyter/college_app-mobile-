@@ -12,8 +12,8 @@ const NewsEvents = () => {
   ];
 
   const archiveData = [
-    { title: 'Conference on Brain Interface Computer Library', date: '2021-09-30', description: 'Brain Interface computer Library Description', link: 'http://cse.iiitdmj.ac.in/www.BrainInterfaceComputerLibrary.com' },
-    { title: 'PR101, PR201 Project Idea Submission', date: '2017-09-15', description: 'IIITDMJ CSE students of B.Tech 2016 and 2017 batch need to submit project ideas for PR101 and PR201.', link: 'https://docs.google.com/forms/d/e/1FAIpQLSeECvFMeZRzR-FabUIMvurT92PAOKgkRyqi7toY1IG8JoSM1g/formrestricted' },
+    { title: 'Conference on Brain Interface Computer Library', date: '2021-09-30', description: 'Brain Interface computer Library Description', link: 'http://cse.iiitdmj.ac.in/news_details.php' },
+    { title: 'PR101, PR201 Project Idea Submission', date: '2017-09-15', description: 'IIITDMJ CSE students of B.Tech 2016 and 2017 batch need to submit project ideas for PR101 and PR201.', link: 'http://cse.iiitdmj.ac.in/news_details.php' },
   ];
 
   const handleLinkPress = (url) => {

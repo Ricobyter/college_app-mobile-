@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'; // Ensure to install this package for icons
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Header from '../components/Header'; // Ensure to install this package for icons
 
 const Mtech = () => {
   const [expanded, setExpanded] = useState(null);
@@ -48,81 +49,88 @@ const Mtech = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>M.Tech Programs</Text>
-      </View>
-
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>A brief summary</Text>
-        <Text style={styles.sectionText}>
-          Institute offers a two-year postgraduate degree (M.Tech) programme in Computer Science & Engineering. 
-          The minimum residential requirement for the program is four semesters. The program requires completion 
-          of 70 credits of which at least 28 units shall be through coursework and 32 units through thesis work. 
-          Non-sponsored candidates who are Indian Nationals admitted to the regular full-time M.Tech Program through 
-          GATE are eligible for financial assistance. A teaching assistant can be asked to conduct labs, help an 
-          instructor in grading, and other course-related tasks. Currently, the assistantship amount is Rs. 12400 per month.
-        </Text>
-      </View>
-
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>What you will learn</Text>
-        <Text style={styles.sectionText}>
-          MTech degree program exposes students to a wide range of courses, combined with specialized research 
-          which culminates in a thesis. Such a combination gives students the breadth and depth necessary for pursuing 
-          careers in academics as well as in industry.
-        </Text>
-      </View>
-
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Expert teachers</Text>
-        <Text style={styles.sectionText}>- Extensive documentation provided</Text>
-        <Text style={styles.sectionText}>- Good infrastructure</Text>
-        <Text style={styles.sectionText}>- Best learning environment</Text>
-      </View>
-
-      {courses.map((semester, index) => (
-        <View key={index} style={styles.section}>
-          <TouchableOpacity onPress={() => handlePress(index)} style={styles.dropdownHeader}>
-            <Text style={styles.dropdownTitle}>{semester.semester}</Text>
-            <Icon name={expanded === index ? 'chevron-up' : 'chevron-down'} size={20} color="#004d40" />
-          </TouchableOpacity>
-          {expanded === index && (
-            <View style={styles.tableContainer}>
-              <View style={styles.table}>
-                <View style={[styles.tableRow, styles.tableHeaderRow]}>
-                  <Text style={[styles.tableCell, styles.tableHeader, styles.tableCellLeft]}>Course Id</Text>
-                  <Text style={[styles.tableCell, styles.tableHeader, styles.tableCellCenter]}>Course Name</Text>
-                  <Text style={[styles.tableCell, styles.tableHeader, styles.tableCellRight]}>Credits</Text>
-                </View>
-                {semester.courses.map((course, idx) => (
-                  <View key={idx} style={styles.tableRow}>
-                    <Text style={[styles.tableCell, styles.tableCellLeft]}>{course.id}</Text>
-                    <Text style={[styles.tableCell, styles.tableCellCenter]}>{course.name}</Text>
-                    <Text style={[styles.tableCell, styles.tableCellRight]}>{course.credits}</Text>
-                  </View>
-                ))}
-              </View>
-            </View>
-          )}
+    <View style={styles.container}>
+      <Header />
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>M.Tech Programs</Text>
         </View>
-      ))}
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>General Instructions</Text>
-        <Text style={styles.sectionText}>
-          Students are expected to follow the university's academic policies and maintain academic integrity.
-        </Text>
-      </View>
-    </ScrollView>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>A brief summary</Text>
+          <Text style={styles.sectionText}>
+            Institute offers a two-year postgraduate degree (M.Tech) programme in Computer Science & Engineering. 
+            The minimum residential requirement for the program is four semesters. The program requires completion 
+            of 70 credits of which at least 28 units shall be through coursework and 32 units through thesis work. 
+            Non-sponsored candidates who are Indian Nationals admitted to the regular full-time M.Tech Program through 
+            GATE are eligible for financial assistance. A teaching assistant can be asked to conduct labs, help an 
+            instructor in grading, and other course-related tasks. Currently, the assistantship amount is Rs. 12400 per month.
+          </Text>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>What you will learn</Text>
+          <Text style={styles.sectionText}>
+            MTech degree program exposes students to a wide range of courses, combined with specialized research 
+            which culminates in a thesis. Such a combination gives students the breadth and depth necessary for pursuing 
+            careers in academics as well as in industry.
+          </Text>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Expert teachers</Text>
+          <Text style={styles.sectionText}>- Extensive documentation provided</Text>
+          <Text style={styles.sectionText}>- Good infrastructure</Text>
+          <Text style={styles.sectionText}>- Best learning environment</Text>
+        </View>
+
+        {courses.map((semester, index) => (
+          <View key={index} style={styles.section}>
+            <TouchableOpacity onPress={() => handlePress(index)} style={styles.dropdownHeader}>
+              <Text style={styles.dropdownTitle}>{semester.semester}</Text>
+              <Icon name={expanded === index ? 'chevron-up' : 'chevron-down'} size={20} color="#004d40" />
+            </TouchableOpacity>
+            {expanded === index && (
+              <View style={styles.tableContainer}>
+                <View style={styles.table}>
+                  <View style={[styles.tableRow, styles.tableHeaderRow]}>
+                    <Text style={[styles.tableCell, styles.tableHeader, styles.tableCellLeft]}>Course Id</Text>
+                    <Text style={[styles.tableCell, styles.tableHeader, styles.tableCellCenter]}>Course Name</Text>
+                    <Text style={[styles.tableCell, styles.tableHeader, styles.tableCellRight]}>Credits</Text>
+                  </View>
+                  {semester.courses.map((course, idx) => (
+                    <View key={idx} style={styles.tableRow}>
+                      <Text style={[styles.tableCell, styles.tableCellLeft]}>{course.id}</Text>
+                      <Text style={[styles.tableCell, styles.tableCellCenter]}>{course.name}</Text>
+                      <Text style={[styles.tableCell, styles.tableCellRight]}>{course.credits}</Text>
+                    </View>
+                  ))}
+                </View>
+              </View>
+            )}
+          </View>
+        ))}
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>General Instructions</Text>
+          <Text style={styles.sectionText}>
+            Students are expected to follow the university's academic policies and maintain academic integrity.
+          </Text>
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
-    paddingTop: 50,
+    flex: 1,
     backgroundColor: '#f5f5f5',
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    padding: 20,
+    paddingTop: 20, // Adjusted to provide space for the Header
   },
   headerContainer: {
     marginBottom: 20,

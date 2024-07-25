@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { View, Text, Pressable, StyleSheet, ScrollView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllUsers } from "../store/userSlice";
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Using MaterialIcons
 import { useNavigation } from "@react-navigation/native";
+import Header from '../components/Header';
 
 const AdminDashboard = () => {
   const navigation = useNavigation();
@@ -27,68 +28,71 @@ const AdminDashboard = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Admin Dashboard</Text>
-      </View>
+      <Header />
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>Admin Dashboard</Text>
+        </View>
 
-      <View style={styles.statsContainer}>
-        <View style={styles.statItem}>
-          <Icon name="people" size={30} color="#00796b" />
-          <Text style={styles.statTitle}>Total</Text>
-          <Text style={styles.statValue}>{totalUsers}</Text>
-        </View>
-        <View style={styles.statItem}>
-          <Icon name="person" size={30} color="#00796b" />
-          <Text style={styles.statTitle}>Professors</Text>
-          <Text style={styles.statValue}>{professors}</Text>
-        </View>
-      </View>
-      <View style={styles.statsContainer}>
-        <View style={styles.statItem}>
-          <Icon name="person" size={30} color="#00796b" />
-          <Text style={styles.statTitle}>Students</Text>
-          <Text style={styles.statValue}>{students}</Text>
-        </View>
-        <View style={styles.statItem}>
-          <Icon name="person-add" size={30} color="#00796b" />
-          <Text style={styles.statTitle}>V.F.</Text>
-          <Text style={styles.statValue}>{visitingFaculty}</Text>
-        </View>
-      </View>
-
-      <Text style={styles.actionsTitle}>More actions</Text>
-
-      <View style={styles.actionsContainer}>
-        <Pressable
-          style={styles.actionButtonBlue}
-          onPress={() => navigation.navigate("AddProfessor")}
-        >
-          <View style={styles.actionButtonContent}>
-            <Text style={styles.actionButtonText}>Add Professor</Text>
-            <Icon name="person-add" size={24} color="white" />
+        <View style={styles.statsContainer}>
+          <View style={styles.statItem}>
+            <Icon name="people" size={30} color="#00796b" />
+            <Text style={styles.statTitle}>Total</Text>
+            <Text style={styles.statValue}>{totalUsers}</Text>
           </View>
-        </Pressable>
-
-        <Pressable
-          style={styles.actionButtonGreen}
-          onPress={() => navigation.navigate("AddStudent")}
-        >
-          <View style={styles.actionButtonContent}>
-            <Text style={styles.actionButtonText}>Add Student</Text>
-            <Icon name="person-add" size={24} color="white" />
+          <View style={styles.statItem}>
+            <Icon name="person" size={30} color="#00796b" />
+            <Text style={styles.statTitle}>Professors</Text>
+            <Text style={styles.statValue}>{professors}</Text>
           </View>
-        </Pressable>
-
-        <Pressable
-          style={styles.actionButtonYellow}
-          onPress={() => navigation.navigate("AddVisitingFaculty")}
-        >
-          <View style={styles.actionButtonContent}>
-            <Text style={styles.actionButtonText}>Add Visiting Faculty</Text>
-            <Icon name="person-add" size={24} color="white" />
+        </View>
+        <View style={styles.statsContainer}>
+          <View style={styles.statItem}>
+            <Icon name="person" size={30} color="#00796b" />
+            <Text style={styles.statTitle}>Students</Text>
+            <Text style={styles.statValue}>{students}</Text>
           </View>
-        </Pressable>
-      </View>
+          <View style={styles.statItem}>
+            <Icon name="person-add" size={30} color="#00796b" />
+            <Text style={styles.statTitle}>V.F.</Text>
+            <Text style={styles.statValue}>{visitingFaculty}</Text>
+          </View>
+        </View>
+
+        <Text style={styles.actionsTitle}>More actions</Text>
+
+        <View style={styles.actionsContainer}>
+          <Pressable
+            style={styles.actionButtonBlue}
+            onPress={() => navigation.navigate("AddProfessor")}
+          >
+            <View style={styles.actionButtonContent}>
+              <Text style={styles.actionButtonText}>Add Professor</Text>
+              <Icon name="person-add" size={24} color="white" />
+            </View>
+          </Pressable>
+
+          <Pressable
+            style={styles.actionButtonGreen}
+            onPress={() => navigation.navigate("AddStudent")}
+          >
+            <View style={styles.actionButtonContent}>
+              <Text style={styles.actionButtonText}>Add Student</Text>
+              <Icon name="person-add" size={24} color="white" />
+            </View>
+          </Pressable>
+
+          <Pressable
+            style={styles.actionButtonYellow}
+            onPress={() => navigation.navigate("AddVisitingFaculty")}
+          >
+            <View style={styles.actionButtonContent}>
+              <Text style={styles.actionButtonText}>Add Visiting Faculty</Text>
+              <Icon name="person-add" size={24} color="white" />
+            </View>
+          </Pressable>
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -96,21 +100,22 @@ const AdminDashboard = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    paddingTop: 50,
     backgroundColor: '#e0f2f1', // Light teal background
   },
+  scrollContainer: {
+    padding: 20,
+  },
   headerContainer: {
+    alignItems: 'center',
     marginBottom: 20,
-    backgroundColor: '#00796b', // Header background color
+    backgroundColor: '#ffffff', // Matching Programs header background
     paddingVertical: 10,
     borderRadius: 10,
-    alignItems: 'center',
   },
   headerText: {
-    fontSize: 24,
+    fontSize: 26, // Matching Programs header text size
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#004d40',
   },
   statsContainer: {
     flexDirection: 'row',
@@ -118,7 +123,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   statItem: {
-    backgroundColor: '#ffffff', // Dark teal background
+    backgroundColor: '#ffffff', // White background
     padding: 15,
     borderRadius: 10,
     width: '44%',
@@ -144,7 +149,6 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   actionsContainer: {
-    flex: 1,
     marginTop: 10,
   },
   actionButtonBlue: {

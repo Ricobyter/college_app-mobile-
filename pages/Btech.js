@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; // Ensure to install this package for icons
+import Header from '../components/Header'; // Import the Header component
 
 const Btech = () => {
   const [expanded, setExpanded] = useState(null);
@@ -95,75 +96,82 @@ const Btech = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>B.Tech Programs</Text>
-      </View>
-      
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>A brief summary</Text>
-        <Text style={styles.sectionText}>
-          Institute offers a four-year undergraduate degree (B.Tech) in Computer Science & Engineering. 
-          The curriculum provides flexibility and prepares students for advanced specializations.
-        </Text>
-      </View>
-      
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>What you will learn</Text>
-        <Text style={styles.sectionText}>
-          The program includes a core curriculum completed in the first four semesters, followed by professional courses in the latter semesters.
-        </Text>
-      </View>
-      
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Expert teachers</Text>
-        <Text style={styles.sectionText}>- Extensive documentation provided</Text>
-        <Text style={styles.sectionText}>- Good infrastructure</Text>
-        <Text style={styles.sectionText}>- Best learning environment</Text>
-      </View>
-      
-      {courses.map((semester, index) => (
-        <View key={index} style={styles.section}>
-          <TouchableOpacity onPress={() => handlePress(index)} style={styles.dropdownHeader}>
-            <Text style={styles.dropdownTitle}>{semester.semester}</Text>
-            <Icon name={expanded === index ? 'chevron-up' : 'chevron-down'} size={20} color="#004d40" />
-          </TouchableOpacity>
-          {expanded === index && (
-            <View style={styles.tableContainer}>
-              <View style={styles.table}>
-                <View style={[styles.tableRow, styles.tableHeaderRow]}>
-                  <Text style={[styles.tableCell, styles.tableHeader, styles.tableCellLeft]}>Course Id</Text>
-                  <Text style={[styles.tableCell, styles.tableHeader, styles.tableCellCenter]}>Course Name</Text>
-                  <Text style={[styles.tableCell, styles.tableHeader, styles.tableCellRight]}>Credits</Text>
-                </View>
-                {semester.courses.map((course, idx) => (
-                  <View key={idx} style={styles.tableRow}>
-                    <Text style={[styles.tableCell, styles.tableCellLeft]}>{course.id}</Text>
-                    <Text style={[styles.tableCell, styles.tableCellCenter]}>{course.name}</Text>
-                    <Text style={[styles.tableCell, styles.tableCellRight]}>{course.credits}</Text>
-                  </View>
-                ))}
-              </View>
-            </View>
-          )}
+    <View style={styles.container}>
+      <Header /> 
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>B.Tech Programs</Text>
         </View>
-      ))}
-      
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>General Instructions</Text>
-        <Text style={styles.sectionText}>
-          Students are expected to follow the university's academic policies and maintain academic integrity.
-        </Text>
-      </View>
-    </ScrollView>
+        
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>A brief summary</Text>
+          <Text style={styles.sectionText}>
+            Institute offers a four-year undergraduate degree (B.Tech) in Computer Science & Engineering. 
+            The curriculum provides flexibility and prepares students for advanced specializations.
+          </Text>
+        </View>
+        
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>What you will learn</Text>
+          <Text style={styles.sectionText}>
+            The program includes a core curriculum completed in the first four semesters, followed by professional courses in the latter semesters.
+          </Text>
+        </View>
+        
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Expert teachers</Text>
+          <Text style={styles.sectionText}>- Extensive documentation provided</Text>
+          <Text style={styles.sectionText}>- Good infrastructure</Text>
+          <Text style={styles.sectionText}>- Best learning environment</Text>
+        </View>
+        
+        {courses.map((semester, index) => (
+          <View key={index} style={styles.section}>
+            <TouchableOpacity onPress={() => handlePress(index)} style={styles.dropdownHeader}>
+              <Text style={styles.dropdownTitle}>{semester.semester}</Text>
+              <Icon name={expanded === index ? 'chevron-up' : 'chevron-down'} size={20} color="#004d40" />
+            </TouchableOpacity>
+            {expanded === index && (
+              <View style={styles.tableContainer}>
+                <View style={styles.table}>
+                  <View style={[styles.tableRow, styles.tableHeaderRow]}>
+                    <Text style={[styles.tableCell, styles.tableHeader, styles.tableCellLeft]}>Course Id</Text>
+                    <Text style={[styles.tableCell, styles.tableHeader, styles.tableCellCenter]}>Course Name</Text>
+                    <Text style={[styles.tableCell, styles.tableHeader, styles.tableCellRight]}>Credits</Text>
+                  </View>
+                  {semester.courses.map((course, idx) => (
+                    <View key={idx} style={styles.tableRow}>
+                      <Text style={[styles.tableCell, styles.tableCellLeft]}>{course.id}</Text>
+                      <Text style={[styles.tableCell, styles.tableCellCenter]}>{course.name}</Text>
+                      <Text style={[styles.tableCell, styles.tableCellRight]}>{course.credits}</Text>
+                    </View>
+                  ))}
+                </View>
+              </View>
+            )}
+          </View>
+        ))}
+        
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>General Instructions</Text>
+          <Text style={styles.sectionText}>
+            Students are expected to follow the university's academic policies and maintain academic integrity.
+          </Text>
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
-    paddingTop: 50,
+    flex: 1,
     backgroundColor: '#f5f5f5',
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    padding: 20,
+    paddingTop: 20, // Adjusted to provide space for the Header
   },
   headerContainer: {
     marginBottom: 20,

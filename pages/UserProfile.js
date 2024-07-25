@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
-import { View, Text, Image, Pressable, Alert, StyleSheet } from 'react-native';
+import { View, Text, Image, Pressable, Alert, StyleSheet, ScrollView } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUser } from '../store/userSlice';
 import Icon from 'react-native-vector-icons/FontAwesome'; // Import FontAwesome icons
 import { signOut } from 'firebase/auth'; // Import Firebase signOut
 import { FIREBASE_AUTH } from '../FirebaseConfig'; // Import your Firebase configuration
 import { clearUser } from '../store/userSlice'; // Import clearUser action
+import Header from '../components/Header';
 
 const UserProfile = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -42,60 +43,63 @@ const UserProfile = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>User Profile</Text>
-      </View>
-      <View style={styles.imageContainer}>
-        <Image
-          source={{ uri: photoURL }}
-          style={styles.profileImage}
-        />
-      </View>
-      <View style={styles.detailsContainer}>
-        <Text style={styles.username}>{username}</Text>
-        <Text style={styles.designation}>{designation}</Text>
-      </View>
-      <View style={styles.menuContainer}>
-        <Pressable
-          style={styles.menuItem}
-          onPress={() => navigation.navigate("UserPersonalInfo")}
-        >
-          <View style={styles.menuIconTextContainer}>
-            <Icon name="user" size={28} color="#004d40" style={styles.menuIcon} />
-            <Text style={styles.menuText}>Personal Details</Text>
-          </View>
-        </Pressable>
+      <Header />
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>User Profile</Text>
+        </View>
+        <View style={styles.imageContainer}>
+          <Image
+            source={{ uri: photoURL }}
+            style={styles.profileImage}
+          />
+        </View>
+        <View style={styles.detailsContainer}>
+          <Text style={styles.username}>{username}</Text>
+          <Text style={styles.designation}>{designation}</Text>
+        </View>
+        <View style={styles.menuContainer}>
+          <Pressable
+            style={styles.menuItem}
+            onPress={() => navigation.navigate("UserPersonalInfo")}
+          >
+            <View style={styles.menuIconTextContainer}>
+              <Icon name="user" size={28} color="#004d40" style={styles.menuIcon} />
+              <Text style={styles.menuText}>Personal Details</Text>
+            </View>
+          </Pressable>
 
-        <Pressable
-          style={styles.menuItem}
-          onPress={() => navigation.navigate("Usereducation")}
-        >
-          <View style={styles.menuIconTextContainer}>
-            <Icon name="graduation-cap" size={28} color="#004d40" style={styles.menuIcon} />
-            <Text style={styles.menuText}>Education</Text>
-          </View>
-        </Pressable>
+          <Pressable
+            style={styles.menuItem}
+            onPress={() => navigation.navigate("Usereducation")}
+          >
+            <View style={styles.menuIconTextContainer}>
+              <Icon name="graduation-cap" size={28} color="#004d40" style={styles.menuIcon} />
+              <Text style={styles.menuText}>Education</Text>
+            </View>
+          </Pressable>
 
-        <Pressable
-          style={styles.menuItem}
-          onPress={() => navigation.navigate("UserSecurity")}
-        >
-          <View style={styles.menuIconTextContainer}>
-            <Icon name="key" size={28} color="#004d40" style={styles.menuIcon} />
-            <Text style={styles.menuText}>Security</Text>
-          </View>
-        </Pressable>
+          <Pressable
+            style={styles.menuItem}
+            onPress={() => navigation.navigate("UserSecurity")}
+          >
+            <View style={styles.menuIconTextContainer}>
+              <Icon name="key" size={28} color="#004d40" style={styles.menuIcon} />
+              <Text style={styles.menuText}>Security</Text>
+            </View>
+          </Pressable>
 
-        <Pressable
-          style={styles.menuItem}
-          onPress={handleSignOut}
-        >
-          <View style={styles.menuIconTextContainer}>
-            <Icon name="cog" size={28} color="#004d40" style={styles.menuIcon} />
-            <Text style={styles.menuText}>Signout</Text>
-          </View>
-        </Pressable>
-      </View>
+          <Pressable
+            style={styles.menuItem}
+            onPress={handleSignOut}
+          >
+            <View style={styles.menuIconTextContainer}>
+              <Icon name="cog" size={28} color="#004d40" style={styles.menuIcon} />
+              <Text style={styles.menuText}>Signout</Text>
+            </View>
+          </Pressable>
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -103,25 +107,23 @@ const UserProfile = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    paddingTop: 10,
     backgroundColor: '#e0f2f1', // Background color matching the theme
-    alignItems: 'center', // Center content horizontally
-    justifyContent: 'center', // Center content vertically
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    padding: 20,
   },
   headerContainer: {
-    marginBottom: 70,
-    backgroundColor: '#00796b', // Header background color matching the Gallery header
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 10,
     alignItems: 'center',
-    width: '100%',
+    marginBottom: 20,
+    backgroundColor: '#ffffff', // Matching Programs header background
+    paddingVertical: 10,
+    borderRadius: 10,
   },
   headerText: {
-    fontSize: 25,
+    fontSize: 26, // Matching Programs header text size
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#004d40',
   },
   imageContainer: {
     alignItems: 'center',

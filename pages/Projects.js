@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'; // Ensure to install this package for icons
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Header from '../components/Header';
 
 const Projects = () => {
   const [expanded, setExpanded] = useState(null);
@@ -37,58 +38,64 @@ const Projects = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Projects</Text>
-      </View>
-
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Search Projects</Text>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search by project title"
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-        />
-      </View>
-
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Select Status</Text>
-        <TouchableOpacity onPress={() => handlePress(0)} style={styles.dropdownHeader}>
-          <Text style={styles.dropdownTitle}>{selectedStatus}</Text>
-          <Icon name={expanded === 0 ? 'chevron-up' : 'chevron-down'} size={20} color="#004d40" />
-        </TouchableOpacity>
-        {expanded === 0 && (
-          <View style={styles.dropdownContent}>
-            {statuses.map((status) => (
-              <TouchableOpacity key={status} onPress={() => setSelectedStatus(status)} style={styles.statusItem}>
-                <Text style={styles.statusText}>{status}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        )}
-      </View>
-
-      {filteredProjects.map((project, index) => (
-        <View key={index} style={styles.projectItem}>
-          <Text style={styles.projectTitle}>{project.title}</Text>
-          <Text style={styles.projectDetail}>Faculty: {project.faculty}</Text>
-          <Text style={styles.projectDetail}>Start: {project.start}</Text>
-          <Text style={styles.projectDetail}>End: {project.end}</Text>
-          <Text style={styles.projectDetail}>Funding Agency: {project.agency}</Text>
-          <Text style={styles.projectDetail}>Funding Amount: {project.amount}</Text>
-          <Text style={styles.projectDetail}>Status: {project.status}</Text>
+    <View style={styles.container}>
+      <Header />
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>Projects</Text>
         </View>
-      ))}
-    </ScrollView>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Search Projects</Text>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search by project title"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Select Status</Text>
+          <TouchableOpacity onPress={() => handlePress(0)} style={styles.dropdownHeader}>
+            <Text style={styles.dropdownTitle}>{selectedStatus}</Text>
+            <Icon name={expanded === 0 ? 'chevron-up' : 'chevron-down'} size={20} color="#004d40" />
+          </TouchableOpacity>
+          {expanded === 0 && (
+            <View style={styles.dropdownContent}>
+              {statuses.map((status) => (
+                <TouchableOpacity key={status} onPress={() => setSelectedStatus(status)} style={styles.statusItem}>
+                  <Text style={styles.statusText}>{status}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
+        </View>
+
+        {filteredProjects.map((project, index) => (
+          <View key={index} style={styles.projectItem}>
+            <Text style={styles.projectTitle}>{project.title}</Text>
+            <Text style={styles.projectDetail}>Faculty: {project.faculty}</Text>
+            <Text style={styles.projectDetail}>Start: {project.start}</Text>
+            <Text style={styles.projectDetail}>End: {project.end}</Text>
+            <Text style={styles.projectDetail}>Funding Agency: {project.agency}</Text>
+            <Text style={styles.projectDetail}>Funding Amount: {project.amount}</Text>
+            <Text style={styles.projectDetail}>Status: {project.status}</Text>
+          </View>
+        ))}
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
-    paddingTop: 50,
+    flex: 1,
     backgroundColor: '#f5f5f5',
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    padding: 20,
   },
   headerContainer: {
     marginBottom: 20,

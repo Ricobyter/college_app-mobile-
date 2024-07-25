@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getUser } from '../store/userSlice'; // Adjust the path as necessary
 import { View, Text, Image, ScrollView, StyleSheet } from 'react-native';
 import { useRoute } from '@react-navigation/native';
+import Header from '../components/Header';
 
 const ProfessorProfile = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -26,61 +27,65 @@ const ProfessorProfile = ({ navigation }) => {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Professor Profile</Text>
-      </View>
+    <View style={styles.container}>
+      <Header />
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>Profile</Text>
+        </View>
 
-      <View style={styles.contentContainer}>
-        <Image
-          source={{
-            uri: photoURL || 'https://via.placeholder.com/150',
-          }}
-          style={styles.profileImage}
-        />
-        <Text style={styles.username}>{username}</Text>
-        <Text style={styles.designation}>{designation}</Text>
-        <Text style={styles.bio}>{bio}</Text>
-        <Text style={styles.infoText}>Email: {userEmail}</Text>
-        <Text style={styles.infoText}>Phone: {phone}</Text>
-        <Text style={styles.infoText}>Birth Place: {birthPlace}</Text>
-        <Text style={styles.sectionTitle}>Education Qualifications:</Text>
-        {educationQualifications && educationQualifications.length > 0 ? (
-          educationQualifications.map((qualification, index) => (
-            <Text key={index} style={styles.qualificationText}>
-              {qualification}
-            </Text>
-          ))
-        ) : (
-          <Text style={styles.qualificationText}>No qualifications listed</Text>
-        )}
-      </View>
-    </ScrollView>
+        <View style={styles.contentContainer}>
+          <Image
+            source={{
+              uri: photoURL || 'https://via.placeholder.com/150',
+            }}
+            style={styles.profileImage}
+          />
+          <Text style={styles.username}>{username}</Text>
+          <Text style={styles.designation}>{designation}</Text>
+          <Text style={styles.bio}>{bio}</Text>
+          <Text style={styles.infoText}>Email: {userEmail}</Text>
+          <Text style={styles.infoText}>Phone: {phone}</Text>
+          <Text style={styles.infoText}>Birth Place: {birthPlace}</Text>
+          <Text style={styles.sectionTitle}>Education Qualifications:</Text>
+          {educationQualifications && educationQualifications.length > 0 ? (
+            educationQualifications.map((qualification, index) => (
+              <Text key={index} style={styles.qualificationText}>
+                {qualification}
+              </Text>
+            ))
+          ) : (
+            <Text style={styles.qualificationText}>No qualifications listed</Text>
+          )}
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    padding: 20,
-    paddingTop: 50,
     backgroundColor: '#e0f2f1', // Background color matching the theme
   },
+  scrollContainer: {
+    flexGrow: 1,
+    padding: 20,
+  },
   headerContainer: {
+    alignItems: 'center',
     marginBottom: 20,
-    backgroundColor: '#00796b', // Header background color
+    backgroundColor: '#ffffff', // Matching Programs header background
     paddingVertical: 10,
     borderRadius: 10,
-    alignItems: 'center',
   },
   headerText: {
-    fontSize: 24,
+    fontSize: 26, // Matching Programs header text size
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#004d40',
   },
   contentContainer: {
     alignItems: 'center',
-    padding: 60,
   },
   profileImage: {
     width: 180,

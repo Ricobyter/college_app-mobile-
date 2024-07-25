@@ -1,77 +1,69 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; // Import your icon library
+import Header from '../components/Header'; // Import the Header component
 
 const Research = ({ navigation }) => {
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Research</Text>
-      </View>
+    <View style={styles.container}>
+      <Header />
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Explore Our Research</Text>
-        <Text style={styles.sectionText}>
-          Dive into our ongoing research, publications, and projects. Tap any section to learn more.
-        </Text>
-      </View>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Explore Our Research</Text>
+          <Text style={styles.sectionText}>
+            Dive into our ongoing research, publications, and projects. Tap any section to learn more.
+          </Text>
+        </View>
 
-      <View style={styles.researchCategory}>
-        <Pressable
-          style={styles.researchItem}
-          onPress={() => navigation.navigate('Publications')}
-        >
-          <Icon name="book" size={30} color="#4CAF50" style={styles.researchIcon} />
-          <View style={styles.researchInfo}>
-            <Text style={styles.researchTitle}>Publications</Text>
-            <Text style={styles.researchDescription}>Explore our published research papers and articles.</Text>
-          </View>
-        </Pressable>
+        <View style={styles.researchCategory}>
+          <Pressable
+            style={styles.researchItem}
+            onPress={() => navigation.navigate('Publications')}
+          >
+            <Icon name="book" size={30} color="#4CAF50" style={styles.researchIcon} />
+            <View style={styles.researchInfo}>
+              <Text style={styles.researchTitle}>Publications</Text>
+              <Text style={styles.researchDescription}>Explore our published research papers and articles.</Text>
+            </View>
+          </Pressable>
 
-        <Pressable
-          style={styles.researchItem}
-          onPress={() => navigation.navigate('Projects')}
-        >
-          <Icon name="cogs" size={30} color="#2196F3" style={styles.researchIcon} />
-          <View style={styles.researchInfo}>
-            <Text style={styles.researchTitle}>Projects</Text>
-            <Text style={styles.researchDescription}>Discover the innovative projects currently underway.</Text>
-          </View>
-        </Pressable>
+          <Pressable
+            style={styles.researchItem}
+            onPress={() => navigation.navigate('Projects')}
+          >
+            <Icon name="cogs" size={30} color="#2196F3" style={styles.researchIcon} />
+            <View style={styles.researchInfo}>
+              <Text style={styles.researchTitle}>Projects</Text>
+              <Text style={styles.researchDescription}>Discover the innovative projects currently underway.</Text>
+            </View>
+          </Pressable>
 
-        <Pressable
-          style={styles.researchItem}
-          onPress={() => navigation.navigate('ResearchW')}
-        >
-          <Icon name="flask" size={30} color="#FF9800" style={styles.researchIcon} />
-          <View style={styles.researchInfo}>
-            <Text style={styles.researchTitle}>Research Work</Text>
-            <Text style={styles.researchDescription}>Learn about our research methodologies and findings.</Text>
-          </View>
-        </Pressable>
-      </View>
-    </ScrollView>
+          <Pressable
+            style={styles.researchItem}
+            onPress={() => navigation.navigate('ResearchW')}
+          >
+            <Icon name="flask" size={30} color="#FF9800" style={styles.researchIcon} />
+            <View style={styles.researchInfo}>
+              <Text style={styles.researchTitle}>Research Work</Text>
+              <Text style={styles.researchDescription}>Learn about our research methodologies and findings.</Text>
+            </View>
+          </Pressable>
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
-    paddingTop: 50,
+    flex: 1,
     backgroundColor: '#e0f2f1', // Light teal background
+  },
+  scrollContainer: {
     flexGrow: 1,
-  },
-  headerContainer: {
-    alignItems: 'center',
-    marginBottom: 20,
-    backgroundColor: '#00796b', // Dark teal background
-    paddingVertical: 10,
-    borderRadius: 10,
-  },
-  headerText: {
-    fontSize: 26, // Increased size for prominence
-    fontWeight: 'bold',
-    color: '#fff',
+    padding: 20,
+    paddingTop: 20,
   },
   section: {
     marginBottom: 20,

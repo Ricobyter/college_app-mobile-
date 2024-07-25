@@ -5,6 +5,7 @@ import { getUser, updateUser } from '../../store/userSlice';
 import * as ImagePicker from 'expo-image-picker';
 import Toast from 'react-native-toast-message';
 
+
 const UserPersonalInfo = ({ navigation }) => {
   const dispatch = useDispatch();
   const { uid, username, photoURL, designation, userEmail, phone, bio, error } = useSelector((state) => state.user);

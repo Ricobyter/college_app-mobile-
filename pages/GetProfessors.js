@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getProfessors } from "../store/userSlice"; // Adjust the path as necessary
-import LoadingScreen from "../components/LoadingScreen"; // Adjust the path as necessary
 import { View, Text, TextInput, ScrollView, StyleSheet, Image, TouchableOpacity } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Import the icon library
+import Header from '../components/Header'; // Import the Header component
 
 const GetProfessors = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -37,71 +37,76 @@ const GetProfessors = ({ navigation }) => {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
+      <Header />
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Professors</Text>
-      </View>
+          <Text style={styles.headerText}>People</Text>
+        </View>
 
-      {/* Search Input with Icon */}
-      <View style={styles.searchContainer}>
-        <Icon
-          name="search"
-          size={20}
-          color="#004d40"
-          style={styles.searchIcon}
-        />
-        <TextInput
-          placeholder="Search Professors"
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          style={styles.searchInput}
-        />
-      </View>
+        {/* Search Input with Icon */}
+        <View style={styles.searchContainer}>
+          <Icon
+            name="search"
+            size={20}
+            color="#004d40"
+            style={styles.searchIcon}
+          />
+          <TextInput
+            placeholder="Search Professors"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            style={styles.searchInput}
+          />
+        </View>
 
-      {filteredProfessors && filteredProfessors.length > 0 ? (
-        filteredProfessors.map((professor) => (
-          <TouchableOpacity
-            key={professor.id}
-            style={styles.professorCard}
-            onPress={() => navigation.navigate("ProfessorProfile", { professorId: professor.id })}
-          >
-            <View style={styles.imageContainer}>
-              <Image
-                source={{ uri: professor.photoURL || "https://via.placeholder.com/100" }}
-                style={styles.profileImage}
-              />
-            </View>
-            <View style={styles.detailsContainer}>
-              <Text style={styles.professorName}>{professor.username}</Text>
-              <Text style={styles.professorEmail}>{professor.email}</Text>
-            </View>
-          </TouchableOpacity>
-        ))
-      ) : (
-        <Text style={styles.noProfessorsText}>No professors found</Text>
-      )}
-    </ScrollView>
+        {filteredProfessors && filteredProfessors.length > 0 ? (
+          filteredProfessors.map((professor) => (
+            <TouchableOpacity
+              key={professor.id}
+              style={styles.professorCard}
+              onPress={() => navigation.navigate("ProfessorProfile", { professorId: professor.id })}
+            >
+              <View style={styles.imageContainer}>
+                <Image
+                  source={{ uri: professor.photoURL || "https://via.placeholder.com/100" }}
+                  style={styles.profileImage}
+                />
+              </View>
+              <View style={styles.detailsContainer}>
+                <Text style={styles.professorName}>{professor.username}</Text>
+                <Text style={styles.professorEmail}>{professor.email}</Text>
+              </View>
+            </TouchableOpacity>
+          ))
+        ) : (
+          <Text style={styles.noProfessorsText}>No professors found</Text>
+        )}
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#e0f2f1', // Background color matching the theme
+  },
+  scrollContainer: {
+    flexGrow: 1,
     padding: 20,
-    paddingTop: 50,
-    backgroundColor: '#e0f2f1',
   },
   headerContainer: {
+    alignItems: 'center',
     marginBottom: 20,
-    backgroundColor: '#00796b', // Header background color matching Gallery
+    backgroundColor: '#ffffff', // Matching Programs header background
     paddingVertical: 10,
     borderRadius: 10,
-    alignItems: 'center',
   },
   headerText: {
-    fontSize: 24, // Same as in Gallery
+    fontSize: 26, // Matching Programs header text size
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#004d40',
   },
   searchContainer: {
     flexDirection: 'row',

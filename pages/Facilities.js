@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'; // Ensure to install this package for icons
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Header from '../components/Header';
 
 const Facilities = () => {
   const [expanded, setExpanded] = useState(null);
@@ -76,64 +77,69 @@ const Facilities = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Facilities</Text>
-      </View>
+    <View style={styles.container}>
+      <Header />
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>Facilities</Text>
+        </View>
 
-      <View style={styles.dropdownSection}>
-        <TouchableOpacity onPress={() => handlePress(0)} style={styles.dropdownHeader}>
-          <Text style={styles.dropdownTitle}>{selectedCategory}</Text>
-          <Icon name={expanded === 0 ? 'chevron-up' : 'chevron-down'} size={20} color="#004d40" />
-        </TouchableOpacity>
-        {expanded === 0 && (
-          <View style={styles.dropdownContent}>
-            {categories.map((category) => (
-              <TouchableOpacity
-                key={category}
-                onPress={() => {
-                  setSelectedCategory(category);
-                  setExpanded(null);
-                }}
-                style={styles.categoryItem}
-              >
-                <Text style={styles.categoryText}>{category}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        )}
-      </View>
+        <View style={styles.dropdownSection}>
+          <TouchableOpacity onPress={() => handlePress(0)} style={styles.dropdownHeader}>
+            <Text style={styles.dropdownTitle}>{selectedCategory}</Text>
+            <Icon name={expanded === 0 ? 'chevron-up' : 'chevron-down'} size={20} color="#004d40" />
+          </TouchableOpacity>
+          {expanded === 0 && (
+            <View style={styles.dropdownContent}>
+              {categories.map((category) => (
+                <TouchableOpacity
+                  key={category}
+                  onPress={() => {
+                    setSelectedCategory(category);
+                    setExpanded(null);
+                  }}
+                  style={styles.categoryItem}
+                >
+                  <Text style={styles.categoryText}>{category}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
+        </View>
 
-      <View style={styles.section}>
-        {facilities[selectedCategory]?.map((facility, index) => (
-          <View key={index} style={styles.facility}>
-            <Text style={styles.facilityTitle}>{facility.title}</Text>
-            <Text style={styles.facilityDescription}>{facility.description}</Text>
-          </View>
-        ))}
-      </View>
-    </ScrollView>
+        <View style={styles.section}>
+          {facilities[selectedCategory]?.map((facility, index) => (
+            <View key={index} style={styles.facility}>
+              <Text style={styles.facilityTitle}>{facility.title}</Text>
+              <Text style={styles.facilityDescription}>{facility.description}</Text>
+            </View>
+          ))}
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    padding: 20,
-    paddingTop: 50,
     backgroundColor: '#e0f2f1', // Matching overall theme background
   },
+  scrollContainer: {
+    padding: 20,
+    paddingTop: 20, // Adjusted to provide space for the Header
+  },
   headerContainer: {
+    alignItems: 'center',
     marginBottom: 20,
-    backgroundColor: '#00796b', // Matching header background color
+    backgroundColor: '#ffffff', // Matching Programs header background
     paddingVertical: 10,
     borderRadius: 10,
-    alignItems: 'center',
   },
   headerText: {
-    fontSize: 24,
+    fontSize: 26, // Matching Programs header text size
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#004d40',
   },
   dropdownSection: {
     marginBottom: 20,

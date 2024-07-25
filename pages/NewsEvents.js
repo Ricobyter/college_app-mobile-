@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Header from '../components/Header'; // Import the Header component
 
 const NewsEvents = () => {
   const [showCurrent, setShowCurrent] = useState(true); // State to track current or archive view
@@ -19,64 +21,76 @@ const NewsEvents = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>News & Events</Text>
-      </View>
+    <View style={styles.container}>
+      <Header /> 
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>News & Events</Text>
+        </View>
 
-      <View style={styles.section}>
-        <TouchableOpacity onPress={() => setShowCurrent(true)} style={[styles.tab, showCurrent ? styles.activeTab : styles.inactiveTab]}>
-          <Text style={[styles.tabTitle, showCurrent ? styles.activeTabText : styles.inactiveTabText]}>Current</Text>
-        </TouchableOpacity>
-        
-        {showCurrent && (
-          <View style={styles.subsection}>
-            {newsData.map((item, index) => (
-              <View key={index} style={styles.newsItem}>
-                <Text style={styles.newsTitle}>{item.title}</Text>
-                <Text style={styles.newsDate}>{item.date}</Text>
-                <Text style={styles.newsDescription}>{item.description}</Text>
-              </View>
-            ))}
-          </View>
-        )}
+        <View style={styles.dropdownSection}>
+          <TouchableOpacity onPress={() => setShowCurrent(true)} style={[styles.tab, showCurrent ? styles.activeTab : styles.inactiveTab]}>
+            <Text style={[styles.tabTitle, showCurrent ? styles.activeTabText : styles.inactiveTabText]}>Current</Text>
+          </TouchableOpacity>
+          
+          {showCurrent && (
+            <View style={styles.subsection}>
+              {newsData.length > 0 ? (
+                newsData.map((item, index) => (
+                  <View key={index} style={styles.newsItem}>
+                    <Text style={styles.newsTitle}>{item.title}</Text>
+                    <Text style={styles.newsDate}>{item.date}</Text>
+                    <Text style={styles.newsDescription}>{item.description}</Text>
+                  </View>
+                ))
+              ) : (
+                <Text style={styles.noDataText}>No current news available.</Text>
+              )}
+            </View>
+          )}
 
-        <TouchableOpacity onPress={() => setShowCurrent(false)} style={[styles.tab, !showCurrent ? styles.activeTab : styles.inactiveTab]}>
-          <Text style={[styles.tabTitle, !showCurrent ? styles.activeTabText : styles.inactiveTabText]}>Archive</Text>
-        </TouchableOpacity>
-        
-        {!showCurrent && (
-          <View style={styles.subsection}>
-            {archiveData.map((item, index) => (
-              <View key={index} style={styles.newsItem}>
-                <Text style={styles.newsTitle}>{item.title}</Text>
-                <Text style={styles.newsDate}>{item.date}</Text>
-                <Text style={styles.newsDescription}>{item.description}</Text>
-                {item.link && (
-                  <TouchableOpacity onPress={() => handleLinkPress(item.link)} style={styles.linkButton}>
-                    <Text style={styles.linkText}>Read More</Text>
-                  </TouchableOpacity>
-                )}
-              </View>
-            ))}
-          </View>
-        )}
-      </View>
-    </ScrollView>
+          <TouchableOpacity onPress={() => setShowCurrent(false)} style={[styles.tab, !showCurrent ? styles.activeTab : styles.inactiveTab]}>
+            <Text style={[styles.tabTitle, !showCurrent ? styles.activeTabText : styles.inactiveTabText]}>Archive</Text>
+          </TouchableOpacity>
+          
+          {!showCurrent && (
+            <View style={styles.subsection}>
+              {archiveData.length > 0 ? (
+                archiveData.map((item, index) => (
+                  <View key={index} style={styles.newsItem}>
+                    <Text style={styles.newsTitle}>{item.title}</Text>
+                    <Text style={styles.newsDate}>{item.date}</Text>
+                    <Text style={styles.newsDescription}>{item.description}</Text>
+                    {item.link && (
+                      <TouchableOpacity onPress={() => handleLinkPress(item.link)} style={styles.linkButton}>
+                        <Text style={styles.linkText}>Read More</Text>
+                      </TouchableOpacity>
+                    )}
+                  </View>
+                ))
+              ) : (
+                <Text style={styles.noDataText}>No archived news available.</Text>
+              )}
+            </View>
+          )}
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
-    paddingTop: 50,
+    flex: 1,
     backgroundColor: '#e0f2f1', // Matching overall theme background
+  },
+  scrollContainer: {
     paddingHorizontal: 20,
     paddingVertical: 24,
   },
   headerContainer: {
     marginBottom: 20,
-    backgroundColor: '#00796b', // Header background color
+    backgroundColor: '#ffffff', // Header background color
     paddingVertical: 10,
     borderRadius: 10,
     alignItems: 'center',
@@ -84,20 +98,14 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#004d40',
   },
-  section: {
+  dropdownSection: {
     backgroundColor: '#ffffff', // Section background color
     borderRadius: 8,
     elevation: 3, // Shadow effect for Android
     padding: 16,
     marginBottom: 20,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 16,
   },
   tab: {
     paddingVertical: 10,
@@ -153,6 +161,11 @@ const styles = StyleSheet.create({
   linkText: {
     color: '#fff',
     fontSize: 16,
+    textAlign: 'center',
+  },
+  noDataText: {
+    fontSize: 16,
+    color: '#777',
     textAlign: 'center',
   },
 });

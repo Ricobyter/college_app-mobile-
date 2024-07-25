@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Header from '../components/Header';
 
 const Gallery = () => {
   const [expanded, setExpanded] = useState(null);
@@ -37,48 +38,53 @@ const Gallery = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Gallery</Text>
-      </View>
-
-      {Object.keys(sections).map((section) => (
-        <View key={section} style={styles.dropdownSection}>
-          <TouchableOpacity onPress={() => handlePress(section)} style={styles.dropdownHeader}>
-            <Text style={styles.dropdownTitle}>{section}</Text>
-            <Icon name={expanded === section ? 'chevron-up' : 'chevron-down'} size={20} color="#004d40" />
-          </TouchableOpacity>
-          {expanded === section && (
-            <View style={styles.dropdownContent}>
-              {sections[section].map((image, index) => (
-                <Image key={index} source={image} style={styles.image} />
-              ))}
-            </View>
-          )}
+    <View style={styles.container}>
+      <Header />
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>Gallery</Text>
         </View>
-     ) )}
-    </ScrollView>
+
+        {Object.keys(sections).map((section) => (
+          <View key={section} style={styles.dropdownSection}>
+            <TouchableOpacity onPress={() => handlePress(section)} style={styles.dropdownHeader}>
+              <Text style={styles.dropdownTitle}>{section}</Text>
+              <Icon name={expanded === section ? 'chevron-up' : 'chevron-down'} size={20} color="#004d40" />
+            </TouchableOpacity>
+            {expanded === section && (
+              <View style={styles.dropdownContent}>
+                {sections[section].map((image, index) => (
+                  <Image key={index} source={image} style={styles.image} />
+                ))}
+              </View>
+            )}
+          </View>
+        ))}
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    padding: 20,
-    paddingTop: 50,
     backgroundColor: '#e0f2f1', // Background color matching the theme
   },
+  scrollContainer: {
+    padding: 20,
+    paddingTop: 20, // Adjusted to provide space for the Header
+  },
   headerContainer: {
+    alignItems: 'center',
     marginBottom: 20,
-    backgroundColor: '#00796b', // Header background color
+    backgroundColor: '#ffffff', // Matching Programs header background
     paddingVertical: 10,
     borderRadius: 10,
-    alignItems: 'center',
   },
   headerText: {
-    fontSize: 24,
+    fontSize: 26, // Matching Programs header text size
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#004d40',
   },
   dropdownSection: {
     marginBottom: 20,

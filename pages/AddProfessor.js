@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Pressable, Image, Alert, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Pressable, Image, Alert, StyleSheet, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Use MaterialIcons for consistency
 import * as ImagePicker from 'expo-image-picker';
 import { useDispatch, useSelector } from 'react-redux';
 import { sendWelcomeEmail } from '../store/emailSlice';
+import Header from '../components/Header';
 
 const AddProfessor = ({ navigation }) => {
   const [name, setName] = useState('');
@@ -53,72 +54,77 @@ const AddProfessor = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      
-
-      <Pressable onPress={handleImagePicker} style={styles.imagePicker}>
-        <View style={styles.imageContainer}>
-          {profilePic ? (
-            <Image source={{ uri: profilePic }} style={styles.profileImage} />
-          ) : (
-            <Icon name="account-circle" size={100} color="#004d40" />
-          )}
-          <Text style={styles.imageText}>Select Profile Picture</Text>
+      <Header />
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>Add Professor</Text>
         </View>
-      </Pressable>
 
-      <TextInput
-        placeholder="Name"
-        value={name}
-        onChangeText={setName}
-        style={styles.input}
-      />
+        <Pressable onPress={handleImagePicker} style={styles.imagePicker}>
+          <View style={styles.imageContainer}>
+            {profilePic ? (
+              <Image source={{ uri: profilePic }} style={styles.profileImage} />
+            ) : (
+              <Icon name="account-circle" size={100} color="#004d40" />
+            )}
+            <Text style={styles.imageText}>Select Profile Picture</Text>
+          </View>
+        </Pressable>
 
-      <TextInput
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        style={styles.input}
-      />
+        <TextInput
+          placeholder="Name"
+          value={name}
+          onChangeText={setName}
+          style={styles.input}
+        />
 
-      <TextInput
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        style={styles.input}
-      />
+        <TextInput
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          style={styles.input}
+        />
 
-      <TextInput
-        placeholder="Confirm Password"
-        value={confirmPassword}
-        onChangeText={setConfirmPassword}
-        secureTextEntry
-        style={styles.input}
-      />
+        <TextInput
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          style={styles.input}
+        />
 
-      <TextInput
-        placeholder="About"
-        value={about}
-        onChangeText={setAbout}
-        multiline
-        style={styles.textArea}
-      />
+        <TextInput
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+          secureTextEntry
+          style={styles.input}
+        />
 
-      <TextInput
-        placeholder="Phone"
-        value={phone}
-        onChangeText={setPhone}
-        keyboardType="phone-pad"
-        style={styles.input}
-      />
+        <TextInput
+          placeholder="About"
+          value={about}
+          onChangeText={setAbout}
+          multiline
+          style={styles.textArea}
+        />
 
-      <Pressable
-        onPress={handleSubmit}
-        style={styles.submitButton}
-      >
-        <Text style={styles.submitButtonText}>Add Professor</Text>
-      </Pressable>
+        <TextInput
+          placeholder="Phone"
+          value={phone}
+          onChangeText={setPhone}
+          keyboardType="phone-pad"
+          style={styles.input}
+        />
+
+        <Pressable
+          onPress={handleSubmit}
+          style={styles.submitButton}
+        >
+          <Text style={styles.submitButtonText}>Add</Text>
+        </Pressable>
+      </ScrollView>
     </View>
   );
 };
@@ -126,16 +132,23 @@ const AddProfessor = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    paddingTop: 50, // Increased paddingTop for additional space at the top
     backgroundColor: '#e0f2f1', // Matching background color from Gallery page
   },
+  scrollContainer: {
+    padding: 20,
+  },
+  headerContainer: {
+    alignItems: 'center',
+    marginBottom: 15,
+    marginTop: -5,
+    backgroundColor: '#ffffff', // Matching Programs header background
+    paddingVertical: 10,
+    borderRadius: 10,
+  },
   headerText: {
-    fontSize: 24,
+    fontSize: 26, // Matching Programs header text size
     fontWeight: 'bold',
-    color: '#00796b', // Matching color from Gallery page header
-    marginBottom: 20,
-    marginTop: 10, // Add top margin for additional spacing
+    color: '#004d40',
   },
   imagePicker: {
     marginBottom: 20,

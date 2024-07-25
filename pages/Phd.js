@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'; // Ensure to install this package for icons
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Header from '../components/Header'; // Ensure to install this package for icons
 
 const Phd = () => {
   const [expanded, setExpanded] = useState(null);
@@ -42,38 +43,45 @@ const Phd = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Ph.D. Program</Text>
-      </View>
-
-      {sections.map((section, index) => (
-        <View key={index} style={styles.section}>
-          <TouchableOpacity onPress={() => handlePress(index)} style={styles.dropdownHeader}>
-            <Text style={styles.dropdownTitle}>{section.title}</Text>
-            <Icon name={expanded === index ? 'chevron-up' : 'chevron-down'} size={20} color="#004d40" />
-          </TouchableOpacity>
-          {expanded === index && (
-            <View style={styles.sectionContent}>
-              <Text style={styles.sectionText}>{section.content}</Text>
-              {section.link && (
-                <TouchableOpacity onPress={() => handleLinkPress(section.link)}>
-                  <Text style={styles.link}>Apply Here</Text>
-                </TouchableOpacity>
-              )}
-            </View>
-          )}
+    <View style={styles.container}>
+      <Header />
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>Ph.D. Program</Text>
         </View>
-      ))}
-    </ScrollView>
+
+        {sections.map((section, index) => (
+          <View key={index} style={styles.section}>
+            <TouchableOpacity onPress={() => handlePress(index)} style={styles.dropdownHeader}>
+              <Text style={styles.dropdownTitle}>{section.title}</Text>
+              <Icon name={expanded === index ? 'chevron-up' : 'chevron-down'} size={20} color="#004d40" />
+            </TouchableOpacity>
+            {expanded === index && (
+              <View style={styles.sectionContent}>
+                <Text style={styles.sectionText}>{section.content}</Text>
+                {section.link && (
+                  <TouchableOpacity onPress={() => handleLinkPress(section.link)}>
+                    <Text style={styles.link}>Apply Here</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            )}
+          </View>
+        ))}
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
-    paddingTop: 50,
+    flex: 1,
     backgroundColor: '#f5f5f5',
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    padding: 20,
+    paddingTop: 20, // Adjusted to provide space for the Header
   },
   headerContainer: {
     marginBottom: 20,

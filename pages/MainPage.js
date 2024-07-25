@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   imageSliderContainer: {
     height: 200, // Adjust height of the image slider container
     width: '100%', // Make sure it takes full width
-    marginBottom: 20, // Adjust as needed for spacing
+    marginBottom: 52, // Adjust as needed for spacing
   },
   imageSlider: {
     width: '100%',
@@ -119,13 +119,13 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     alignItems: 'center',
     width: '100%',
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
   },
   menuRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-    marginBottom: 20,
+    marginBottom: 52,
   },
   menuItem: {
     width: '45%', // Adjust width as needed for spacing

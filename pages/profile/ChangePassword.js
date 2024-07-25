@@ -4,7 +4,6 @@ import Toast from 'react-native-toast-message';
 import { useNavigation } from '@react-navigation/native';
 import { updatePassword, signOut } from 'firebase/auth';
 import { FIREBASE_AUTH } from '../../FirebaseConfig'; 
-import PageHeader from '../../components/PageHeader';
 
 const ChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState('');

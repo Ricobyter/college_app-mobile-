@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: '#00796b', // Header background color matching theme
     elevation: 5, // Shadow effect for Android
-    marginTop: 40, // Margin to move header down
+    marginTop: 30, // Margin to move header down
     borderBottomColor: '#ccc',
   },
   logoContainer: {

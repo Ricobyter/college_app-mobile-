@@ -31,6 +31,7 @@ import Gallery from './pages/Gallery';
 import Info from './components/Info';
 import Notification from './components/Notification';
 import Links from './pages/Links';
+import AddAnnouncement from './pages/AddAnnouncement';
 
 const Stack = createStackNavigator();
 
@@ -67,6 +68,7 @@ const AppStack = () => (
     <Stack.Screen name="Notification" component={Notification} />
     <Stack.Screen name="Usereducation" component={Usereducation} />
     <Stack.Screen name="Links" component={Links} />
+    <Stack.Screen name="AddAnnouncement" component={AddAnnouncement} />
   </Stack.Navigator>
 );
 

@@ -91,6 +91,15 @@ const AdminDashboard = () => {
               <Icon name="person-add" size={24} color="white" />
             </View>
           </Pressable>
+          <Pressable
+  style={styles.actionButtonBlue}
+  onPress={() => navigation.navigate("AddAnnouncement")}
+>
+  <View style={styles.actionButtonContent}>
+    <Text style={styles.actionButtonText}>Add Announcement</Text>
+    <Icon name="announcement" size={24} color="white" />
+  </View>
+</Pressable>
         </View>
       </ScrollView>
     </View>

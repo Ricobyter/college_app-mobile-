@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { signOut } from "firebase/auth";
 import { FIREBASE_AUTH } from "../FirebaseConfig";
 import { clearUser } from "../store/userSlice";
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useNavigation } from "@react-navigation/native";
 
 const Sidebar = (props) => {
@@ -45,10 +45,7 @@ const Sidebar = (props) => {
                 {isLoading ? (
                   <ActivityIndicator size="large" color="#6ec6ff" />
                 ) : (
-                  <Image
-                    source={{ uri: photoURL }}
-                    style={styles.userImage}
-                  />
+                  <Image source={{ uri: photoURL }} style={styles.userImage} />
                 )}
               </View>
               <View style={styles.userInfo}>
@@ -58,41 +55,42 @@ const Sidebar = (props) => {
             </View>
           )}
         </View>
-        <Pressable style={styles.menuItem} onPress={() => navigation.navigate('Home')}>
-          <Icon name="home" size={24} color="#004d40" />
-          <Text style={styles.menuItemText}>Home</Text>
-        </Pressable>
-        {isLoggedIn && (
-          <Pressable style={styles.menuItem} onPress={() => navigation.navigate('UserProfile')}>
-            <Icon name="user" size={24} color="#004d40" />
-            <Text style={styles.menuItemText}>My Profile</Text>
+        <View style={styles.menuContainer}>
+          <Pressable style={styles.menuItem} onPress={() => navigation.navigate('Home')}>
+            <Icon name="home" size={20} color="#00796b" />
+            <Text style={styles.menuItemText}>Home</Text>
           </Pressable>
-        )}
-        <Pressable style={styles.menuItem} onPress={() => navigation.navigate('Facilities')}>
-          <Icon name="building" size={24} color="#004d40" />
-          <Text style={styles.menuItemText}>Facilities</Text>
-        </Pressable>
-        <Pressable style={styles.menuItem} onPress={() => navigation.navigate('Gallery')}>
-          <Icon name="photo" size={24} color="#004d40" />
-          <Text style={styles.menuItemText}>Gallery</Text>
-        </Pressable>
-        <Pressable style={styles.menuItem} onPress={() => navigation.navigate('Links')}>
-          <Icon name="rocket" size={24} color="#004d40" />
-          <Text style={styles.menuItemText}>Links</Text>
-        </Pressable>
-        
-        <Pressable style={styles.menuItem} onPress={() => navigation.navigate('AdminDashboard')}>
-          <Icon name="tachometer" size={24} color="#004d40" />
-          <Text style={styles.menuItemText}>Dashboard</Text>
-        </Pressable>
-        <Pressable style={styles.menuItem} onPress={() => navigation.navigate('Info')}>
-          <Icon name="info-circle" size={24} color="#004d40" />
-          <Text style={styles.menuItemText}>About App</Text>
-        </Pressable>
+          {isLoggedIn && (
+            <Pressable style={styles.menuItem} onPress={() => navigation.navigate('UserProfile')}>
+              <Icon name="user" size={20} color="#00796b" />
+              <Text style={styles.menuItemText}>My Profile</Text>
+            </Pressable>
+          )}
+          <Pressable style={styles.menuItem} onPress={() => navigation.navigate('Facilities')}>
+            <Icon name="building" size={20} color="#00796b" />
+            <Text style={styles.menuItemText}>Facilities</Text>
+          </Pressable>
+          <Pressable style={styles.menuItem} onPress={() => navigation.navigate('Gallery')}>
+            <Icon name="images" size={20} color="#00796b" />
+            <Text style={styles.menuItemText}>Gallery</Text>
+          </Pressable>
+          <Pressable style={styles.menuItem} onPress={() => navigation.navigate('Links')}>
+            <Icon name="link" size={20} color="#00796b" />
+            <Text style={styles.menuItemText}>Links</Text>
+          </Pressable>
+          <Pressable style={styles.menuItem} onPress={() => navigation.navigate('AdminDashboard')}>
+            <Icon name="tachometer-alt" size={20} color="#00796b" />
+            <Text style={styles.menuItemText}>Dashboard</Text>
+          </Pressable>
+          <Pressable style={styles.menuItem} onPress={() => navigation.navigate('Info')}>
+            <Icon name="info-circle" size={20} color="#00796b" />
+            <Text style={styles.menuItemText}>About App</Text>
+          </Pressable>
+        </View>
         {isLoggedIn && (
           <View style={styles.logoutContainer}>
             <Pressable style={styles.logoutButton} onPress={handleSignOut}>
-              <Icon name="sign-out" size={24} color="#00796b" />
+              <Icon name="sign-out-alt" size={20} color="#00796b" />
               <Text style={styles.logoutButtonText}>Log Out</Text>
             </Pressable>
           </View>
@@ -112,16 +110,30 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     paddingHorizontal: 15,
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  logo: {
+    width: 50,
+    height: 50,
+  },
+  headerText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#00796b',
+    marginLeft: 10,
+  },
   userInfoContainer: {
     marginBottom: 20,
+    paddingBottom: 20,
     borderBottomWidth: 1,
     borderBottomColor: '#b2ebf2',
-    paddingBottom: 20,
   },
   notLoggedInContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: 300,
   },
   notLoggedInText: {
     color: '#00796b',
@@ -162,19 +174,27 @@ const styles = StyleSheet.create({
     color: '#004d40',
     fontSize: 16,
   },
+  menuContainer: {
+    flex: 1,
+  },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 10,
+    paddingVertical: 15,
     paddingHorizontal: 10,
-    backgroundColor: '#b2ebf2',
+    backgroundColor: '#ffffff',
     borderRadius: 5,
     marginBottom: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 2,
   },
   menuItemText: {
-    color: '#004d40',
+    color: '#00796b',
     fontSize: 18,
-    marginLeft: 10,
+    marginLeft: 15,
   },
   logoutContainer: {
     borderTopWidth: 1,

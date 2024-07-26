@@ -77,6 +77,52 @@ export const getProfessors = createAsyncThunk(
     }
   }
 );
+export const getStudents = createAsyncThunk(
+  'user/getStudents',
+  async (_, { rejectWithValue }) => {
+    try {
+      const studentQuery = query(
+        collection(FIREBASE_DB, 'users'),
+        where('designation', '==', 'Student')
+      );
+      const querySnapshot = await getDocs(studentQuery);
+
+      const students = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const { createdAt, ...rest } = data;
+        students.push({ id: doc.id, ...rest });
+      });
+
+      return students;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+export const getVFaculties = createAsyncThunk(
+  'user/getVFaculties',
+  async (_, { rejectWithValue }) => {
+    try {
+      const vFacultyQuery = query(
+        collection(FIREBASE_DB, 'users'),
+        where('designation', '==', 'V. Faculty')
+      );
+      const querySnapshot = await getDocs(vFacultyQuery);
+
+      const vFaculties = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const { createdAt, ...rest } = data;
+        vFaculties.push({ id: doc.id, ...rest });
+      });
+
+      return vFaculties;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
 export const getAllUsers = createAsyncThunk(
   'user/getAllUsers',
@@ -112,6 +158,28 @@ export const sendResetEmail = createAsyncThunk(
   }
 );
 
+export const addUser = createAsyncThunk(
+  'user/addUser',
+  async ({ userData }, { rejectWithValue }) => {
+    try {
+      const defaultProfilePic = 'https://img.freepik.com/free-vector/illustration-businessman_53876-5856.jpg?w=740&t=st=1721141254~exp=1721141854~hmac=16b7be7a26efb621a8073b1e8204f34be34595f0d723d5c8ae9279435c66a468';
+
+      // Check if profilePic is provided, otherwise use default
+      const profilePic = userData.photoURL || defaultProfilePic;
+
+      const userRef = doc(FIREBASE_DB, 'users', userData.uid);
+      await setDoc(userRef, {
+        ...userData,
+        photoURL: profilePic
+      });
+      return userData;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+
 const initialState = {
   userEmail: '',
   uid: '',
@@ -126,6 +194,8 @@ const initialState = {
   isLoading: false,
   phone: '',
   professors: [],
+  students : [],
+  vFaculties: [],
   allUsers: []  // Add allUsers to the state
 };
 
@@ -147,6 +217,8 @@ const userSlice = createSlice({
       state.bio = '';
       state.phone = '';
       state.professors = [];
+      state.students=[];
+      state.vFaculties = [];
       state.allUsers = []; // Clear allUsers
     },
     setUser(state, action) {
@@ -220,6 +292,36 @@ const userSlice = createSlice({
         state.error = action.payload;
         state.isLoading = false;
       })
+      .addCase(getStudents.pending, (state) => {
+        state.loading = true;
+        state.error = '';
+        state.isLoading = true;
+      })
+      .addCase(getStudents.fulfilled, (state, action) => {
+        state.loading = false;
+        state.students = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(getStudents.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(getVFaculties.pending, (state) => {
+        state.loading = true;
+        state.error = '';
+        state.isLoading = true;
+      })
+      .addCase(getVFaculties.fulfilled, (state, action) => {
+        state.loading = false;
+        state.vFaculties = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(getVFaculties.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.isLoading = false;
+      })
       .addCase(getAllUsers.pending, (state) => {
         state.loading = true;
         state.error = '';
@@ -234,7 +336,22 @@ const userSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         state.isLoading = false;
-      });
+      })
+      .addCase(addUser.pending, (state) => {
+        state.loading = true;
+        state.error = '';
+        state.isLoading = true;
+      })
+      .addCase(addUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.allUsers = action.payload; // Update state with all users
+        state.isLoading = false;
+      })
+      .addCase(addUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.isLoading = false;
+      })
   },
 });
 

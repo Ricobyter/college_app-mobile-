@@ -43,11 +43,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 10,
+    paddingVertical: 20,
     paddingHorizontal: 20,
     backgroundColor: '#00796b', // Header background color matching theme
     elevation: 5, // Shadow effect for Android
-    marginTop: 50, // Margin to move header down
+    marginTop:0, // Margin to move header down
     marginBottom: 10, // Optional: Adds space below header
   },
   logoContainer: {

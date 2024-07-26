@@ -3,12 +3,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getUser } from '../store/userSlice'; // Adjust the path as necessary
 import { View, Text, Image, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
 import { useRoute } from '@react-navigation/native';
+import { Picker } from '@react-native-picker/picker';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const ProfessorProfile = ({ navigation }) => {
   const dispatch = useDispatch();
   const route = useRoute();
   const { professorId } = route.params;
   const [imageLoading, setImageLoading] = useState(true);
+  const [selectedBio, setSelectedBio] = useState('');
+  const [selectedQualification, setSelectedQualification] = useState('');
 
   useEffect(() => {
     if (professorId) {
@@ -17,6 +21,17 @@ const ProfessorProfile = ({ navigation }) => {
   }, [dispatch, professorId]);
 
   const { username, photoURL, educationQualifications, userEmail, birthPlace, designation, bio, phone, error } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (bio) {
+      setSelectedBio(bio);
+    } else {
+      setSelectedBio('No relevant information found');
+    }
+    if (educationQualifications && educationQualifications.length > 0) {
+      setSelectedQualification(educationQualifications[0]);
+    }
+  }, [bio, educationQualifications]);
 
   if (error) {
     return (
@@ -44,19 +59,45 @@ const ProfessorProfile = ({ navigation }) => {
             onError={() => setImageLoading(false)}
           />
         </View>
-        <Text style={styles.username}>{username}</Text>
-        <Text style={styles.designation}>{designation}</Text>
-        <Text style={styles.bio}>{bio}</Text>
-        <Text style={styles.infoText}>Email: {userEmail}</Text>
-        <Text style={styles.infoText}>Phone: {phone}</Text>
-        <Text style={styles.infoText}>Birth Place: {birthPlace}</Text>
+        <View style={styles.infoContainer}>
+          <Icon name="person" size={24} color="#004d40" style={styles.icon} />
+          <Text style={styles.username}>{username}</Text>
+        </View>
+        <View style={styles.infoContainer}>
+          <Icon name="work" size={24} color="#004d40" style={styles.icon} />
+          <Text style={styles.designation} className='font-bold'>{designation}</Text>
+        </View>
+        <View style={styles.infoContainer}>
+          <Icon name="email" size={24} color="#004d40" style={styles.icon} />
+          <Text style={styles.infoText} className = 'font-bold'>{userEmail}</Text>
+        </View>
+        <View style={styles.infoContainer}>
+          <Icon name="phone" size={24} color="#004d40" style={styles.icon} />
+          <Text style={styles.infoText} className = 'font-bold'>{phone}</Text>
+        </View>
+
+        <Text style={styles.sectionTitle}>Bio:</Text>
+        <Picker
+          selectedValue={selectedBio}
+          onValueChange={(value) => setSelectedBio(value)}
+          style={styles.picker}
+          enabled={false} 
+        >
+          <Picker.Item label="About" value={selectedBio}/>
+        </Picker>
+
         <Text style={styles.sectionTitle}>Education Qualifications:</Text>
         {educationQualifications && educationQualifications.length > 0 ? (
-          educationQualifications.map((qualification, index) => (
-            <Text key={index} style={styles.qualificationText}>
-              {qualification}
-            </Text>
-          ))
+          <Picker
+            selectedValue={selectedQualification}
+            onValueChange={(value) => setSelectedQualification(value)}
+            style={styles.picker}
+            enabled={false} 
+          >
+            {educationQualifications.map((qualification, index) => (
+              <Picker.Item key={index} label="Education" value={qualification} classname = 'font-bold'/>
+            ))}
+          </Picker>
         ) : (
           <Text style={styles.qualificationText}>No qualifications listed</Text>
         )}
@@ -86,7 +127,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     alignItems: 'center',
-    padding: 60,
+    padding: 20,
   },
   imageContainer: {
     position: 'relative',
@@ -107,27 +148,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  infoContainer: {
+    flexDirection: 'row',
+    alignItems: 'between',
+    marginBottom: 10,
+    borderColor : 'green',
+    width: '100%'
+  },
+  icon: {
+    marginRight: 10,
+  },
   username: {
-    fontSize: 26,
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#004d40',
-    marginBottom: 10,
   },
   designation: {
     fontSize: 18,
     color: '#004d40',
-    marginBottom: 20,
-  },
-  bio: {
-    fontSize: 16,
-    color: '#004d40',
-    textAlign: 'center',
-    marginBottom: 20,
   },
   infoText: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#004d40',
-    marginBottom: 10,
   },
   sectionTitle: {
     fontSize: 18,
@@ -135,6 +177,10 @@ const styles = StyleSheet.create({
     color: '#004d40',
     marginBottom: 10,
     textAlign: 'center',
+  },
+  picker: {
+    width: '100%',
+    marginBottom: 20,
   },
   qualificationText: {
     fontSize: 16,

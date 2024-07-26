@@ -7,7 +7,7 @@ import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { FIREBASE_AUTH, FIREBASE_DB } from '../FirebaseConfig'; // Make sure to configure Firebase properly
 import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 
-const AddProfessor = ({ navigation }) => {
+const AddVF = ({ navigation }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -44,7 +44,7 @@ const AddProfessor = ({ navigation }) => {
       const userData = {
         bio: about,
         phone: phone,
-        designation: 'Professor',
+        designation: 'V. Faculty',
         email: email,
         username: name,
         photoURL: photoURL,
@@ -63,7 +63,7 @@ const AddProfessor = ({ navigation }) => {
           type: 'success',
           position: 'bottom',
           text1: 'Success',
-          text2: 'Professor added successfully!',
+          text2: 'User added successfully!',
         });
       }
 
@@ -72,7 +72,7 @@ const AddProfessor = ({ navigation }) => {
           type: 'error',
           position: 'bottom',
           text1: 'Error',
-          text2: 'Failed to add professor. Please try again',
+          text2: 'Failed to add user. Please try again',
         });
       }
 
@@ -91,9 +91,7 @@ const AddProfessor = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-            <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Admin Dashboard</Text>
-      </View>
+      <Text className ='mb-16 text-3xl text-[#00796b] font-bold'>Add Visiting Faculty</Text>
       <TextInput
         placeholder="Name"
         value={name}
@@ -145,7 +143,7 @@ const AddProfessor = ({ navigation }) => {
         <ActivityIndicator size="large" color="#00796b" style={styles.activityIndicator} />
       ) : (
         <Pressable onPress={handleSubmit} style={styles.submitButton}>
-          <Text style={styles.submitButtonText}>Add Professor</Text>
+          <Text style={styles.submitButtonText}>Add Faculty</Text>
         </Pressable>
       )}
 
@@ -162,19 +160,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#e0f2f1',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  headerContainer: {
-    marginBottom: 80,
-    backgroundColor: '#00796b', // Header background color matching Gallery
-    paddingVertical: 10,
-    borderRadius: 10,
-    alignItems: 'center',
-    width: '100%'
-  },
-  headerText: {
-    fontSize: 24, // Same as in Gallery
-    fontWeight: 'bold',
-    color: '#fff',
   },
   input: {
     borderColor: '#00796b',
@@ -211,4 +196,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddProfessor;
+export default AddVF;

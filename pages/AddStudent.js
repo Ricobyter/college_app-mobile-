@@ -7,14 +7,13 @@ import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { FIREBASE_AUTH, FIREBASE_DB } from '../FirebaseConfig'; // Make sure to configure Firebase properly
 import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 
-const AddProfessor = ({ navigation }) => {
+const AddStudent = ({ navigation }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [about, setAbout] = useState('');
   const [phone, setPhone] = useState('');
-  const [profilePic, setProfilePic] = useState(null);
 
   const dispatch = useDispatch();
   const { isSending, isSent, isNotSent, message } = useSelector((state) => state.email);
@@ -44,7 +43,7 @@ const AddProfessor = ({ navigation }) => {
       const userData = {
         bio: about,
         phone: phone,
-        designation: 'Professor',
+        designation: 'Student',
         email: email,
         username: name,
         photoURL: photoURL,
@@ -56,14 +55,14 @@ const AddProfessor = ({ navigation }) => {
       await setDoc(doc(FIREBASE_DB, 'users', user.uid), userData);
 
 
-      await dispatch(sendWelcomeEmail({ name, email, password })).unwrap();
+    //   await dispatch(sendWelcomeEmail({ name, email, password })).unwrap();
 
       if (isSent) {
         Toast.show({
           type: 'success',
           position: 'bottom',
           text1: 'Success',
-          text2: 'Professor added successfully!',
+          text2: 'Student added successfully!',
         });
       }
 
@@ -72,7 +71,7 @@ const AddProfessor = ({ navigation }) => {
           type: 'error',
           position: 'bottom',
           text1: 'Error',
-          text2: 'Failed to add professor. Please try again',
+          text2: 'Failed to add student. Please try again',
         });
       }
 
@@ -85,15 +84,13 @@ const AddProfessor = ({ navigation }) => {
       setPhone('');
     } catch (err) {
       console.error('Error:', err);
-      Alert.alert('Error', message || 'Failed to add professor. Please try again.');
+      Alert.alert('Error', message || 'Failed to add student. Please try again.');
     }
   };
 
   return (
     <View style={styles.container}>
-            <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Admin Dashboard</Text>
-      </View>
+      <Text className ='mb-16 text-3xl text-[#00796b] font-bold'>Add Student</Text>
       <TextInput
         placeholder="Name"
         value={name}
@@ -145,7 +142,7 @@ const AddProfessor = ({ navigation }) => {
         <ActivityIndicator size="large" color="#00796b" style={styles.activityIndicator} />
       ) : (
         <Pressable onPress={handleSubmit} style={styles.submitButton}>
-          <Text style={styles.submitButtonText}>Add Professor</Text>
+          <Text style={styles.submitButtonText}>Add Student</Text>
         </Pressable>
       )}
 
@@ -162,19 +159,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#e0f2f1',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  headerContainer: {
-    marginBottom: 80,
-    backgroundColor: '#00796b', // Header background color matching Gallery
-    paddingVertical: 10,
-    borderRadius: 10,
-    alignItems: 'center',
-    width: '100%'
-  },
-  headerText: {
-    fontSize: 24, // Same as in Gallery
-    fontWeight: 'bold',
-    color: '#fff',
   },
   input: {
     borderColor: '#00796b',
@@ -211,4 +195,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddProfessor;
+export default AddStudent;

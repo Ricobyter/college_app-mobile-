@@ -33,15 +33,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#e0f2f1', // Background color matching the theme
+    backgroundColor: '#e0f2f1', 
     position: 'relative',
-    padding: 20, // Added padding to avoid clipping
+    padding: 20, 
   },
   skipButton: {
     position: 'absolute',
-    top: 50, // Adjusted top position
+    top: 50, 
     right: 20,
-    backgroundColor: '#00796b', // Button color matching the theme
+    backgroundColor: '#00796b', 
     padding: 10,
     borderRadius: 10,
   },
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 32,
-    color: '#00796b', // Text color matching the theme
+    color: '#00796b', 
     fontWeight: 'bold',
     marginBottom: 20,
   },
@@ -66,14 +66,14 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   loginButton: {
-    backgroundColor: '#004d40', // Button color matching the theme
+    backgroundColor: '#004d40', 
     borderRadius: 30,
     paddingVertical: 15,
     marginBottom: 15,
     alignItems: 'center',
   },
   signupButton: {
-    backgroundColor: '#00796b', // Button color matching the theme
+    backgroundColor: '#00796b', 
     borderRadius: 30,
     paddingVertical: 15,
     marginBottom: 15,

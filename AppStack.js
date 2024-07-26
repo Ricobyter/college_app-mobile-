@@ -14,6 +14,8 @@ import PasswordChangeConfirmation from './pages/profile/PasswordChangeConfirmati
 import UserPersonalInfo from './pages/profile/UserPersonalInfo';
 import AdminDashboard from './pages/AdminDashboard';
 import AddProfessor from './pages/AddProfessor';
+import AddStudent from './pages/AddStudent';
+import AddVF from './pages/AddVF';
 import Programs from './pages/Programs';
 import Btech from './pages/Btech';
 import Mtech from './pages/Mtech';
@@ -29,6 +31,8 @@ import Facilities from './pages/Facilities';
 import Gallery from './pages/Gallery';
 import Info from './components/Info';
 import Notification from './components/Notification';
+import GetStudents from './pages/GetStudents';
+import GetVF from './pages/GetVF';
 
 const Stack = createStackNavigator();
 
@@ -42,12 +46,16 @@ const AppStack = () => (
     <Stack.Screen name="UserProfile" component={UserProfile} />
     <Stack.Screen name="UserPersonalInfo" component={UserPersonalInfo} />
     <Stack.Screen name="GetProfessors" component={GetProfessors} />
+    <Stack.Screen name="GetStudents" component={GetStudents} />
+    <Stack.Screen name="GetVF" component={GetVF} />
     <Stack.Screen name="ProfessorProfile" component={ProfessorProfile} />
     <Stack.Screen name="ChangePassword" component={ChangePassword} />
     <Stack.Screen name="PasswordChangeConfirmation" component={PasswordChangeConfirmation} />
     <Stack.Screen name="UserSecurity" component={UserSecurity} />
     <Stack.Screen name="AdminDashboard" component={AdminDashboard} />
     <Stack.Screen name="AddProfessor" component={AddProfessor} />
+    <Stack.Screen name="AddStudent" component={AddStudent} />
+    <Stack.Screen name="AddVF" component={AddVF} />
     <Stack.Screen name="Programs" component={Programs} />
     <Stack.Screen name="Btech" component={Btech} />
     <Stack.Screen name="Mtech" component={Mtech} />

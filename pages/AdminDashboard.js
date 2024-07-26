@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, Pressable, StyleSheet, ScrollView, RefreshControl, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllUsers } from "../store/userSlice";
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Using MaterialIcons
@@ -9,10 +9,17 @@ const AdminDashboard = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const { allUsers } = useSelector((state) => state.user);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     dispatch(getAllUsers());
   }, [dispatch]);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await dispatch(getAllUsers());
+    setRefreshing(false);
+  };
 
   const totalUsers = allUsers.length;
   const professors = allUsers.filter(
@@ -26,7 +33,12 @@ const AdminDashboard = () => {
   ).length;
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Admin Dashboard</Text>
       </View>
@@ -37,23 +49,28 @@ const AdminDashboard = () => {
           <Text style={styles.statTitle}>Total</Text>
           <Text style={styles.statValue}>{totalUsers}</Text>
         </View>
-        <View style={styles.statItem}>
-          <Icon name="person" size={30} color="#00796b" />
-          <Text style={styles.statTitle}>Professors</Text>
-          <Text style={styles.statValue}>{professors}</Text>
-        </View>
+          <View style={styles.statItem}>
+        <TouchableOpacity onPress={() => navigation.navigate('GetProfessors')} className='flex justify-center items-center'>
+            <Icon name="person" size={30} color="#00796b" />
+            <Text style={styles.statTitle}>Professors</Text>
+            <Text style={styles.statValue}>{professors}</Text>
+        </TouchableOpacity>
+          </View>
       </View>
       <View style={styles.statsContainer}>
-        <View style={styles.statItem}>
-          <Icon name="person" size={30} color="#00796b" />
-          <Text style={styles.statTitle}>Students</Text>
-          <Text style={styles.statValue}>{students}</Text>
-        </View>
-        <View style={styles.statItem}>
+          <View style={styles.statItem}>
+        <TouchableOpacity onPress={() => navigation.navigate('GetStudents')} className='flex justify-center items-center'>
+            <Icon name="person" size={30} color="#00796b" />
+            <Text style={styles.statTitle}>Students</Text>
+            <Text style={styles.statValue}>{students}</Text>
+        </TouchableOpacity>
+          </View>
+
+        <Pressable style={styles.statItem} onPress={() => navigation.navigate('GetVF')}>
           <Icon name="person-add" size={30} color="#00796b" />
           <Text style={styles.statTitle}>V.F.</Text>
           <Text style={styles.statValue}>{visitingFaculty}</Text>
-        </View>
+        </Pressable>
       </View>
 
       <Text style={styles.actionsTitle}>More actions</Text>
@@ -81,7 +98,7 @@ const AdminDashboard = () => {
 
         <Pressable
           style={styles.actionButtonYellow}
-          onPress={() => navigation.navigate("AddVisitingFaculty")}
+          onPress={() => navigation.navigate("AddVF")}
         >
           <View style={styles.actionButtonContent}>
             <Text style={styles.actionButtonText}>Add Visiting Faculty</Text>
@@ -89,7 +106,7 @@ const AdminDashboard = () => {
           </View>
         </Pressable>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

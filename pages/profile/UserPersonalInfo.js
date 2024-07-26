@@ -80,11 +80,11 @@ const UserPersonalInfo = ({ navigation }) => {
   return (
     <ScrollView contentContainerStyle={styles.scrollViewContainer}>
       <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Edit Profile</Text>
+        <Text style={styles.headerText}>Personal Details</Text>
       </View>
       <View style={styles.imageContainer}>
         <Image
-          source={{ uri: formState.photoURL || photoURL }}
+          source={{ uri: formState.photoURL || photoURL ||"https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg" }}
           style={styles.profileImage}
         />
         {isUpgrading && (

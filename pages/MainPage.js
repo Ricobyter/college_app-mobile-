@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, ScrollView, Pressable, StyleSheet, Image, Animated } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'; // or any other icon library you prefer
+import Icon from 'react-native-vector-icons/FontAwesome';
 import Header from '../components/Header';
 
 // Image sources
@@ -33,9 +33,9 @@ const MainPage = ({ navigation }) => {
           useNativeDriver: true,
         }).start();
       });
-    }, 3000); // Change image every 3 seconds
+    }, 3000);
 
-    return () => clearInterval(interval); // Clear interval on component unmount
+    return () => clearInterval(interval);
   }, [opacity]);
 
   return (
@@ -43,54 +43,57 @@ const MainPage = ({ navigation }) => {
       <Header />
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-
-        {/* Image Slider Section */}
-        <View style={styles.imageSliderContainer}>
+        {/* Hero Section */}
+        <View style={styles.heroSection}>
           <Animated.Image
-            source={images[currentImageIndex]} // Use currentImageIndex to show the current image
-            style={[styles.imageSlider, { opacity }]} // Apply animated opacity
+            source={images[currentImageIndex]}
+            style={[styles.heroImage, { opacity }]}
             resizeMode="cover"
           />
+          <View style={styles.heroOverlay}>
+            <Text style={styles.heroText}>Welcome to IIITDMJ</Text>
+            <Text style={styles.heroSubText}>Excellence in Education & Research</Text>
+          </View>
         </View>
 
-        {/* Menu Items Section */}
-        <View style={styles.menuContainer}>
-          <View style={styles.menuRow}>
-            <Pressable style={styles.menuItem} onPress={() => navigation.navigate("Programs")}>
-              <Icon name="graduation-cap" size={40} color="#00796b" />
-              <Text style={styles.menuText}>Programs</Text>
+        {/* Quick Links */}
+        <View style={styles.quickLinksContainer}>
+          <Text style={styles.sectionTitle}>Important Shortcuts</Text>
+          <View style={styles.quickLinksGrid}>
+            <Pressable style={styles.quickLinkItem} onPress={() => navigation.navigate("Programs")}>
+              <Icon name="graduation-cap" size={30} color="#00796b" />
+              <Text style={styles.quickLinkText}>Programs</Text>
             </Pressable>
 
-            <Pressable style={styles.menuItem} onPress={() => navigation.navigate("GetProfessors")}>
-              <Icon name="users" size={40} color="#00796b" />
-              <Text style={styles.menuText}>People</Text>
-            </Pressable>
-          </View>
-
-          <View style={styles.menuRow}>
-            <Pressable style={styles.menuItem} onPress={() => navigation.navigate("Research")}>
-              <Icon name="flask" size={40} color="#00796b" />
-              <Text style={styles.menuText}>Research</Text>
+            <Pressable style={styles.quickLinkItem} onPress={() => navigation.navigate("GetPeople")}>
+              <Icon name="users" size={30} color="#00796b" />
+              <Text style={styles.quickLinkText}>People</Text>
             </Pressable>
 
-            <Pressable style={styles.menuItem} onPress={() => navigation.navigate("Placement")}>
-              <Icon name="briefcase" size={40} color="#00796b" />
-              <Text style={styles.menuText}>Placement</Text>
-            </Pressable>
-          </View>
-          <View style={styles.menuRow}>
-            <Pressable style={styles.menuItem} onPress={() => navigation.navigate('NewsEvents')}>
-              <Icon name="newspaper-o" size={40} color="#00796b" />
-              <Text style={styles.menuText}>News & Events</Text>
+            <Pressable style={styles.quickLinkItem} onPress={() => navigation.navigate("Research")}>
+              <Icon name="flask" size={30} color="#00796b" />
+              <Text style={styles.quickLinkText}>Research</Text>
             </Pressable>
 
-            <Pressable style={styles.menuItem} onPress={() => navigation.navigate('Contacts')}>
-              <Icon name="phone" size={40} color="#00796b" />
-              <Text style={styles.menuText}>Contacts</Text>
+            <Pressable style={styles.quickLinkItem} onPress={() => navigation.navigate("Placement")}>
+              <Icon name="briefcase" size={30} color="#00796b" />
+              <Text style={styles.quickLinkText}>Placement</Text>
             </Pressable>
           </View>
         </View>
 
+        {/* Highlighted Sections */}
+        <View style={styles.highlightedSection}>
+          <Text style={styles.sectionTitle}>Featured</Text>
+          <Pressable style={styles.highlightedCard} onPress={() => navigation.navigate('News')}>
+            <Icon name="newspaper-o" size={30} color="#00796b" />
+            <Text style={styles.highlightedText}>News & Events</Text>
+          </Pressable>
+          <Pressable style={styles.highlightedCard} onPress={() => navigation.navigate('Contacts')}>
+            <Icon name="phone" size={30} color="#00796b" />
+            <Text style={styles.highlightedText}>Contacts</Text>
+          </Pressable>
+        </View>
       </ScrollView>
     </View>
   );
@@ -99,50 +102,85 @@ const MainPage = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#e0f2f1', // Background color matching the theme
+    backgroundColor: '#e0f2f1',
   },
   scrollContainer: {
     flexGrow: 1,
-    alignItems: 'center',
   },
-  imageSliderContainer: {
-    height: 200, // Adjust height of the image slider container
-    width: '100%', // Make sure it takes full width
-    marginBottom: 20, // Adjust as needed for spacing
-  },
-  imageSlider: {
+  heroSection: {
+    position: 'relative',
+    height: 250,
     width: '100%',
+  },
+  heroImage: {
     height: '100%',
-    borderRadius: 10, // Optional: Rounded corners for image slider
-  },
-  menuContainer: {
-    flexGrow: 1,
-    alignItems: 'center',
     width: '100%',
-    paddingHorizontal: 10,
   },
-  menuRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  heroOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    height: '100%',
     width: '100%',
-    marginBottom: 20,
-  },
-  menuItem: {
-    width: '45%', // Adjust width as needed for spacing
-    height: 120, // Adjust height for menu item container
-    backgroundColor: '#ffffff', // Matching menu item background
-    borderRadius: 10,
-    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
     justifyContent: 'center',
-    elevation: 3,
-    paddingVertical: 10, // Add padding for better spacing
+    alignItems: 'center',
   },
-  menuText: {
-    fontSize: 16,
+  heroText: {
+    color: '#fff',
+    fontSize: 24,
     fontWeight: 'bold',
-    color: '#00796b', // Menu text color matching the theme
-    textAlign: 'center',
-    marginTop: 8,
+  },
+  heroSubText: {
+    color: '#fff',
+    fontSize: 18,
+    marginTop: 5,
+  },
+  quickLinksContainer: {
+    marginVertical: 20,
+    paddingHorizontal: 20,
+  },
+  sectionTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#004d40',
+    marginBottom: 10,
+  },
+  quickLinksGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  quickLinkItem: {
+    width: '48%',
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    padding: 15,
+    alignItems: 'center',
+    marginBottom: 15,
+    elevation: 3,
+  },
+  quickLinkText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#00796b',
+  },
+  highlightedSection: {
+    paddingHorizontal: 20,
+  },
+  highlightedCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 15,
+    elevation: 3,
+  },
+  highlightedText: {
+    marginLeft: 10,
+    fontSize: 16,
+    color: '#00796b',
   },
 });
 

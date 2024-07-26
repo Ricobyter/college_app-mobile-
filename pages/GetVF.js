@@ -42,10 +42,6 @@ const GetVF = ({ navigation }) => {
 
   return (
     <ScrollView style={styles.container} >
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Visting Faculties</Text>
-      </View>
-
       {/* Search Input with Icon */}
       <View style={styles.searchContainer}>
         <Icon
@@ -55,7 +51,7 @@ const GetVF = ({ navigation }) => {
           style={styles.searchIcon}
         />
         <TextInput
-          placeholder="Search vFaculties"
+          placeholder="Search Visiting Faculties"
           value={searchQuery}
           onChangeText={setSearchQuery}
           style={styles.searchInput}
@@ -83,7 +79,7 @@ const GetVF = ({ navigation }) => {
           </TouchableOpacity>
         ))
       ) : (
-        <Text style={styles.novFacultiesText}>No vFaculties found</Text>
+        <Text style={styles.novFacultiesText}>No Visiting Faculties found</Text>
       )}
     </ScrollView>
   );
@@ -93,7 +89,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    paddingTop: 50,
+    paddingTop: 30,
     backgroundColor: '#e0f2f1',
     paddingBottom: 50
   },

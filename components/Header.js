@@ -19,6 +19,9 @@ const Header = () => {
 
   return (
     <View style={styles.headerContainer}>
+      <Pressable onPress={() => navigation.toggleDrawer()} style={styles.menuButton}>
+        <Icon name="bars" size={24} color="#fff" />
+      </Pressable>
       <View style={styles.logoContainer}>
         <Image
           source={require('../assets/images/logo.png')}
@@ -26,14 +29,9 @@ const Header = () => {
         />
         <Text style={styles.headerTitle}>IIITDM Jabalpur</Text>
       </View>
-      <View style={styles.buttonContainer}>
-        <Pressable onPress={() => navigation.navigate('Notification')} style={styles.infoButton}>
-          <Icon name="bell" size={24} color="#fff" />
-        </Pressable>
-        <Pressable onPress={() => navigation.toggleDrawer()} style={styles.menuButton}>
-          <Icon name="bars" size={24} color="#fff" />
-        </Pressable>
-      </View>
+      <Pressable onPress={() => navigation.navigate('Announcement')} style={styles.infoButton}>
+        <Icon name="bell" size={23} color="#fff" />
+      </Pressable>
     </View>
   );
 };
@@ -43,36 +41,33 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 20,
-    paddingHorizontal: 20,
+    paddingVertical: 25,
+    paddingHorizontal: 10,
     backgroundColor: '#00796b', // Header background color matching theme
     elevation: 5, // Shadow effect for Android
-    marginTop:0, // Margin to move header down
-    marginBottom: 10, // Optional: Adds space below header
+    marginTop: 0, // Margin to move header down
+    borderBottomColor: '#ccc',
   },
   logoContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center', // Center the logo and title
+    flex: 1,
   },
   logo: {
     width: 40,
     height: 40,
-    marginRight: 10,
+    marginRight: 5, // Reduced margin between logo and title
   },
   headerTitle: {
     fontSize: 20,
     fontWeight: 'bold',
     color: '#fff',
   },
-  buttonContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  menuButton: {
+    padding: 10,
   },
   infoButton: {
-    padding: 10,
-    marginRight: 15, // Space between info and menu buttons
-  },
-  menuButton: {
     padding: 10,
   },
 });

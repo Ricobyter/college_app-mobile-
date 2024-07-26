@@ -5,13 +5,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { signOut } from "firebase/auth";
 import { FIREBASE_AUTH } from "../FirebaseConfig";
 import { clearUser } from "../store/userSlice";
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useNavigation } from "@react-navigation/native";
 
 const Sidebar = (props) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const { uid, username, photoURL, isLoading, userEmail } = useSelector((state) => state.user);
+  const { uid, username, photoURL, isLoading, userEmail, designation } = useSelector((state) => state.user);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -46,48 +46,56 @@ const Sidebar = (props) => {
                   <ActivityIndicator size="large" color="#6ec6ff" />
                 ) : (
                   <Image
-                    source={{ uri: photoURL }}
+                    source={{ uri: photoURL || 'https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg' }}
                     style={styles.userImage}
                   />
                 )}
               </View>
               <View style={styles.userInfo}>
-                <Text style={styles.username}>{username}</Text>
-                <Text style={styles.userEmail}>{userEmail}</Text>
+              <Text style={styles.username}>
+                  {username.length > 9 ? `${username.substring(0, 9)}...` : username}
+                </Text>
+                <Text style={styles.userEmail}>{designation}</Text>
               </View>
             </View>
           )}
         </View>
-        <Pressable style={styles.menuItem} onPress={() => navigation.navigate('MainPage')}>
-          <Icon name="home" size={24} color="#004d40" />
-          <Text style={styles.menuItemText}>Home</Text>
-        </Pressable>
-        {isLoggedIn && (
-          <Pressable style={styles.menuItem} onPress={() => navigation.navigate('UserProfile')}>
-            <Icon name="user" size={24} color="#004d40" />
-            <Text style={styles.menuItemText}>My Profile</Text>
+        <View style={styles.menuContainer}>
+          <Pressable style={styles.menuItem} onPress={() => navigation.navigate('Home')}>
+            <Icon name="home" size={20} color="#00796b" />
+            <Text style={styles.menuItemText}>Home</Text>
           </Pressable>
-        )}
-        <Pressable style={styles.menuItem} onPress={() => navigation.navigate('Facilities')}>
-          <Icon name="building" size={24} color="#004d40" />
-          <Text style={styles.menuItemText}>Facilities</Text>
-        </Pressable>
-        <Pressable style={styles.menuItem} onPress={() => navigation.navigate('Gallery')}>
-          <Icon name="photo" size={24} color="#004d40" />
-          <Text style={styles.menuItemText}>Gallery</Text>
-        </Pressable>
-        <Pressable style={styles.menuItem} onPress={() => navigation.navigate('AdminDashboard')}>
-          <Icon name="tachometer" size={24} color="#004d40" />
-          <Text style={styles.menuItemText}>Dashboard</Text>
-        </Pressable>
-        <Pressable style={styles.menuItem} onPress={() => navigation.navigate('Info')}>
-          <Icon name="info-circle" size={24} color="#004d40" />
-          <Text style={styles.menuItemText}>About App</Text>
-        </Pressable>
+          {isLoggedIn && (
+            <Pressable style={styles.menuItem} onPress={() => navigation.navigate('UserProfile')}>
+              <Icon name="user" size={20} color="#00796b" />
+              <Text style={styles.menuItemText}>My Profile</Text>
+            </Pressable>
+          )}
+          <Pressable style={styles.menuItem} onPress={() => navigation.navigate('Facilities')}>
+            <Icon name="building" size={20} color="#00796b" />
+            <Text style={styles.menuItemText}>Facilities</Text>
+          </Pressable>
+          <Pressable style={styles.menuItem} onPress={() => navigation.navigate('Gallery')}>
+            <Icon name="images" size={20} color="#00796b" />
+            <Text style={styles.menuItemText}>Gallery</Text>
+          </Pressable>
+          <Pressable style={styles.menuItem} onPress={() => navigation.navigate('Links')}>
+            <Icon name="link" size={20} color="#00796b" />
+            <Text style={styles.menuItemText}>Links</Text>
+          </Pressable>
+          <Pressable style={styles.menuItem} onPress={() => navigation.navigate('AdminDashboard')}>
+            <Icon name="tachometer-alt" size={20} color="#00796b" />
+            <Text style={styles.menuItemText}>Dashboard</Text>
+          </Pressable>
+          <Pressable style={styles.menuItem} onPress={() => navigation.navigate('Info')}>
+            <Icon name="info-circle" size={20} color="#00796b" />
+            <Text style={styles.menuItemText}>About App</Text>
+          </Pressable>
+        </View>
         {isLoggedIn && (
           <View style={styles.logoutContainer}>
             <Pressable style={styles.logoutButton} onPress={handleSignOut}>
-              <Icon name="sign-out" size={24} color="#00796b" />
+              <Icon name="sign-out-alt" size={20} color="#00796b" />
               <Text style={styles.logoutButtonText}>Log Out</Text>
             </Pressable>
           </View>
@@ -106,6 +114,9 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 20,
     paddingHorizontal: 15,
+  },
+  menuContainer: {
+flex: 1
   },
   userInfoContainer: {
     marginBottom: 20,
@@ -141,9 +152,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   userImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
   },
   userInfo: {
     marginLeft: 10,
@@ -174,7 +185,7 @@ const styles = StyleSheet.create({
   logoutContainer: {
     borderTopWidth: 1,
     borderTopColor: '#b2ebf2',
-    marginTop: 20,
+    marginTop: 120,
     paddingTop: 20,
   },
   logoutButton: {

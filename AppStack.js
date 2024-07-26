@@ -33,6 +33,10 @@ import Info from './components/Info';
 import Notification from './components/Notification';
 import GetStudents from './pages/GetStudents';
 import GetVF from './pages/GetVF';
+import GetPeople from './pages/GetPeople';
+import Links from './pages/Link';
+import Announcement from './pages/Announcement';
+import AddAnnouncement from './pages/AddAnnouncement';
 
 const Stack = createStackNavigator();
 
@@ -48,6 +52,7 @@ const AppStack = () => (
     <Stack.Screen name="GetProfessors" component={GetProfessors} />
     <Stack.Screen name="GetStudents" component={GetStudents} />
     <Stack.Screen name="GetVF" component={GetVF} />
+    <Stack.Screen name="GetPeople" component={GetPeople} />
     <Stack.Screen name="ProfessorProfile" component={ProfessorProfile} />
     <Stack.Screen name="ChangePassword" component={ChangePassword} />
     <Stack.Screen name="PasswordChangeConfirmation" component={PasswordChangeConfirmation} />
@@ -56,16 +61,19 @@ const AppStack = () => (
     <Stack.Screen name="AddProfessor" component={AddProfessor} />
     <Stack.Screen name="AddStudent" component={AddStudent} />
     <Stack.Screen name="AddVF" component={AddVF} />
+    <Stack.Screen name="AddAnnouncement" component={AddAnnouncement} />
+    <Stack.Screen name="Announcement" component={Announcement} />
     <Stack.Screen name="Programs" component={Programs} />
     <Stack.Screen name="Btech" component={Btech} />
     <Stack.Screen name="Mtech" component={Mtech} />
     <Stack.Screen name="Phd" component={Phd} />
+    <Stack.Screen name="Links" component={Links} />
     <Stack.Screen name="Research" component={Research} />
     <Stack.Screen name="Publications" component={Publications} />
     <Stack.Screen name="Projects" component={Projects} />
     <Stack.Screen name="ResearchW" component={ResearchW} />
     <Stack.Screen name="Placement" component={Placement} />
-    <Stack.Screen name="NewsEvents" component={NewsEvents} />
+    <Stack.Screen name="News" component={NewsEvents} />
     <Stack.Screen name="Contacts" component={Contacts} />
     <Stack.Screen name="Facilities" component={Facilities} />
     <Stack.Screen name="Gallery" component={Gallery} />

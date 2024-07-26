@@ -41,12 +41,8 @@ const GetProfessors = ({ navigation }) => {
   }
 
   return (
+    <>
     <ScrollView style={styles.container} >
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Professors</Text>
-      </View>
-
-      {/* Search Input with Icon */}
       <View style={styles.searchContainer}>
         <Icon
           name="search"
@@ -86,6 +82,8 @@ const GetProfessors = ({ navigation }) => {
         <Text style={styles.noProfessorsText}>No professors found</Text>
       )}
     </ScrollView>
+    </>
+
   );
 };
 
@@ -93,7 +91,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    paddingTop: 50,
+    paddingTop: 30,
     backgroundColor: '#e0f2f1',
     paddingBottom: 50
   },

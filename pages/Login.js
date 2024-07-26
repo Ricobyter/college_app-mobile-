@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff', // Background color matching the theme
+    backgroundColor: '#e0f2f1', // Background color matching the theme
     padding: 16,
   },
   title: {
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   input: {
     width: '100%',
     backgroundColor: '#ffffff',
-    borderColor: '', // Border color matching the theme
+    borderColor: '#00796b', // Border color matching the theme
     borderWidth: 2,
     padding: 12,
     borderRadius: 10,
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   loginButton: {
-    // backgroundColor: '#00796b', // Button color matching the theme
+     backgroundColor: '#00796b', // Button color matching the theme
     width: '100%',
     padding: 12,
     borderRadius: 10,

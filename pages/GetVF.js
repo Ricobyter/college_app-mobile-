@@ -5,6 +5,7 @@ import LoadingScreen from "../components/LoadingScreen"; // Adjust the path as n
 import { View, Text, TextInput, ScrollView, StyleSheet, Image, TouchableOpacity } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Import the icon library
 import { useNavigation } from "@react-navigation/native";
+import { AdminOnly } from "../utils";
 
 const GetVF = ({ }) => {
   const dispatch = useDispatch();
@@ -29,6 +30,25 @@ const GetVF = ({ }) => {
       setFilteredvFaculties(vFaculties);
     }
   }, [searchQuery, vFaculties]);
+
+  const handleDelete = (professorId) => {
+    Alert.alert(
+      "Delete Professor",
+      "Are you sure you want to delete this professor?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        {
+          text: "Yes",
+          onPress: () => {
+            dispatch(deleteUser(professorId));
+          }
+        }
+      ]
+    );
+  };
 
   if (loading) {
     return <LoadingScreen />;
@@ -76,8 +96,13 @@ const GetVF = ({ }) => {
             </View>
             <View style={styles.detailsContainer}>
               <Text style={styles.professorName}>{professor.username}</Text>
-              <Text style={styles.professorEmail}>{professor.email}</Text>
+              <Text style={styles.professorEmail}>{professor.designation}</Text>
             </View>
+            <AdminOnly>
+            <TouchableOpacity onPress={() => handleDelete(professor.id)}>
+                <Icon name="delete" size={24} color="red" />
+              </TouchableOpacity>
+            </AdminOnly>
           </TouchableOpacity>
         ))
       ) : (

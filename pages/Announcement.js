@@ -26,8 +26,10 @@ const Announcement = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <>
+    
       <Header />
+    <View style={styles.container}>
       <View style={styles.contentContainer}>
         <View style={styles.headerContainer}>
           <Text style={styles.headerText}>Announcements</Text>
@@ -43,6 +45,8 @@ const Announcement = () => {
         </ScrollView>
       </View>
     </View>
+    </>
+    
   );
 };
 

@@ -4,6 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getUser, updateUser } from '../../store/userSlice';
 import * as ImagePicker from 'expo-image-picker';
 import Toast from 'react-native-toast-message';
+import axios from 'axios';
+
+const UPLOAD_PRESET = process.env.REACT_APP_UPLOAD_PRESET;
+const CLOUD_NAME = process.env.REACT_APP_CLOUD_NAME
 
 const UserPersonalInfo = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -14,10 +18,10 @@ const UserPersonalInfo = ({ navigation }) => {
     userEmail: '',
     phone: '',
     bio: '',
-    photoURL: '',
     designation: '',
   });
 
+  const [imageUri, setImageUri] = useState(photoURL);
   const [isUpgrading, setIsUpgrading] = useState(false);
 
   useEffect(() => {
@@ -32,9 +36,9 @@ const UserPersonalInfo = ({ navigation }) => {
       userEmail,
       phone,
       bio,
-      photoURL,
-      designation
+      designation,
     });
+    setImageUri(photoURL);
   }, [username, userEmail, phone, bio, photoURL, designation]);
 
   const handleInputChange = (name, value) => {
@@ -53,25 +57,69 @@ const UserPersonalInfo = ({ navigation }) => {
     });
 
     if (!result.canceled) {
-      setFormState({ ...formState, photoURL: result.assets[0].uri });
+      setImageUri(result.assets[0].uri);
+    }
+  };
+
+  const uploadImageToCloudinary = async (imageUri) => {
+    const data = new FormData();
+    const fileName = imageUri.split('/').pop();
+    const fileType = imageUri.split('.').pop();
+
+    data.append('file', {
+      uri: imageUri,
+      type: `image/${fileType}`,
+      name: fileName,
+    });
+    data.append('upload_preset', UPLOAD_PRESET); // replace 'your_upload_preset' with your actual Cloudinary upload preset
+
+    try {
+      const response = await axios.post(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data.secure_url; // return the secure_url from Cloudinary
+    } catch (error) {
+      console.error('Error uploading image to Cloudinary', error);
+      throw error;
     }
   };
 
   const saveProfile = async () => {
-    dispatch(updateUser({ uid, userData: formState }));
+    let cloudinaryUrl = imageUri;
+    if (imageUri !== photoURL) {
+      try {
+        cloudinaryUrl = await uploadImageToCloudinary(imageUri);
+      } catch (error) {
+        Toast.show({
+          type: 'error',
+          text1: 'Image Upload Error',
+          text2: 'Failed to upload image to Cloudinary',
+        });
+        return;
+      }
+    }
+
+    const updatedUserData = {
+      ...formState,
+      photoURL: cloudinaryUrl,
+    };
+
+    dispatch(updateUser({ uid, userData: updatedUserData }));
 
     if (error) {
       Toast.show({
-        type: "error",
-        text1: "Updation Error",
-        text2: "Error Updating User",
+        type: 'error',
+        text1: 'Updation Error',
+        text2: 'Error Updating User',
       });
       return;
     } else {
       Toast.show({
-        type: "success",
-        text1: "Updation Success",
-        text2: "Profile Updated Successfully",
+        type: 'success',
+        text1: 'Updation Success',
+        text2: 'Profile Updated Successfully',
       });
       setIsUpgrading(false);
     }
@@ -84,7 +132,7 @@ const UserPersonalInfo = ({ navigation }) => {
       </View>
       <View style={styles.imageContainer}>
         <Image
-          source={{ uri: formState.photoURL || photoURL ||"https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg" }}
+          source={{ uri: imageUri || 'https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg' }}
           style={styles.profileImage}
         />
         {isUpgrading && (
@@ -113,8 +161,9 @@ const UserPersonalInfo = ({ navigation }) => {
         <TextInput
           placeholder="Designation"
           value={formState.designation}
-          editable={false}
-          style={[styles.input, styles.inputNonEditable]}
+          editable={isUpgrading}
+          onChangeText={(value) => handleInputChange('designation', value)}
+          style={[styles.input, isUpgrading ? styles.inputEditable : styles.inputNonEditable]}
         />
         <Text style={styles.label}>Phone</Text>
         <TextInput

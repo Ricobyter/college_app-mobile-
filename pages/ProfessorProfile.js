@@ -15,7 +15,7 @@ const ProfessorProfile = ({ navigation }) => {
   const [selectedBio, setSelectedBio] = useState('');
   const [selectedQualification, setSelectedQualification] = useState('');
 
-  const { username, photoURL, educationQualifications, userEmail, isLoading, designation, bio, phone, error , degrees, uid} = useSelector((state) => state.user);
+  const { username, photoURL, userEmail, isLoading, designation, bio, phone, error, degrees } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (professorId) {
@@ -25,16 +25,15 @@ const ProfessorProfile = ({ navigation }) => {
   }, [dispatch, professorId]);
 
   useEffect(() => {
-    // Assuming that user data includes bio and qualifications
     if (bio) {
       setSelectedBio(bio);
     } else {
       setSelectedBio('No relevant information found');
     }
-    if (educationQualifications && educationQualifications.length > 0) {
-      setSelectedQualification(educationQualifications[0]);
+    if (degrees && degrees.length > 0) {
+      setSelectedQualification(`${degrees[0].degreeName}, ${degrees[0].year}, ${degrees[0].institute}`);
     }
-  }, [bio, educationQualifications]);
+  }, [bio, degrees]);
 
   if (error) {
     return (
@@ -94,20 +93,21 @@ const ProfessorProfile = ({ navigation }) => {
         </Picker>
 
         <Text style={styles.sectionTitle}>Education Qualifications:</Text>
+
+      <ScrollView className = 'w-full'>
         {degrees && degrees.length > 0 ? (
-          <Picker
-            selectedValue={selectedQualification}
-            onValueChange={(value) => setSelectedQualification(value)}
-            style={styles.picker}
-            enabled={false}
-          >
-            {degrees.map((degree) => (
-              <Picker.Item key={degree.id} label={degree.degreeName} value={degree.degreeName} />
-            ))}
-          </Picker>
+          degrees.map((degree) => (
+            <View key={degree.id} style={styles.degreeCard}>
+              <Text style={styles.degreeName}>{degree.degreeName}</Text>
+              <Text style={styles.institution}>{degree.institution}</Text>
+              <Text style={styles.year}>{degree.startYear} - {degree.endYear}</Text>
+            </View>
+          ))
         ) : (
-          <Text style={styles.qualificationText}>No qualifications listed</Text>
+          <Text style={styles.noDegreesText}>No degrees found</Text>
         )}
+      </ScrollView>
+      
       </View>
     </ScrollView>
   );
@@ -193,6 +193,27 @@ const styles = StyleSheet.create({
     color: '#004d40',
     marginBottom: 5,
     textAlign: 'center',
+  },
+  degreeCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: 8,
+    padding: 15,
+    marginBottom: 15,
+    elevation: 2,
+    width: '100px'
+  },
+  degreeName: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#004d40',
+  },
+  institution: {
+    fontSize: 18,
+    color: '#004d40',
+  },
+  year: {
+    fontSize: 14,
+    color: '#004d40',
   },
   errorContainer: {
     flex: 1,

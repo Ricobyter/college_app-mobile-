@@ -37,6 +37,8 @@ import GetPeople from './pages/GetPeople';
 import Links from './pages/Link';
 import Announcement from './pages/Announcement';
 import AddAnnouncement from './pages/AddAnnouncement';
+import AddDegree from './pages/profile/AddDegree';
+import ShowDegrees from './pages/profile/ShowDegrees';
 
 const Stack = createStackNavigator();
 
@@ -62,6 +64,7 @@ const AppStack = () => (
     <Stack.Screen name="AddStudent" component={AddStudent} />
     <Stack.Screen name="AddVF" component={AddVF} />
     <Stack.Screen name="AddAnnouncement" component={AddAnnouncement} />
+    <Stack.Screen name="AddDegree" component={AddDegree} />
     <Stack.Screen name="Announcement" component={Announcement} />
     <Stack.Screen name="Programs" component={Programs} />
     <Stack.Screen name="Btech" component={Btech} />
@@ -79,6 +82,7 @@ const AppStack = () => (
     <Stack.Screen name="Gallery" component={Gallery} />
     <Stack.Screen name="Info" component={Info} />
     <Stack.Screen name="Notification" component={Notification} />
+    <Stack.Screen name="ShowDegrees" component={ShowDegrees} />
 
   </Stack.Navigator>
 );

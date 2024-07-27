@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { FIREBASE_AUTH, FIREBASE_DB } from '../FirebaseConfig';
-import { collection, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore';
 import { sendPasswordResetEmail } from 'firebase/auth';
 
 export const loginUser = createAsyncThunk(
@@ -35,6 +35,18 @@ export const getUser = createAsyncThunk(
       } else {
         return rejectWithValue('User not found');
       }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const deleteUser = createAsyncThunk(
+  'user/deleteProfessor',
+  async (professorId, { rejectWithValue }) => {
+    try {
+      await deleteDoc(doc(FIREBASE_DB, 'users', professorId));
+      return professorId;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -179,6 +191,56 @@ export const addUser = createAsyncThunk(
   }
 );
 
+export const addDegreeToUser = createAsyncThunk(
+  'user/addDegreeToUser',
+  async (degree, { rejectWithValue }) => {
+    try {
+      const degreesRef = collection(FIREBASE_DB, 'degrees');
+      const docRef = await addDoc(degreesRef, degree);
+      return { id: docRef.id, ...degree };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const fetchUserDegrees = createAsyncThunk(
+  'user/fetchUserDegrees',
+  async (userId, { rejectWithValue }) => {
+    try {
+      const q = query(collection(FIREBASE_DB, 'degrees'), where('userId', '==', userId));
+      const querySnapshot = await getDocs(q);
+      const degrees = querySnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          ...data,
+          createdAt: data.createdAt.toDate().toISOString(), // Convert Firestore Timestamp to ISO string
+          startYear: data.startYear.toDate().getFullYear(), // Convert Firestore Timestamp to year
+          endYear: data.endYear.toDate().getFullYear(), // Convert Firestore Timestamp to year
+        };
+      });
+      return degrees;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const fetchOnlyUserDegrees = createAsyncThunk(
+  'user/fetchUserDegrees',
+  async (uid, { rejectWithValue }) => {
+    try {
+      const querySnapshot = await getDocs(collection(FIREBASE_DB, 'degrees'));
+      const degrees = querySnapshot.docs
+        .filter(doc => doc.data().userId === uid)
+        .map(doc => ({ id: doc.id, ...doc.data() }));
+      return degrees;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
 const initialState = {
   userEmail: '',
@@ -195,6 +257,7 @@ const initialState = {
   phone: '',
   professors: [],
   students : [],
+  degrees : [],
   vFaculties: [],
   allUsers: []  // Add allUsers to the state
 };
@@ -216,6 +279,7 @@ const userSlice = createSlice({
       state.isLoading = false;
       state.bio = '';
       state.phone = '';
+      degrees =[];
       state.professors = [];
       state.students=[];
       state.vFaculties = [];
@@ -265,6 +329,12 @@ const userSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         state.isLoading = false;
+      })
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        state.professors = state.professors.filter(professor => professor.id !== action.payload);
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
+        state.error = action.payload;
       })
       .addCase(updateUser.pending, (state) => {
         state.isLoading = true;
@@ -351,6 +421,23 @@ const userSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         state.isLoading = false;
+      })
+      .addCase(addDegreeToUser.fulfilled, (state, action) => {
+        // Optionally handle the new degree in the state if necessary
+      })
+      .addCase(addDegreeToUser.rejected, (state, action) => {
+        state.error = action.payload;
+      })
+      .addCase(fetchUserDegrees.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchUserDegrees.fulfilled, (state, action) => {
+        state.loading = false;
+        state.degrees = action.payload;
+      })
+      .addCase(fetchUserDegrees.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       })
   },
 });

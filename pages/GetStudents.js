@@ -4,12 +4,15 @@ import {getStudents } from "../store/userSlice"; // Adjust the path as necessary
 import LoadingScreen from "../components/LoadingScreen"; // Adjust the path as necessary
 import { View, Text, TextInput, ScrollView, StyleSheet, Image, TouchableOpacity } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Import the icon library
+import { useNavigation } from "@react-navigation/native";
 
-const GetStudents = ({ navigation }) => {
+const GetStudents = ({ }) => {
   const dispatch = useDispatch();
   const { students, loading, error } = useSelector((state) => state.user);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredstudents, setFilteredstudents] = useState([]);
+
+  const navigation = useNavigation()
 
   useEffect(() => {
     dispatch(getStudents());

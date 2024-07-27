@@ -21,6 +21,24 @@ export const sendWelcomeEmail = createAsyncThunk(
     }
   }
 );
+export const sendUpdationEmail = createAsyncThunk(
+  'email/sendUpdationEmail',
+  async ({ name, email }, thunkAPI) => {
+    try {
+      const response = await axios.post(`${API_URL}/send-email`, {
+        name,
+        email,
+        password,
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error sending email:', error);
+      return thunkAPI.rejectWithValue(
+        error.response ? error.response.data : error.message
+      );
+    }
+  }
+);
 
 // Define slice
 const emailSlice = createSlice({

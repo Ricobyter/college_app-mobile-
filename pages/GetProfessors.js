@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getProfessors } from "../store/userSlice"; // Adjust the path as necessary
+import { getProfessors, deleteUser } from "../store/userSlice"; // Adjust the path as necessary
 import LoadingScreen from "../components/LoadingScreen"; // Adjust the path as necessary
-import { View, Text, TextInput, ScrollView, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, ScrollView, StyleSheet, Image, TouchableOpacity, Alert } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Import the icon library
+import { useNavigation } from "@react-navigation/native";
 
-const GetProfessors = ({ navigation }) => {
+const GetProfessors = () => {
   const dispatch = useDispatch();
   const { professors, loading, error } = useSelector((state) => state.user);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredProfessors, setFilteredProfessors] = useState([]);
+  const navigation = useNavigation()
 
   useEffect(() => {
     dispatch(getProfessors());
@@ -28,6 +30,25 @@ const GetProfessors = ({ navigation }) => {
     }
   }, [searchQuery, professors]);
 
+  const handleDelete = (professorId) => {
+    Alert.alert(
+      "Delete Professor",
+      "Are you sure you want to delete this professor?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        {
+          text: "Yes",
+          onPress: () => {
+            dispatch(deleteUser(professorId));
+          }
+        }
+      ]
+    );
+  };
+
   if (loading) {
     return <LoadingScreen />;
   }
@@ -42,48 +63,50 @@ const GetProfessors = ({ navigation }) => {
 
   return (
     <>
-    <ScrollView style={styles.container} >
-      <View style={styles.searchContainer}>
-        <Icon
-          name="search"
-          size={20}
-          color="#004d40"
-          style={styles.searchIcon}
-        />
-        <TextInput
-          placeholder="Search Professors"
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          style={styles.searchInput}
-        />
-      </View>
+      <ScrollView style={styles.container} >
+        <View style={styles.searchContainer}>
+          <Icon
+            name="search"
+            size={20}
+            color="#004d40"
+            style={styles.searchIcon}
+          />
+          <TextInput
+            placeholder="Search Professors"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            style={styles.searchInput}
+          />
+        </View>
 
-      {filteredProfessors && filteredProfessors.length > 0 ? (
-        filteredProfessors.map((professor) => (
-          <TouchableOpacity
-            key={professor.id}
-            style={styles.professorCard}
-            onPress={() => navigation.navigate("ProfessorProfile", { professorId: professor.id })}
-            className =''
-          >
-            <View style={styles.imageContainer}>
-              <Image
-                source={{ uri: professor.photoURL || "https://via.placeholder.com/100" }}
-                style={styles.profileImage}
-              />
+        {filteredProfessors && filteredProfessors.length > 0 ? (
+          filteredProfessors.map((professor) => (
+            <View key={professor.id} style={styles.professorCard}>
+              <TouchableOpacity
+                style={styles.cardContent}
+                onPress={() => navigation.navigate("ProfessorProfile", { professorId: professor.id })}
+              >
+                <View style={styles.imageContainer}>
+                  <Image
+                    source={{ uri: professor.photoURL || "https://via.placeholder.com/100" }}
+                    style={styles.profileImage}
+                  />
+                </View>
+                <View style={styles.detailsContainer}>
+                  <Text style={styles.professorName}>{professor.username}</Text>
+                  <Text style={styles.professorEmail}>{professor.email}</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleDelete(professor.id)}>
+                <Icon name="delete" size={24} color="red" />
+              </TouchableOpacity>
             </View>
-            <View style={styles.detailsContainer}>
-              <Text style={styles.professorName}>{professor.username}</Text>
-              <Text style={styles.professorEmail}>{professor.email}</Text>
-            </View>
-          </TouchableOpacity>
-        ))
-      ) : (
-        <Text style={styles.noProfessorsText}>No professors found</Text>
-      )}
-    </ScrollView>
+          ))
+        ) : (
+          <Text style={styles.noProfessorsText}>No professors found</Text>
+        )}
+      </ScrollView>
     </>
-
   );
 };
 
@@ -133,6 +156,12 @@ const styles = StyleSheet.create({
     padding: 15,
     marginBottom: 15,
     elevation: 2,
+    justifyContent: 'space-between'
+  },
+  cardContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
   },
   imageContainer: {
     marginRight: 15,

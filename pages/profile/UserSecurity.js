@@ -1,13 +1,13 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/FontAwesome'; // Import FontAwesome icons
+import Icon from 'react-native-vector-icons/FontAwesome'; 
 
 const UserSecurity = () => {
   const navigation = useNavigation();
 
   const handleNavigateToChangePassword = () => {
-    navigation.navigate('ChangePassword'); // Ensure 'ChangePassword' matches the route name in your navigator
+    navigation.navigate('ChangePassword');
   };
 
   return (

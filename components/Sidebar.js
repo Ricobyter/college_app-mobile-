@@ -61,7 +61,7 @@ const Sidebar = (props) => {
           )}
         </View>
         <View style={styles.menuContainer}>
-          <Pressable style={styles.menuItem} onPress={() => navigation.navigate('Home')}>
+          <Pressable style={styles.menuItem} onPress={() => navigation.navigate('MainPage')}>
             <Icon name="home" size={20} color="#00796b" />
             <Text style={styles.menuItemText}>Home</Text>
           </Pressable>

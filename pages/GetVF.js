@@ -4,12 +4,14 @@ import {getvFaculties, getVFaculties } from "../store/userSlice"; // Adjust the 
 import LoadingScreen from "../components/LoadingScreen"; // Adjust the path as necessary
 import { View, Text, TextInput, ScrollView, StyleSheet, Image, TouchableOpacity } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Import the icon library
+import { useNavigation } from "@react-navigation/native";
 
-const GetVF = ({ navigation }) => {
+const GetVF = ({ }) => {
   const dispatch = useDispatch();
   const { vFaculties, loading, error } = useSelector((state) => state.user);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredvFaculties, setFilteredvFaculties] = useState([]);
+ const navigation = useNavigation()
 
   useEffect(() => {
     dispatch(getVFaculties());

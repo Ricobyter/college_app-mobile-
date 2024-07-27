@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUser } from '../store/userSlice'; // Adjust the path as necessary
+import { getUser, fetchUserDegrees } from '../store/userSlice'; // Adjust the path as necessary
 import { View, Text, Image, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import LoadingPage from '../components/LoadingScreen';
 
 const ProfessorProfile = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -14,15 +15,17 @@ const ProfessorProfile = ({ navigation }) => {
   const [selectedBio, setSelectedBio] = useState('');
   const [selectedQualification, setSelectedQualification] = useState('');
 
+  const { username, photoURL, educationQualifications, userEmail, isLoading, designation, bio, phone, error , degrees, uid} = useSelector((state) => state.user);
+
   useEffect(() => {
     if (professorId) {
       dispatch(getUser(professorId));
+      dispatch(fetchUserDegrees(professorId)); 
     }
   }, [dispatch, professorId]);
 
-  const { username, photoURL, educationQualifications, userEmail, birthPlace, designation, bio, phone, error } = useSelector((state) => state.user);
-
   useEffect(() => {
+    // Assuming that user data includes bio and qualifications
     if (bio) {
       setSelectedBio(bio);
     } else {
@@ -41,10 +44,14 @@ const ProfessorProfile = ({ navigation }) => {
     );
   }
 
+  if (isLoading) {
+    return <LoadingPage />;
+  }
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Professor Profile</Text>
+        <Text style={styles.headerText}>Profile</Text>
       </View>
 
       <View style={styles.contentContainer}>
@@ -65,15 +72,15 @@ const ProfessorProfile = ({ navigation }) => {
         </View>
         <View style={styles.infoContainer}>
           <Icon name="work" size={24} color="#004d40" style={styles.icon} />
-          <Text style={styles.designation} className='font-bold'>{designation}</Text>
+          <Text style={styles.designation}>{designation}</Text>
         </View>
         <View style={styles.infoContainer}>
           <Icon name="email" size={24} color="#004d40" style={styles.icon} />
-          <Text style={styles.infoText} className = 'font-bold'>{userEmail}</Text>
+          <Text style={styles.infoText}>{userEmail}</Text>
         </View>
         <View style={styles.infoContainer}>
           <Icon name="phone" size={24} color="#004d40" style={styles.icon} />
-          <Text style={styles.infoText} className = 'font-bold'>{phone}</Text>
+          <Text style={styles.infoText}>{phone}</Text>
         </View>
 
         <Text style={styles.sectionTitle}>Bio:</Text>
@@ -81,21 +88,21 @@ const ProfessorProfile = ({ navigation }) => {
           selectedValue={selectedBio}
           onValueChange={(value) => setSelectedBio(value)}
           style={styles.picker}
-          enabled={false} 
+          enabled={false}
         >
-          <Picker.Item label="About" value={selectedBio}/>
+          <Picker.Item label={selectedBio} value={selectedBio} />
         </Picker>
 
         <Text style={styles.sectionTitle}>Education Qualifications:</Text>
-        {educationQualifications && educationQualifications.length > 0 ? (
+        {degrees && degrees.length > 0 ? (
           <Picker
             selectedValue={selectedQualification}
             onValueChange={(value) => setSelectedQualification(value)}
             style={styles.picker}
-            enabled={false} 
+            enabled={false}
           >
-            {educationQualifications.map((qualification, index) => (
-              <Picker.Item key={index} label="Education" value={qualification} classname = 'font-bold'/>
+            {degrees.map((degree) => (
+              <Picker.Item key={degree.id} label={degree.degreeName} value={degree.degreeName} />
             ))}
           </Picker>
         ) : (
@@ -111,11 +118,11 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     padding: 20,
     paddingTop: 50,
-    backgroundColor: '#e0f2f1', // Background color matching the theme
+    backgroundColor: '#e0f2f1',
   },
   headerContainer: {
     marginBottom: 20,
-    backgroundColor: '#00796b', // Header background color
+    backgroundColor: '#00796b',
     paddingVertical: 10,
     borderRadius: 10,
     alignItems: 'center',
@@ -150,10 +157,9 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     flexDirection: 'row',
-    alignItems: 'between',
+    alignItems: 'center',
     marginBottom: 10,
-    borderColor : 'green',
-    width: '100%'
+    width: '100%',
   },
   icon: {
     marginRight: 10,

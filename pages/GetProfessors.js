@@ -119,6 +119,7 @@ const GetProfessors = () => {
                   <Text style={styles.professorEmail}>{professor.designation}</Text>
                 </View>
               </TouchableOpacity>
+              
               <AdminOnly>
                 <TouchableOpacity onPress={() => handleDelete(professor.id)}>
                   <Icon name="delete" size={24} color="red" />

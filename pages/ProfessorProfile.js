@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUser, fetchUserDegrees } from '../store/userSlice'; // Adjust the path as necessary
-import { View, Text, Image, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, Image, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { useRoute } from '@react-navigation/native';
-import { Picker } from '@react-native-picker/picker';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import LoadingPage from '../components/LoadingScreen';
 
@@ -13,7 +12,8 @@ const ProfessorProfile = ({ navigation }) => {
   const { professorId } = route.params;
   const [imageLoading, setImageLoading] = useState(true);
   const [selectedBio, setSelectedBio] = useState('');
-  const [selectedQualification, setSelectedQualification] = useState('');
+  const [isBioExpanded, setIsBioExpanded] = useState(false);
+  const [isEducationExpanded, setIsEducationExpanded] = useState(false);
 
   const { username, photoURL, userEmail, isLoading, designation, bio, phone, error, degrees } = useSelector((state) => state.user);
 
@@ -30,10 +30,15 @@ const ProfessorProfile = ({ navigation }) => {
     } else {
       setSelectedBio('No relevant information found');
     }
-    if (degrees && degrees.length > 0) {
-      setSelectedQualification(`${degrees[0].degreeName}, ${degrees[0].year}, ${degrees[0].institute}`);
-    }
-  }, [bio, degrees]);
+  }, [bio]);
+
+  const toggleBioExpansion = () => {
+    setIsBioExpanded(!isBioExpanded);
+  };
+
+  const toggleEducationExpansion = () => {
+    setIsEducationExpanded(!isEducationExpanded);
+  };
 
   if (error) {
     return (
@@ -82,32 +87,37 @@ const ProfessorProfile = ({ navigation }) => {
           <Text style={styles.infoText}>{phone}</Text>
         </View>
 
-        <Text style={styles.sectionTitle}>Bio:</Text>
-        <Picker
-          selectedValue={selectedBio}
-          onValueChange={(value) => setSelectedBio(value)}
-          style={styles.picker}
-          enabled={false}
-        >
-          <Picker.Item label={selectedBio} value={selectedBio} />
-        </Picker>
+        <TouchableOpacity onPress={toggleBioExpansion} style={[styles.sectionHeader, styles.bioSection]}>
+          <Text style={styles.sectionTitle}>Bio:</Text>
+          <Icon name={isBioExpanded ? "expand-less" : "expand-more"} size={24} color="#004d40" />
+        </TouchableOpacity>
 
-        <Text style={styles.sectionTitle}>Education Qualifications:</Text>
-
-      <ScrollView className = 'w-full'>
-        {degrees && degrees.length > 0 ? (
-          degrees.map((degree) => (
-            <View key={degree.id} style={styles.degreeCard}>
-              <Text style={styles.degreeName}>{degree.degreeName}</Text>
-              <Text style={styles.institution}>{degree.institution}</Text>
-              <Text style={styles.year}>{degree.startYear} - {degree.endYear}</Text>
-            </View>
-          ))
-        ) : (
-          <Text style={styles.noDegreesText}>No degrees found</Text>
+        {isBioExpanded && (
+          <View style={styles.expandedContent}>
+            <Text style={styles.bioText}>{selectedBio}</Text>
+          </View>
         )}
-      </ScrollView>
-      
+
+        <TouchableOpacity onPress={toggleEducationExpansion} style={[styles.sectionHeader, styles.educationSection]}>
+          <Text style={styles.sectionTitle}>Education Qualifications:</Text>
+          <Icon name={isEducationExpanded ? "expand-less" : "expand-more"} size={24} color="#004d40" />
+        </TouchableOpacity>
+
+        {isEducationExpanded && (
+          <View style={styles.expandedContent}>
+            {degrees && degrees.length > 0 ? (
+              degrees.map((degree) => (
+                <View key={degree.id} style={styles.degreeCard}>
+                  <Text style={styles.degreeName}>{degree.degreeName}</Text>
+                  <Text style={styles.institution}>{degree.institution}</Text>
+                  <Text style={styles.year}>{degree.startYear} - {degree.endYear}</Text>
+                </View>
+              ))
+            ) : (
+              <Text style={styles.noDegreesText}>No degrees found</Text>
+            )}
+          </View>
+        )}
       </View>
     </ScrollView>
   );
@@ -177,22 +187,37 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#004d40',
   },
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 10,
+    padding: 10,
+    borderRadius: 10,
+  },
+  bioSection: {
+    backgroundColor: '#b2dfdb',
+    marginTop: 10,
+  },
+  educationSection: {
+    backgroundColor: '#80cbc4',
+  },
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#004d40',
-    marginBottom: 10,
-    textAlign: 'center',
   },
-  picker: {
+  expandedContent: {
+    backgroundColor: '#ffffff',
+    padding: 15,
+    borderRadius: 10,
     width: '100%',
     marginBottom: 20,
   },
-  qualificationText: {
+  bioText: {
     fontSize: 16,
     color: '#004d40',
-    marginBottom: 5,
-    textAlign: 'center',
   },
   degreeCard: {
     backgroundColor: '#ffffff',
@@ -200,7 +225,6 @@ const styles = StyleSheet.create({
     padding: 15,
     marginBottom: 15,
     elevation: 2,
-    width: '100px'
   },
   degreeName: {
     fontSize: 20,
@@ -208,12 +232,17 @@ const styles = StyleSheet.create({
     color: '#004d40',
   },
   institution: {
-    fontSize: 18,
+    fontSize: 16,
     color: '#004d40',
   },
   year: {
     fontSize: 14,
     color: '#004d40',
+  },
+  noDegreesText: {
+    fontSize: 18,
+    color: '#004d40',
+    textAlign: 'center',
   },
   errorContainer: {
     flex: 1,

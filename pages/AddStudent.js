@@ -17,6 +17,7 @@ const AddStudent = ({ navigation }) => {
 
   const dispatch = useDispatch();
   const { isSending, isSent, isNotSent, message } = useSelector((state) => state.email);
+  const { loading, isLoading } = useSelector((state) => state.user);
 
   const handleSubmit = async () => {
     if (!name || !email || !password || !confirmPassword) {
@@ -138,7 +139,7 @@ const AddStudent = ({ navigation }) => {
         style={styles.input}
       />
 
-      {isSending ? (
+      {(isSending|| loading || isLoading) ? (
         <ActivityIndicator size="large" color="#00796b" style={styles.activityIndicator} />
       ) : (
         <Pressable onPress={handleSubmit} style={styles.submitButton}>

@@ -39,6 +39,7 @@ import Announcement from './pages/Announcement';
 import AddAnnouncement from './pages/AddAnnouncement';
 import AddDegree from './pages/profile/AddDegree';
 import ShowDegrees from './pages/profile/ShowDegrees';
+import AddEvent from './pages/AddEvent';
 
 const Stack = createStackNavigator();
 
@@ -65,6 +66,7 @@ const AppStack = () => (
     <Stack.Screen name="AddVF" component={AddVF} />
     <Stack.Screen name="AddAnnouncement" component={AddAnnouncement} />
     <Stack.Screen name="AddDegree" component={AddDegree} />
+    <Stack.Screen name="AddEvent" component={AddEvent} />
     <Stack.Screen name="Announcement" component={Announcement} />
     <Stack.Screen name="Programs" component={Programs} />
     <Stack.Screen name="Btech" component={Btech} />

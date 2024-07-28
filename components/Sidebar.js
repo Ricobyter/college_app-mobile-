@@ -12,7 +12,7 @@ import { AdminOnly } from "../utils";
 const Sidebar = (props) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const { uid, username, photoURL, isLoading, userEmail, designation } = useSelector((state) => state.user);
+  const { uid, username, photoURL, isLoading,  designation } = useSelector((state) => state.user);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -84,13 +84,14 @@ const Sidebar = (props) => {
             <Icon name="link" size={20} color="#00796b" />
             <Text style={styles.menuItemText}>Links</Text>
           </Pressable>
-          <AdminOnly>
 
+          <AdminOnly>
           <Pressable style={styles.menuItem} onPress={() => navigation.navigate('AdminDashboard')}>
             <Icon name="tachometer-alt" size={20} color="#00796b" />
             <Text style={styles.menuItemText}>Dashboard</Text>
           </Pressable>
           </AdminOnly>
+
           <Pressable style={styles.menuItem} onPress={() => navigation.navigate('Info')}>
             <Icon name="info-circle" size={20} color="#00796b" />
             <Text style={styles.menuItemText}>About App</Text>

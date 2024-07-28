@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
-import { collection, getDocs, orderBy, query } from 'firebase/firestore';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { collection, getDocs, orderBy, query, doc, deleteDoc } from 'firebase/firestore';
 import { FIREBASE_DB } from '../FirebaseConfig';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import Toast from 'react-native-toast-message';
 import Header from '../components/Header'; // Import Header component
 
 const Announcement = () => {
@@ -25,28 +27,65 @@ const Announcement = () => {
     fetchAnnouncements();
   }, []);
 
+  const handleDelete = async (id) => {
+    try {
+      await deleteDoc(doc(FIREBASE_DB, 'announcements', id));
+      setAnnouncements(announcements.filter((announcement) => announcement.id !== id));
+      Toast.show({
+        type: 'success',
+        text1: 'Deleted',
+        text2: 'Announcement deleted successfully!',
+      });
+    } catch (error) {
+      console.error('Error deleting announcement: ', error);
+    }
+  };
+
+  const confirmDelete = (id) => {
+    Alert.alert(
+      'Delete Announcement',
+      'Are you sure you want to delete this announcement?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          onPress: () => handleDelete(id),
+          style: 'destructive',
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
   return (
     <>
-    
       <Header />
-    <View style={styles.container}>
-      <View style={styles.contentContainer}>
-        <View style={styles.headerContainer}>
-          <Text style={styles.headerText}>Announcements</Text>
+      <View style={styles.container}>
+        <View style={styles.contentContainer}>
+          <View style={styles.headerContainer}>
+            <Text style={styles.headerText}>Announcements</Text>
+          </View>
+          <ScrollView contentContainerStyle={styles.scrollContainer}>
+            {announcements.map((announcement) => (
+              <View key={announcement.id} style={styles.announcementCard}>
+                <View style={styles.cardHeader}>
+                  <Text style={styles.announcementTitle}>{announcement.title}</Text>
+                  <TouchableOpacity onPress={() => confirmDelete(announcement.id)}>
+                    <Icon name="delete" size={24} color="#d32f2f" />
+                  </TouchableOpacity>
+                </View>
+                <Text style={styles.announcementDate}>{announcement.date}</Text>
+                <Text style={styles.announcementDescription}>{announcement.description}</Text>
+              </View>
+            ))}
+          </ScrollView>
         </View>
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
-          {announcements.map((announcement) => (
-            <View key={announcement.id} style={styles.announcementCard}>
-              <Text style={styles.announcementTitle}>{announcement.title}</Text>
-              <Text style={styles.announcementDate}>{announcement.date}</Text>
-              <Text style={styles.announcementDescription}>{announcement.description}</Text>
-            </View>
-          ))}
-        </ScrollView>
       </View>
-    </View>
+      <Toast />
     </>
-    
   );
 };
 
@@ -80,6 +119,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 15,
     elevation: 3, // Shadow effect for Android
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   announcementTitle: {
     fontSize: 18,

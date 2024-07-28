@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; // Ensure to install this package for icons
+import Header from '../components/Header';
 
 const Facilities = () => {
   const [expanded, setExpanded] = useState(null);
@@ -76,6 +77,8 @@ const Facilities = () => {
   };
 
   return (
+    <>
+    <Header />
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Facilities</Text>
@@ -113,6 +116,7 @@ const Facilities = () => {
         ))}
       </View>
     </ScrollView>
+    </>
   );
 };
 

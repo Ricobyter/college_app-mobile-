@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Header from '../components/Header';
 
 const Gallery = () => {
   const [expanded, setExpanded] = useState(null);
@@ -37,6 +38,8 @@ const Gallery = () => {
   };
 
   return (
+    <>
+    <Header />
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Gallery</Text>
@@ -58,6 +61,7 @@ const Gallery = () => {
         </View>
      ) )}
     </ScrollView>
+    </>
   );
 };
 

@@ -5,30 +5,13 @@ const API_URL = process.env.API_URL;
 
 export const sendWelcomeEmail = createAsyncThunk(
   'email/sendWelcomeEmail',
-  async ({ name, email, password }, thunkAPI) => {
+  async ({ name, email, password, role }, thunkAPI) => {
     try {
       const response = await axios.post(`${API_URL}/send-email`, {
         name,
         email,
         password,
-      });
-      return response.data;
-    } catch (error) {
-      console.error('Error sending email:', error);
-      return thunkAPI.rejectWithValue(
-        error.response ? error.response.data : error.message
-      );
-    }
-  }
-);
-export const sendUpdationEmail = createAsyncThunk(
-  'email/sendUpdationEmail',
-  async ({ name, email }, thunkAPI) => {
-    try {
-      const response = await axios.post(`${API_URL}/send-email`, {
-        name,
-        email,
-        password,
+        role
       });
       return response.data;
     } catch (error) {
@@ -40,7 +23,43 @@ export const sendUpdationEmail = createAsyncThunk(
   }
 );
 
-// Define slice
+export const sendUpdationEmail = createAsyncThunk(
+  'email/sendUpdationEmail',
+  async ({ name, email }, thunkAPI) => {
+    try {
+      const response = await axios.post(`${API_URL}/send-update-profile-email`, {
+        name,
+        email,
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error sending email:', error);
+      return thunkAPI.rejectWithValue(
+        error.response ? error.response.data : error.message
+      );
+    }
+  }
+);
+
+export const sendUpdatePasswordEmail = createAsyncThunk(
+  'email/sendUpdatePasswordEmail',
+  async ({ name, email }, thunkAPI) => {
+    try {
+      const response = await axios.post(`${API_URL}/send-update-password-email`, {
+        name,
+        email,
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error sending email:', error);
+      return thunkAPI.rejectWithValue(
+        error.response ? error.response.data : error.message
+      );
+    }
+  }
+);
+
+
 const emailSlice = createSlice({
   name: 'email',
   initialState: {

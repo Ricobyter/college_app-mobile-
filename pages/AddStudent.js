@@ -55,7 +55,7 @@ const AddStudent = ({ navigation }) => {
       await setDoc(doc(FIREBASE_DB, 'users', user.uid), userData);
 
 
-    //   await dispatch(sendWelcomeEmail({ name, email, password })).unwrap();
+      // await dispatch(sendWelcomeEmail({ name, email, password, role: "Student" })).unwrap();
 
       if (isSent) {
         Toast.show({

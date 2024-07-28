@@ -56,7 +56,7 @@ const AddVF = ({ navigation }) => {
       await setDoc(doc(FIREBASE_DB, 'users', user.uid), userData);
 
 
-      // await dispatch(sendWelcomeEmail({ name, email, password })).unwrap();
+      await dispatch(sendWelcomeEmail({ name, email, password, role: "Visiting Faculty" })).unwrap();
 
       if (isSent) {
         Toast.show({

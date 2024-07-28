@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'react-native';
+import Header from '../components/Header';
 
 const NewsEvents = () => {
   const [showCurrent, setShowCurrent] = useState(true); // State to track current or archive view
@@ -19,6 +20,8 @@ const NewsEvents = () => {
   };
 
   return (
+    <>
+    <Header />
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>News & Events</Text>
@@ -63,6 +66,7 @@ const NewsEvents = () => {
         )}
       </View>
     </ScrollView>
+    </>
   );
 };
 

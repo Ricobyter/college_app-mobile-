@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; // Ensure to install this package for icons
+import Header from '../components/Header';
 
 const Phd = () => {
   const [expanded, setExpanded] = useState(null);
@@ -42,7 +43,9 @@ const Phd = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    
+    <ScrollView contentContainerStyle={styles.container}>4
+    <Header/>
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Ph.D. Program</Text>
       </View>

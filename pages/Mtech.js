@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; // Ensure to install this package for icons
+import Header from '../components/Header';
 
 const Mtech = () => {
   const [expanded, setExpanded] = useState(null);
@@ -48,6 +49,8 @@ const Mtech = () => {
   };
 
   return (
+    <>
+    <Header />
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>M.Tech Programs</Text>
@@ -115,6 +118,7 @@ const Mtech = () => {
         </Text>
       </View>
     </ScrollView>
+    </>
   );
 };
 

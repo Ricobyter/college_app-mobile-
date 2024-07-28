@@ -12,6 +12,8 @@ const GetProfessors = () => {
   const { professors, loading, error } = useSelector((state) => state.user);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredProfessors, setFilteredProfessors] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(4); // Number of items per page
   const navigation = useNavigation()
 
   useEffect(() => {
@@ -29,6 +31,7 @@ const GetProfessors = () => {
     } else {
       setFilteredProfessors(professors);
     }
+    setCurrentPage(1); // Reset to first page on new search
   }, [searchQuery, professors]);
 
   const handleDelete = (professorId) => {
@@ -48,6 +51,24 @@ const GetProfessors = () => {
         }
       ]
     );
+  };
+
+  // Pagination calculations
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentProfessors = filteredProfessors.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredProfessors.length / itemsPerPage);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
   };
 
   if (loading) {
@@ -80,8 +101,8 @@ const GetProfessors = () => {
           />
         </View>
 
-        {filteredProfessors && filteredProfessors.length > 0 ? (
-          filteredProfessors.map((professor) => (
+        {currentProfessors && currentProfessors.length > 0 ? (
+          currentProfessors.map((professor) => (
             <View key={professor.id} style={styles.professorCard}>
               <TouchableOpacity
                 style={styles.cardContent}
@@ -99,9 +120,9 @@ const GetProfessors = () => {
                 </View>
               </TouchableOpacity>
               <AdminOnly>
-              <TouchableOpacity onPress={() => handleDelete(professor.id)}>
-                <Icon name="delete" size={24} color="red" />
-              </TouchableOpacity>
+                <TouchableOpacity onPress={() => handleDelete(professor.id)}>
+                  <Icon name="delete" size={24} color="red" />
+                </TouchableOpacity>
               </AdminOnly>
             </View>
           ))
@@ -109,6 +130,30 @@ const GetProfessors = () => {
           <Text style={styles.noProfessorsText}>No professors found</Text>
         )}
       </ScrollView>
+
+      <View style={styles.paginationContainer}>
+        <TouchableOpacity
+          onPress={handlePreviousPage}
+          disabled={currentPage === 1}
+          style={[
+            styles.paginationButton,
+            currentPage === 1 && styles.paginationButtonDisabled,
+          ]}
+        >
+          <Text style={styles.paginationButtonText}>Previous</Text>
+        </TouchableOpacity>
+        <Text style={styles.pageNumberText}>{currentPage} / {totalPages}</Text>
+        <TouchableOpacity
+          onPress={handleNextPage}
+          disabled={currentPage === totalPages}
+          style={[
+            styles.paginationButton,
+            currentPage === totalPages && styles.paginationButtonDisabled,
+          ]}
+        >
+          <Text style={styles.paginationButtonText}>Next</Text>
+        </TouchableOpacity>
+      </View>
     </>
   );
 };
@@ -199,6 +244,31 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 18,
+    color: '#004d40',
+  },
+  paginationContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+    backgroundColor: '#e0f2f1',
+  },
+  paginationButton: {
+    backgroundColor: '#00796b', // Shade of green
+    padding: 10,
+    borderRadius: 5,
+    marginHorizontal: 10,
+  },
+  paginationButtonDisabled: {
+    backgroundColor: '#b2dfdb', // Lighter shade of green for disabled state
+  },
+  paginationButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+  },
+  pageNumberText: {
+    marginHorizontal: 20,
+    fontSize: 16,
     color: '#004d40',
   },
 });

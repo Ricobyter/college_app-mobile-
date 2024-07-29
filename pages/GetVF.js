@@ -1,37 +1,37 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getProfessors, deleteUser } from "../store/userSlice"; // Adjust the path as necessary
+import { getVFaculties, deleteUser } from "../store/userSlice"; // Adjust the path as necessary
 import { View, Text, TextInput, ScrollView, StyleSheet, Image, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Import the icon library
 import { useNavigation } from "@react-navigation/native";
 import { AdminOnly } from "../utils";
 
-const GetProfessors = () => {
+const GetVF = () => {
   const dispatch = useDispatch();
-  const { professors, loading, error } = useSelector((state) => state.user);
+  const { vFaculties, loading, error } = useSelector((state) => state.user);
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredProfessors, setFilteredProfessors] = useState([]);
+  const [filteredvFaculties, setFilteredvFaculties] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(4); // Number of items per page
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
   useEffect(() => {
-    dispatch(getProfessors());
+    dispatch(getVFaculties());
   }, [dispatch]);
 
   useEffect(() => {
-    // Filter professors based on search query
+    // Filter vFaculties based on search query
     if (searchQuery) {
-      setFilteredProfessors(
-        professors.filter(professor =>
+      setFilteredvFaculties(
+        vFaculties.filter(professor =>
           professor.username.toLowerCase().includes(searchQuery.toLowerCase())
         )
       );
     } else {
-      setFilteredProfessors(professors);
+      setFilteredvFaculties(vFaculties);
     }
     setCurrentPage(1); // Reset to first page on new search
-  }, [searchQuery, professors]);
+  }, [searchQuery, vFaculties]);
 
   const handleDelete = (professorId) => {
     Alert.alert(
@@ -55,8 +55,8 @@ const GetProfessors = () => {
   // Pagination calculations
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentProfessors = filteredProfessors.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredProfessors.length / itemsPerPage);
+  const currentvFaculties = filteredvFaculties.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredvFaculties.length / itemsPerPage);
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -72,7 +72,7 @@ const GetProfessors = () => {
 
   if (loading) {
     return (
-      <View style={styles.centeredView}>
+      <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#00796b" />
       </View>
     );
@@ -88,7 +88,8 @@ const GetProfessors = () => {
 
   return (
     <>
-      <ScrollView style={styles.container}>
+      <ScrollView style={styles.container} >
+        {/* Search Input with Icon */}
         <View style={styles.searchContainer}>
           <Icon
             name="search"
@@ -97,40 +98,39 @@ const GetProfessors = () => {
             style={styles.searchIcon}
           />
           <TextInput
-            placeholder="Search Professors"
+            placeholder="Search Visiting Faculties"
             value={searchQuery}
             onChangeText={setSearchQuery}
             style={styles.searchInput}
           />
         </View>
 
-        {currentProfessors && currentProfessors.length > 0 ? (
-          currentProfessors.map((professor) => (
-            <View key={professor.id} style={styles.professorCard}>
-              <TouchableOpacity
-                style={styles.cardContent}
-                onPress={() => navigation.navigate("ProfessorProfile", { professorId: professor.id })}
-              >
-                <View style={styles.imageContainer}>
-                  <Image
-                    source={{ uri: professor.photoURL || "https://via.placeholder.com/100" }}
-                    style={styles.profileImage}
-                  />
-                </View>
-                <View style={styles.detailsContainer}>
-                  <Text style={styles.professorName}>{professor.username}</Text>
-                  <Text style={styles.professorEmail}>{professor.designation}</Text>
-                </View>
-              </TouchableOpacity>
+        {currentvFaculties && currentvFaculties.length > 0 ? (
+          currentvFaculties.map((professor) => (
+            <TouchableOpacity
+              key={professor.id}
+              style={styles.professorCard}
+              onPress={() => navigation.navigate("ProfessorProfile", { professorId: professor.id })}
+            >
+              <View style={styles.imageContainer}>
+                <Image
+                  source={{ uri: professor.photoURL || "https://via.placeholder.com/100" }}
+                  style={styles.profileImage}
+                />
+              </View>
+              <View style={styles.detailsContainer}>
+                <Text style={styles.professorName}>{professor.username}</Text>
+                <Text style={styles.professorEmail}>{professor.designation}</Text>
+              </View>
               <AdminOnly>
                 <TouchableOpacity onPress={() => handleDelete(professor.id)}>
                   <Icon name="delete" size={24} color="red" />
                 </TouchableOpacity>
               </AdminOnly>
-            </View>
+            </TouchableOpacity>
           ))
         ) : (
-          <Text style={styles.noProfessorsText}>No professors found</Text>
+          <Text style={styles.novFacultiesText}>No Visiting Faculties found</Text>
         )}
       </ScrollView>
 
@@ -209,11 +209,6 @@ const styles = StyleSheet.create({
     elevation: 2,
     justifyContent: 'space-between'
   },
-  cardContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
   imageContainer: {
     marginRight: 15,
   },
@@ -234,7 +229,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#004d40',
   },
-  noProfessorsText: {
+  novFacultiesText: {
     fontSize: 16,
     color: '#004d40',
     textAlign: 'center',
@@ -274,6 +269,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#004d40',
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#e0f2f1',
+  },
 });
 
-export default GetProfessors;
+export default GetVF;

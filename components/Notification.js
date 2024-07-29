@@ -1,15 +1,55 @@
-import React from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { collection, getDocs, orderBy, query, doc, deleteDoc } from 'firebase/firestore';
+import { FIREBASE_DB } from '../FirebaseConfig';
 import Header from '../components/Header'; // Import Header component
+import Icon from 'react-native-vector-icons/MaterialIcons'; // Import the icon library
+import { AdminOnly } from "../utils";
 
 const Announcement = () => {
-  // Sample data for announcements
-  const announcements = [
-    { title: 'New Research Lab Opening', date: 'July 30, 2024', description: 'We are excited to announce the opening of a new research lab focused on AI and machine learning.' },
-    { title: 'Semester Exam Schedule', date: 'August 5, 2024', description: 'The exam schedule for the upcoming semester has been released. Please check the student portal for details.' },
-    { title: 'Guest Lecture on Cybersecurity', date: 'August 15, 2024', description: 'A guest lecture on cybersecurity will be held next week. All students are encouraged to attend.' },
-    // Add more announcements as needed
-  ];
+  const [announcements, setAnnouncements] = useState([]);
+
+  useEffect(() => {
+    const fetchAnnouncements = async () => {
+      try {
+        const q = query(collection(FIREBASE_DB, 'announcements'), orderBy('createdAt', 'desc'));
+        const querySnapshot = await getDocs(q);
+        const fetchedAnnouncements = [];
+        querySnapshot.forEach((doc) => {
+          fetchedAnnouncements.push({ ...doc.data(), id: doc.id });
+        });
+        setAnnouncements(fetchedAnnouncements);
+      } catch (error) {
+        console.error('Error fetching announcements: ', error);
+      }
+    };
+
+    fetchAnnouncements();
+  }, []);
+
+  const handleDelete = (announcementId) => {
+    Alert.alert(
+      "Delete Announcement",
+      "Are you sure you want to delete this announcement?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        {
+          text: "Yes",
+          onPress: async () => {
+            try {
+              await deleteDoc(doc(FIREBASE_DB, 'announcements', announcementId));
+              setAnnouncements(announcements.filter(announcement => announcement.id !== announcementId));
+            } catch (error) {
+              console.error('Error deleting announcement: ', error);
+            }
+          }
+        }
+      ]
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -19,9 +59,16 @@ const Announcement = () => {
           <Text style={styles.headerText}>Announcements</Text>
         </View>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
-          {announcements.map((announcement, index) => (
-            <View key={index} style={styles.announcementCard}>
-              <Text style={styles.announcementTitle}>{announcement.title}</Text>
+          {announcements.map((announcement) => (
+            <View key={announcement.id} style={styles.announcementCard}>
+              <View style={styles.announcementHeader}>
+                <Text style={styles.announcementTitle}>{announcement.title}</Text>
+                <AdminOnly>
+                <TouchableOpacity onPress={() => handleDelete(announcement.id)}>
+                  <Icon name="delete" size={24} color="red" />
+                </TouchableOpacity>
+                </AdminOnly>
+              </View>
               <Text style={styles.announcementDate}>{announcement.date}</Text>
               <Text style={styles.announcementDescription}>{announcement.description}</Text>
             </View>
@@ -62,6 +109,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 15,
     elevation: 3, // Shadow effect for Android
+  },
+  announcementHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   announcementTitle: {
     fontSize: 18,

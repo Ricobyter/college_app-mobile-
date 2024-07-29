@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getUser, updateUser } from '../../store/userSlice';
 import * as ImagePicker from 'expo-image-picker';
 import Toast from 'react-native-toast-message';
-
+import Header from '../../components/Header';
 
 const UserPersonalInfo = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -79,99 +79,105 @@ const UserPersonalInfo = ({ navigation }) => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Edit Profile</Text>
-      </View>
-      <View style={styles.imageContainer}>
-        <Image
-          source={{ uri: formState.photoURL || photoURL }}
-          style={styles.profileImage}
-        />
-        {isUpgrading && (
-          <Pressable onPress={handleImageChange} style={styles.changePhotoButton}>
-            <Text style={styles.changePhotoText}>Change Photo</Text>
+    <View style={styles.container}>
+      <Header />
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>Edit Profile</Text>
+        </View>
+        <View style={styles.imageContainer}>
+          <Image
+            source={{ uri: formState.photoURL || photoURL }}
+            style={styles.profileImage}
+          />
+          {isUpgrading && (
+            <Pressable onPress={handleImageChange} style={styles.changePhotoButton}>
+              <Text style={styles.changePhotoText}>Change Photo</Text>
+            </Pressable>
+          )}
+        </View>
+        <View style={styles.formContainer}>
+          <Text style={styles.label}>Name</Text>
+          <TextInput
+            placeholder="Name"
+            value={formState.username}
+            editable={isUpgrading}
+            onChangeText={(value) => handleInputChange('username', value)}
+            style={[styles.input, isUpgrading ? styles.inputEditable : styles.inputNonEditable]}
+          />
+          <Text style={styles.label}>Email</Text>
+          <TextInput
+            placeholder="Email"
+            value={formState.userEmail}
+            editable={false}
+            style={[styles.input, styles.inputNonEditable]}
+          />
+          <Text style={styles.label}>Designation</Text>
+          <TextInput
+            placeholder="Designation"
+            value={formState.designation}
+            editable={false}
+            style={[styles.input, styles.inputNonEditable]}
+          />
+          <Text style={styles.label}>Phone</Text>
+          <TextInput
+            placeholder="Phone"
+            value={formState.phone}
+            editable={isUpgrading}
+            onChangeText={(value) => handleInputChange('phone', value)}
+            style={[styles.input, isUpgrading ? styles.inputEditable : styles.inputNonEditable]}
+          />
+          <Text style={styles.label}>Bio</Text>
+          <TextInput
+            placeholder="Bio"
+            value={formState.bio}
+            onChangeText={(value) => handleInputChange('bio', value)}
+            multiline
+            editable={isUpgrading}
+            numberOfLines={3}
+            style={[styles.input, isUpgrading ? styles.inputEditable : styles.inputNonEditable]}
+          />
+        </View>
+        <View style={styles.buttonContainer}>
+          <Pressable onPress={() => {
+            if (isUpgrading) {
+              saveProfile();
+            } else {
+              setIsUpgrading(true);
+            }
+          }} style={styles.editButton}>
+            <Text style={styles.editButtonText}>{isUpgrading ? 'Save Profile' : 'Edit Profile'}</Text>
           </Pressable>
-        )}
-      </View>
-      <View style={styles.formContainer}>
-        <Text style={styles.label}>Name</Text>
-        <TextInput
-          placeholder="Name"
-          value={formState.username}
-          editable={isUpgrading}
-          onChangeText={(value) => handleInputChange('username', value)}
-          style={[styles.input, isUpgrading ? styles.inputEditable : styles.inputNonEditable]}
-        />
-        <Text style={styles.label}>Email</Text>
-        <TextInput
-          placeholder="Email"
-          value={formState.userEmail}
-          editable={false}
-          style={[styles.input, styles.inputNonEditable]}
-        />
-        <Text style={styles.label}>Designation</Text>
-        <TextInput
-          placeholder="Designation"
-          value={formState.designation}
-          editable={false}
-          style={[styles.input, styles.inputNonEditable]}
-        />
-        <Text style={styles.label}>Phone</Text>
-        <TextInput
-          placeholder="Phone"
-          value={formState.phone}
-          editable={isUpgrading}
-          onChangeText={(value) => handleInputChange('phone', value)}
-          style={[styles.input, isUpgrading ? styles.inputEditable : styles.inputNonEditable]}
-        />
-        <Text style={styles.label}>Bio</Text>
-        <TextInput
-          placeholder="Bio"
-          value={formState.bio}
-          onChangeText={(value) => handleInputChange('bio', value)}
-          multiline
-          editable={isUpgrading}
-          numberOfLines={3}
-          style={[styles.input, isUpgrading ? styles.inputEditable : styles.inputNonEditable]}
-        />
-      </View>
-      <View style={styles.buttonContainer}>
-        <Pressable onPress={() => {
-          if (isUpgrading) {
-            saveProfile();
-          } else {
-            setIsUpgrading(true);
-          }
-        }} style={styles.editButton}>
-          <Text style={styles.editButtonText}>{isUpgrading ? 'Save Profile' : 'Edit Profile'}</Text>
-        </Pressable>
-      </View>
-    </ScrollView>
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  scrollViewContainer: {
-    flexGrow: 1,
+  container: {
+    flex: 1,
     backgroundColor: '#e0f2f1',
   },
+  scrollContainer: {
+    flexGrow: 1,
+    padding: 20,
+  },
   headerContainer: {
-    backgroundColor: '#00796b',
-    paddingVertical: 20,
+    backgroundColor: '#ffffff',
+    paddingVertical: 15,
     alignItems: 'center',
     borderRadius: 10,
-    marginHorizontal: 20,
-    marginTop: 50,
+    marginBottom: 20,
   },
   headerText: {
     fontSize: 26,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#004d40',
   },
   imageContainer: {
     alignItems: 'center',
-    marginVertical: 30,
+    marginVertical: 20,
   },
   profileImage: {
     width: 150,
@@ -179,8 +185,8 @@ const styles = StyleSheet.create({
     borderRadius: 75,
   },
   changePhotoButton: {
-    marginTop: 15,
-    backgroundColor: '#fff',
+    marginTop: 10,
+    backgroundColor: '#ffffff',
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 8,
@@ -215,7 +221,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     alignItems: 'center',
-    marginVertical: 30,
+    marginVertical: 20,
   },
   editButton: {
     backgroundColor: '#00796b',

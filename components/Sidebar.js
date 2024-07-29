@@ -7,11 +7,12 @@ import { FIREBASE_AUTH } from "../FirebaseConfig";
 import { clearUser } from "../store/userSlice";
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useNavigation } from "@react-navigation/native";
+import { AdminOnly } from "../utils";
 
 const Sidebar = (props) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const { uid, username, photoURL, isLoading, userEmail } = useSelector((state) => state.user);
+  const { uid, username, photoURL, isLoading, userEmail, designation } = useSelector((state) => state.user);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -45,18 +46,23 @@ const Sidebar = (props) => {
                 {isLoading ? (
                   <ActivityIndicator size="large" color="#6ec6ff" />
                 ) : (
-                  <Image source={{ uri: photoURL }} style={styles.userImage} />
+                  <Image
+                    source={{ uri: photoURL || 'https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg' }}
+                    style={styles.userImage}
+                  />
                 )}
               </View>
               <View style={styles.userInfo}>
-                <Text style={styles.username}>{username}</Text>
-                <Text style={styles.userEmail}>{userEmail}</Text>
+                <Text style={styles.username}>
+                  {username.length > 20 ? `${username.substring(0, 20)}...` : username}
+                </Text>
+                <Text style={styles.userEmail}>{designation}</Text>
               </View>
             </View>
           )}
         </View>
         <View style={styles.menuContainer}>
-          <Pressable style={styles.menuItem} onPress={() => navigation.navigate('Home')}>
+          <Pressable style={styles.menuItem} onPress={() => navigation.navigate('MainPage')}>
             <Icon name="home" size={20} color="#00796b" />
             <Text style={styles.menuItemText}>Home</Text>
           </Pressable>
@@ -78,10 +84,16 @@ const Sidebar = (props) => {
             <Icon name="link" size={20} color="#00796b" />
             <Text style={styles.menuItemText}>Links</Text>
           </Pressable>
+
+          <AdminOnly>
+
           <Pressable style={styles.menuItem} onPress={() => navigation.navigate('AdminDashboard')}>
             <Icon name="tachometer-alt" size={20} color="#00796b" />
             <Text style={styles.menuItemText}>Dashboard</Text>
           </Pressable>
+          
+          </AdminOnly>
+
           <Pressable style={styles.menuItem} onPress={() => navigation.navigate('Info')}>
             <Icon name="info-circle" size={20} color="#00796b" />
             <Text style={styles.menuItemText}>About App</Text>
@@ -109,21 +121,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 20,
     paddingHorizontal: 15,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  logo: {
-    width: 50,
-    height: 50,
-  },
-  headerText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#00796b',
-    marginLeft: 10,
   },
   userInfoContainer: {
     marginBottom: 20,

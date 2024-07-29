@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome'; // Import FontAwesome icons
+import Header from '../../components/Header';
 
 const UserSecurity = () => {
   const navigation = useNavigation();
@@ -12,18 +13,21 @@ const UserSecurity = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Security</Text>
-      </View>
-      <View style={styles.content}>
-        <TouchableOpacity 
-          onPress={handleNavigateToChangePassword} 
-          style={styles.button}
-        >
-          <Icon name="key" size={24} color="#fff" style={styles.buttonIcon} />
-          <Text style={styles.buttonText}>Change Password</Text>
-        </TouchableOpacity>
-      </View>
+      <Header />
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>Security</Text>
+        </View>
+        <View style={styles.content}>
+          <TouchableOpacity 
+            onPress={handleNavigateToChangePassword} 
+            style={styles.button}
+          >
+            <Icon name="key" size={24} color="#fff" style={styles.buttonIcon} />
+            <Text style={styles.buttonText}>Change Password</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -31,13 +35,15 @@ const UserSecurity = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    paddingTop: 50,
     backgroundColor: '#e0f2f1', // Background color matching the theme
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    padding: 20,
   },
   headerContainer: {
     marginBottom: 30,
-    backgroundColor: '#00796b', // Header background color matching the Gallery header
+    backgroundColor: '#ffffff', // Header background color matching the UserProfile header
     paddingVertical: 15,
     paddingHorizontal: 20,
     borderRadius: 10,
@@ -47,7 +53,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 25,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#004d40',
   },
   content: {
     alignItems: 'center',

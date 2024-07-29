@@ -1,42 +1,43 @@
+
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getProfessors, deleteUser } from "../store/userSlice"; // Adjust the path as necessary
-import { View, Text, TextInput, ScrollView, StyleSheet, Image, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
+import { getStudents, deleteUser } from "../store/userSlice"; // Adjust the path as necessary
+import { View, Text, TextInput, ScrollView, StyleSheet, Image, TouchableOpacity, Alert } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Import the icon library
 import { useNavigation } from "@react-navigation/native";
 import { AdminOnly } from "../utils";
 
-const GetProfessors = () => {
+const GetStudents = () => {
   const dispatch = useDispatch();
-  const { professors, loading, error } = useSelector((state) => state.user);
+  const { students, loading, error } = useSelector((state) => state.user);
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredProfessors, setFilteredProfessors] = useState([]);
+  const [filteredStudents, setFilteredStudents] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(4); // Number of items per page
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
   useEffect(() => {
-    dispatch(getProfessors());
+    dispatch(getStudents());
   }, [dispatch]);
 
   useEffect(() => {
-    // Filter professors based on search query
+    // Filter students based on search query
     if (searchQuery) {
-      setFilteredProfessors(
-        professors.filter(professor =>
-          professor.username.toLowerCase().includes(searchQuery.toLowerCase())
+      setFilteredStudents(
+        students.filter(student =>
+          student.username.toLowerCase().includes(searchQuery.toLowerCase())
         )
       );
     } else {
-      setFilteredProfessors(professors);
+      setFilteredStudents(students);
     }
     setCurrentPage(1); // Reset to first page on new search
-  }, [searchQuery, professors]);
+  }, [searchQuery, students]);
 
-  const handleDelete = (professorId) => {
+  const handleDelete = (studentId) => {
     Alert.alert(
-      "Delete Professor",
-      "Are you sure you want to delete this professor?",
+      "Delete Student",
+      "Are you sure you want to delete this student?",
       [
         {
           text: "Cancel",
@@ -45,7 +46,7 @@ const GetProfessors = () => {
         {
           text: "Yes",
           onPress: () => {
-            dispatch(deleteUser(professorId));
+            dispatch(deleteUser(studentId));
           }
         }
       ]
@@ -55,8 +56,8 @@ const GetProfessors = () => {
   // Pagination calculations
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentProfessors = filteredProfessors.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredProfessors.length / itemsPerPage);
+  const currentStudents = filteredStudents.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -70,14 +71,6 @@ const GetProfessors = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <View style={styles.centeredView}>
-        <ActivityIndicator size="large" color="#00796b" />
-      </View>
-    );
-  }
-
   if (error) {
     return (
       <View style={styles.centeredView}>
@@ -88,7 +81,7 @@ const GetProfessors = () => {
 
   return (
     <>
-      <ScrollView style={styles.container}>
+      <ScrollView style={styles.container} >
         <View style={styles.searchContainer}>
           <Icon
             name="search"
@@ -97,40 +90,42 @@ const GetProfessors = () => {
             style={styles.searchIcon}
           />
           <TextInput
-            placeholder="Search Professors"
+            placeholder="Search Students"
             value={searchQuery}
             onChangeText={setSearchQuery}
             style={styles.searchInput}
           />
         </View>
 
-        {currentProfessors && currentProfessors.length > 0 ? (
-          currentProfessors.map((professor) => (
-            <View key={professor.id} style={styles.professorCard}>
+        {currentStudents && currentStudents.length > 0 ? (
+          currentStudents.map((student) => (
+            <View key={student.id} style={styles.studentCard}>
               <TouchableOpacity
                 style={styles.cardContent}
-                onPress={() => navigation.navigate("ProfessorProfile", { professorId: professor.id })}
+                onPress={() => navigation.navigate("ProfessorProfile", { studentId: student.id })}
               >
                 <View style={styles.imageContainer}>
                   <Image
-                    source={{ uri: professor.photoURL || "https://via.placeholder.com/100" }}
+                    source={{ uri: student.photoURL || "https://via.placeholder.com/100" }}
                     style={styles.profileImage}
                   />
                 </View>
                 <View style={styles.detailsContainer}>
-                  <Text style={styles.professorName}>{professor.username}</Text>
-                  <Text style={styles.professorEmail}>{professor.designation}</Text>
+                  <Text style={styles.studentName}>{student.username}</Text>
+                  <Text style={styles.studentEmail}>{student.designation}</Text>
                 </View>
               </TouchableOpacity>
               <AdminOnly>
-                <TouchableOpacity onPress={() => handleDelete(professor.id)}>
+
+                <TouchableOpacity onPress={() => handleDelete(student.id)}>
                   <Icon name="delete" size={24} color="red" />
                 </TouchableOpacity>
+                
               </AdminOnly>
             </View>
           ))
         ) : (
-          <Text style={styles.noProfessorsText}>No professors found</Text>
+          <Text style={styles.noStudentsText}>No students found</Text>
         )}
       </ScrollView>
 
@@ -199,7 +194,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#004d40',
   },
-  professorCard: {
+  studentCard: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#ffffff',
@@ -225,16 +220,16 @@ const styles = StyleSheet.create({
   detailsContainer: {
     flex: 1,
   },
-  professorName: {
+  studentName: {
     fontSize: 20,
     fontWeight: 'bold',
     color: '#004d40',
   },
-  professorEmail: {
+  studentEmail: {
     fontSize: 16,
     color: '#004d40',
   },
-  noProfessorsText: {
+  noStudentsText: {
     fontSize: 16,
     color: '#004d40',
     textAlign: 'center',
@@ -276,4 +271,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default GetProfessors;
+export default GetStudents;

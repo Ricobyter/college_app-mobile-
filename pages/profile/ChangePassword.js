@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Pressable, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, Pressable, ActivityIndicator, StyleSheet } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { useNavigation } from '@react-navigation/native';
 import { updatePassword, signOut } from 'firebase/auth';
 import { FIREBASE_AUTH } from '../../FirebaseConfig'; 
+import Header from '../../components/Header';
 
 const ChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState('');
@@ -30,14 +31,13 @@ const ChangePassword = () => {
       if (user) {
         await updatePassword(user, newPassword);
         Toast.show({
-            type: 'success',
-            position: 'top',
-            text1: 'Password Updated',
-            text2: 'Your password has been updated successfully. Please log in again.',
-          });
+          type: 'success',
+          position: 'top',
+          text1: 'Password Updated',
+          text2: 'Your password has been updated successfully. Please log in again.',
+        });
 
         await signOut(FIREBASE_AUTH); // Log out the user
-
 
         setLoading(false);
         navigation.navigate('PasswordChangeConfirmation'); // Navigate to LoginPage
@@ -56,42 +56,71 @@ const ChangePassword = () => {
   };
 
   return (
-    <>
-    <PageHeader name='Change password' navigation={navigation}/>
-    <View className="flex-1 justify-center p-4 bg-white">
-      <TextInput
-        placeholder="Current Password"
-        secureTextEntry
-        value={currentPassword}
-        onChangeText={setCurrentPassword}
-        className="border-b border-gray-400 mb-4 py-2 px-4"
-      />
-      <TextInput
-        placeholder="New Password"
-        secureTextEntry
-        value={newPassword}
-        onChangeText={setNewPassword}
-        className="border-b border-gray-400 mb-4 py-2 px-4"
-      />
-      <TextInput
-        placeholder="Confirm New Password"
-        secureTextEntry
-        value={confirmPassword}
-        onChangeText={setConfirmPassword}
-        className="border-b border-gray-400 mb-4 py-2 px-4"
-      />
-      {/* <Button
-        title={loading ? 'Updating...' : 'Update Password'}
-        onPress={handlePasswordChange}
-        disabled={loading}
-      /> */}
-      <Pressable className='py-3 w-full bg-red rounded-lg' onPress={handlePasswordChange}>
-        <Text className="text-white font-medium text-center">{loading ? <ActivityIndicator color='#fff'/> : 'Update Password'}</Text>
-      </Pressable>
-      <Toast />
+    <View style={styles.container}>
+      <Header />
+      
+      <View style={styles.content}>
+        <TextInput
+          placeholder="Current Password"
+          secureTextEntry
+          value={currentPassword}
+          onChangeText={setCurrentPassword}
+          style={styles.input}
+        />
+        <TextInput
+          placeholder="New Password"
+          secureTextEntry
+          value={newPassword}
+          onChangeText={setNewPassword}
+          style={styles.input}
+        />
+        <TextInput
+          placeholder="Confirm New Password"
+          secureTextEntry
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+          style={styles.input}
+        />
+        <Pressable style={styles.button} onPress={handlePasswordChange}>
+          <Text style={styles.buttonText}>
+            {loading ? <ActivityIndicator color='#fff'/> : 'Update Password'}
+          </Text>
+        </Pressable>
+        <Toast />
+      </View>
     </View>
-    </>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#e0f2f1', // Background color matching the theme
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 16,
+    backgroundColor: '#fff',
+  },
+  input: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    marginBottom: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+  },
+  button: {
+    paddingVertical: 12,
+    borderRadius: 8,
+    backgroundColor: '#00796b', // Button color consistent with header
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+});
 
 export default ChangePassword;

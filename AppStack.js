@@ -11,7 +11,6 @@ import ProfessorProfile from './pages/ProfessorProfile';
 import ChangePassword from './pages/profile/ChangePassword';
 import UserSecurity from './pages/profile/UserSecurity';
 import PasswordChangeConfirmation from './pages/profile/PasswordChangeConfirmation';
-import Usereducation from './pages/profile/Usereducation';
 import UserPersonalInfo from './pages/profile/UserPersonalInfo';
 import AdminDashboard from './pages/AdminDashboard';
 import AddProfessor from './pages/AddProfessor';
@@ -32,6 +31,16 @@ import Info from './components/Info';
 import Notification from './components/Notification';
 import Links from './pages/Links';
 import AddAnnouncement from './pages/AddAnnouncement';
+import GetPeople from './pages/GetPeople';
+import GetVF from './pages/GetVF';
+import GetStudents from './pages/GetStudents';
+import AddVF from './pages/AddVF';
+import AddStudents from './pages/AddStudents';
+import ShowDegrees from './pages/profile/ShowDegrees';
+import AddDegree from './pages/profile/AddDegree';
+import AddEvent from './pages/AddEvent';
+
+
 
 const Stack = createStackNavigator();
 
@@ -66,9 +75,19 @@ const AppStack = () => (
     <Stack.Screen name="Gallery" component={Gallery} />
     <Stack.Screen name="Info" component={Info} />
     <Stack.Screen name="Notification" component={Notification} />
-    <Stack.Screen name="Usereducation" component={Usereducation} />
     <Stack.Screen name="Links" component={Links} />
     <Stack.Screen name="AddAnnouncement" component={AddAnnouncement} />
+    <Stack.Screen name="GetStudents" component={GetStudents} />
+    <Stack.Screen name="GetVF" component={GetVF} />
+    <Stack.Screen name="GetPeople" component={GetPeople} />
+    <Stack.Screen name="AddStudents" component={AddStudents} />
+    <Stack.Screen name="AddVF" component={AddVF} />
+    <Stack.Screen name="AddDegree" component={AddDegree} />
+    <Stack.Screen name="ShowDegrees" component={ShowDegrees} />
+    <Stack.Screen name="AddEvent" component={AddEvent} />
+
+   
+    
   </Stack.Navigator>
 );
 

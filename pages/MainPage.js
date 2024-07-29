@@ -65,7 +65,7 @@ const MainPage = ({ navigation }) => {
               <Text style={styles.quickLinkText}>Programs</Text>
             </Pressable>
 
-            <Pressable style={styles.quickLinkItem} onPress={() => navigation.navigate("GetProfessors")}>
+            <Pressable style={styles.quickLinkItem} onPress={() => navigation.navigate("GetPeople")}>
               <Icon name="users" size={30} color="#00796b" />
               <Text style={styles.quickLinkText}>People</Text>
             </Pressable>

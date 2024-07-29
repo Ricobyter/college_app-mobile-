@@ -120,9 +120,11 @@ const GetStudents = () => {
                 </View>
               </TouchableOpacity>
               <AdminOnly>
+
                 <TouchableOpacity onPress={() => handleDelete(student.id)}>
                   <Icon name="delete" size={24} color="red" />
                 </TouchableOpacity>
+                
               </AdminOnly>
             </View>
           ))

@@ -89,6 +89,7 @@ export const getProfessors = createAsyncThunk(
     }
   }
 );
+
 export const getStudents = createAsyncThunk(
   'user/getStudents',
   async (_, { rejectWithValue }) => {
@@ -112,6 +113,7 @@ export const getStudents = createAsyncThunk(
     }
   }
 );
+
 export const getVFaculties = createAsyncThunk(
   'user/getVFaculties',
   async (_, { rejectWithValue }) => {
@@ -215,9 +217,9 @@ export const fetchUserDegrees = createAsyncThunk(
         return {
           id: doc.id,
           ...data,
-          createdAt: data.createdAt.toDate().toISOString(), // Convert Firestore Timestamp to ISO string
-          startYear: data.startYear.toDate().getFullYear(), // Convert Firestore Timestamp to year
-          endYear: data.endYear.toDate().getFullYear(), // Convert Firestore Timestamp to year
+          createdAt: data.createdAt.toDate().toISOString(), 
+          startYear: data.startYear.toDate().getFullYear(), 
+          endYear: data.endYear.toDate().getFullYear(), 
         };
       });
       return degrees;
@@ -227,20 +229,20 @@ export const fetchUserDegrees = createAsyncThunk(
   }
 );
 
-export const fetchOnlyUserDegrees = createAsyncThunk(
-  'user/fetchUserDegrees',
-  async (uid, { rejectWithValue }) => {
-    try {
-      const querySnapshot = await getDocs(collection(FIREBASE_DB, 'degrees'));
-      const degrees = querySnapshot.docs
-        .filter(doc => doc.data().userId === uid)
-        .map(doc => ({ id: doc.id, ...doc.data() }));
-      return degrees;
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
+// export const fetchOnlyUserDegrees = createAsyncThunk(
+//   'user/fetchUserDegrees',
+//   async (uid, { rejectWithValue }) => {
+//     try {
+//       const querySnapshot = await getDocs(collection(FIREBASE_DB, 'degrees'));
+//       const degrees = querySnapshot.docs
+//         .filter(doc => doc.data().userId === uid)
+//         .map(doc => ({ id: doc.id, ...doc.data() }));
+//       return degrees;
+//     } catch (error) {
+//       return rejectWithValue(error.message);
+//     }
+//   }
+// );
 
 const initialState = {
   userEmail: '',

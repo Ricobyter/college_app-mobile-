@@ -86,10 +86,12 @@ const Sidebar = (props) => {
           </Pressable>
 
           <AdminOnly>
+
           <Pressable style={styles.menuItem} onPress={() => navigation.navigate('AdminDashboard')}>
             <Icon name="tachometer-alt" size={20} color="#00796b" />
             <Text style={styles.menuItemText}>Dashboard</Text>
           </Pressable>
+          
           </AdminOnly>
 
           <Pressable style={styles.menuItem} onPress={() => navigation.navigate('Info')}>

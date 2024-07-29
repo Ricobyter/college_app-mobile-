@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUser, fetchUserDegrees } from '../store/userSlice'; // Adjust the path as necessary
+import {  fetchUserDegrees } from '../store/userSlice'; // Adjust the path as necessary
+import { getUser } from '../store/professorSlice';
 import { View, Text, Image, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Header from '../components/Header';
 
-const ProfessorProfile = () => {
+const ProfessorProfile = ({ navigation }) => {
   const dispatch = useDispatch();
   const route = useRoute();
   const { professorId } = route.params;
@@ -15,7 +16,8 @@ const ProfessorProfile = () => {
   const [isBioExpanded, setIsBioExpanded] = useState(false);
   const [isEducationExpanded, setIsEducationExpanded] = useState(false);
 
-  const { username, photoURL, userEmail, isLoading, designation, bio, phone, error, degrees } = useSelector((state) => state.user);
+  const { username, photoURL, userEmail, isLoading, designation, bio, phone, error } = useSelector((state) => state.professor);
+  const {degrees} = useSelector((state) => state.user);
 
   useEffect(() => {
     if (professorId) {
@@ -25,11 +27,20 @@ const ProfessorProfile = () => {
   }, [dispatch, professorId]);
 
   useEffect(() => {
-    setSelectedBio(bio || 'No relevant information found');
+    if (bio) {
+      setSelectedBio(bio);
+    } else {
+      setSelectedBio('No relevant information found');
+    }
   }, [bio]);
 
-  const toggleBioExpansion = () => setIsBioExpanded((prev) => !prev);
-  const toggleEducationExpansion = () => setIsEducationExpanded((prev) => !prev);
+  const toggleBioExpansion = () => {
+    setIsBioExpanded(!isBioExpanded);
+  };
+
+  const toggleEducationExpansion = () => {
+    setIsEducationExpanded(!isEducationExpanded);
+  };
 
   if (error) {
     return (
@@ -52,11 +63,13 @@ const ProfessorProfile = () => {
           <View style={styles.imageContainer}>
             {imageLoading && <ActivityIndicator size="large" color="#00796b" style={styles.activityIndicator} />}
             <Image
-              source={{ uri: photoURL || 'https://via.placeholder.com/150' }}
-              style={styles.profileImage}
-              onLoad={() => setImageLoading(false)}
-              onError={() => setImageLoading(false)}
-            />
+            source={{
+              uri: photoURL || 'https://via.placeholder.com/150',
+            }}
+            style={styles.profileImage}
+            onLoad={() => setImageLoading(false)}
+            onError={() => setImageLoading(false)}
+          />
           </View>
           <View style={styles.infoContainer}>
             <Icon name="person" size={24} color="#004d40" style={styles.icon} />

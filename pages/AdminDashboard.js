@@ -105,7 +105,7 @@ const AdminDashboard = () => {
 
         <Pressable
           style={styles.actionButtonGreen}
-          onPress={() => navigation.navigate("AddStudent")}
+          onPress={() => navigation.navigate("AddStudents")}
         >
           <View style={styles.actionButtonContent}>
             <Text style={styles.actionButtonText}>Add Student</Text>

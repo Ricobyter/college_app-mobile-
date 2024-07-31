@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getVFaculties, deleteUser } from "../store/userSlice"; // Adjust the path as necessary
 import LoadingScreen from "../components/LoadingScreen"; // Adjust the path as necessary
-import { View, Text, TextInput, ScrollView, StyleSheet, Image, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TextInput, ScrollView, StyleSheet, Image, TouchableOpacity, Alert, RefreshControl } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Import the icon library
 import { useNavigation } from "@react-navigation/native";
 import { AdminOnly } from "../utils";
@@ -14,6 +14,7 @@ const GetVF = () => {
   const [filteredvFaculties, setFilteredvFaculties] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(4); // Number of items per page
+  const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -53,6 +54,13 @@ const GetVF = () => {
     );
   };
 
+  const onRefresh = () => {
+    setRefreshing(true);
+    dispatch(getVFaculties()).finally(() => {
+      setRefreshing(false);
+    });
+  };
+
   // Pagination calculations
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -85,7 +93,12 @@ const GetVF = () => {
 
   return (
     <>
-      <ScrollView style={styles.container} >
+      <ScrollView
+        style={styles.container}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         {/* Search Input with Icon */}
         <View style={styles.searchContainer}>
           <Icon

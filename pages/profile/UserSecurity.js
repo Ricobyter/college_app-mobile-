@@ -36,18 +36,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#e0f2f1', // Background color matching the theme
   },
   headerContainer: {
-    marginBottom: 30,
-    backgroundColor: '#00796b', // Header background color matching the Gallery header
-    paddingVertical: 15,
-    paddingHorizontal: 20,
+    marginBottom: 20,
+    backgroundColor: '#fff',
+    paddingVertical: 10,
     borderRadius: 10,
     alignItems: 'center',
-    width: '100%',
   },
   headerText: {
-    fontSize: 25,
+    fontSize: 24,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#00796b',
   },
   content: {
     alignItems: 'center',
@@ -56,7 +54,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 12,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
+    width: '100%',
     borderRadius: 8,
     backgroundColor: '#00796b', // Button color consistent with header
     borderWidth: 1,

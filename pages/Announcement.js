@@ -5,6 +5,7 @@ import { FIREBASE_DB } from '../FirebaseConfig';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Toast from 'react-native-toast-message';
 import Header from '../components/Header'; // Import Header component
+import { AdminOnly } from '../utils';
 
 const Announcement = () => {
   const [announcements, setAnnouncements] = useState([]);
@@ -73,9 +74,13 @@ const Announcement = () => {
               <View key={announcement.id} style={styles.announcementCard}>
                 <View style={styles.cardHeader}>
                   <Text style={styles.announcementTitle}>{announcement.title}</Text>
+
+                  <AdminOnly>
                   <TouchableOpacity onPress={() => confirmDelete(announcement.id)}>
                     <Icon name="delete" size={24} color="#d32f2f" />
                   </TouchableOpacity>
+                  </AdminOnly>
+
                 </View>
                 <Text style={styles.announcementDate}>{announcement.date}</Text>
                 <Text style={styles.announcementDescription}>{announcement.description}</Text>

@@ -139,7 +139,7 @@ const AddStudent = ({ navigation }) => {
         style={styles.input}
       />
 
-      {(isSending|| loading || isLoading) ? (
+      {(isSending||isLoading) ? (
         <ActivityIndicator size="large" color="#00796b" style={styles.activityIndicator} />
       ) : (
         <Pressable onPress={handleSubmit} style={styles.submitButton}>

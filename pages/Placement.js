@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Header from '../components/Header';
 
 const Placement = () => {
   const [selectedYear, setSelectedYear] = useState('2021'); // Default to a valid year
@@ -58,6 +59,8 @@ const Placement = () => {
   const chartX = new Animated.Value(-50); // Adjust this value to shift the chart left
 
   return (
+    <>
+      <Header/>
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Placement Statistics</Text>
@@ -119,6 +122,7 @@ const Placement = () => {
         </Animated.View>
       </View>
     </ScrollView>
+    </>
   );
 };
 
@@ -137,20 +141,20 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 20,
-    paddingTop: 50,
-    backgroundColor: '#e0f2f1', // Matching Programs background
+    paddingTop: 30,
+    backgroundColor: '#e0f2f1',
   },
   headerContainer: {
-    alignItems: 'center',
     marginBottom: 20,
-    backgroundColor: '#00796b', // Matching Programs header background
+    backgroundColor: '#fff',
     paddingVertical: 10,
     borderRadius: 10,
+    alignItems: 'center',
   },
   headerText: {
-    fontSize: 26, // Matching Programs header text size
+    fontSize: 24,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#00796b',
   },
   dropdownSection: {
     marginBottom: 20,

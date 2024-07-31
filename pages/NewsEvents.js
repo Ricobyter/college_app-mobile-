@@ -218,22 +218,21 @@ const NewsEvents = () => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    paddingTop: 50,
-    backgroundColor: "#e0f2f1", // Matching overall theme background
-    paddingHorizontal: 20,
-    paddingVertical: 24,
+    padding: 20,
+    paddingTop: 30,
+    backgroundColor: '#e0f2f1',
   },
   headerContainer: {
     marginBottom: 20,
-    backgroundColor: "#00796b", // Header background color
+    backgroundColor: '#fff',
     paddingVertical: 10,
     borderRadius: 10,
-    alignItems: "center",
+    alignItems: 'center',
   },
   headerText: {
     fontSize: 24,
-    fontWeight: "bold",
-    color: "#fff",
+    fontWeight: 'bold',
+    color: '#00796b',
   },
   addButton: {
     backgroundColor: "#00796b", // Add button background color

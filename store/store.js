@@ -2,10 +2,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import userReducer from './userSlice';
 import emailReducer from './emailSlice'
+import professorReducer from './professorSlice'
  const store = configureStore({
   reducer: {
     user: userReducer,
-    email: emailReducer
+    email: emailReducer,
+    professor: professorReducer
   },
 });
 

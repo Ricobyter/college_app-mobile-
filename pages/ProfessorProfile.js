@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUser, fetchUserDegrees } from '../store/userSlice'; // Adjust the path as necessary
+import {  fetchUserDegrees } from '../store/userSlice'; // Adjust the path as necessary
+import { getUser } from '../store/professorSlice';
 import { View, Text, Image, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import LoadingPage from '../components/LoadingScreen';
+import Header from '../components/Header';
 
 const ProfessorProfile = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -15,7 +17,8 @@ const ProfessorProfile = ({ navigation }) => {
   const [isBioExpanded, setIsBioExpanded] = useState(false);
   const [isEducationExpanded, setIsEducationExpanded] = useState(false);
 
-  const { username, photoURL, userEmail, isLoading, designation, bio, phone, error, degrees } = useSelector((state) => state.user);
+  const { username, photoURL, userEmail, isLoading, designation, bio, phone, error } = useSelector((state) => state.professor);
+  const {degrees} = useSelector((state) => state.user);
 
   useEffect(() => {
     if (professorId) {
@@ -53,6 +56,8 @@ const ProfessorProfile = ({ navigation }) => {
   }
 
   return (
+    <>
+    <Header />
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Profile</Text>
@@ -120,6 +125,7 @@ const ProfessorProfile = ({ navigation }) => {
         )}
       </View>
     </ScrollView>
+    </>
   );
 };
 
@@ -127,12 +133,12 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 20,
-    paddingTop: 50,
+    paddingTop: 30,
     backgroundColor: '#e0f2f1',
   },
   headerContainer: {
     marginBottom: 20,
-    backgroundColor: '#00796b',
+    backgroundColor: '#fff',
     paddingVertical: 10,
     borderRadius: 10,
     alignItems: 'center',
@@ -140,7 +146,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#00796b',
   },
   contentContainer: {
     alignItems: 'center',

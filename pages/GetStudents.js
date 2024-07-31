@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getStudents, deleteUser } from "../store/userSlice"; // Adjust the path as necessary
 import LoadingScreen from "../components/LoadingScreen"; // Adjust the path as necessary
-import { View, Text, TextInput, ScrollView, StyleSheet, Image, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TextInput, ScrollView, StyleSheet, Image, TouchableOpacity, Alert, RefreshControl } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Import the icon library
 import { useNavigation } from "@react-navigation/native";
 import { AdminOnly } from "../utils";
@@ -13,7 +13,8 @@ const GetStudents = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(4); // Number of items per page
+  const [itemsPerPage] = useState(4);
+  const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -21,7 +22,6 @@ const GetStudents = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    // Filter students based on search query
     if (searchQuery) {
       setFilteredStudents(
         students.filter(student =>
@@ -31,7 +31,7 @@ const GetStudents = () => {
     } else {
       setFilteredStudents(students);
     }
-    setCurrentPage(1); // Reset to first page on new search
+    setCurrentPage(1);
   }, [searchQuery, students]);
 
   const handleDelete = (studentId) => {
@@ -71,6 +71,11 @@ const GetStudents = () => {
     }
   };
 
+  const onRefresh = () => {
+    setRefreshing(true);
+    dispatch(getStudents()).then(() => setRefreshing(false));
+  };
+
   if (loading) {
     return <LoadingScreen />;
   }
@@ -85,7 +90,10 @@ const GetStudents = () => {
 
   return (
     <>
-      <ScrollView style={styles.container} >
+      <ScrollView
+        style={styles.container}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      >
         <View style={styles.searchContainer}>
           <Icon
             name="search"
@@ -106,7 +114,7 @@ const GetStudents = () => {
             <View key={student.id} style={styles.studentCard}>
               <TouchableOpacity
                 style={styles.cardContent}
-                onPress={() => navigation.navigate("StudentProfile", { studentId: student.id })}
+                onPress={() => navigation.navigate("ProfessorProfile", { professorId: student.id })}
               >
                 <View style={styles.imageContainer}>
                   <Image
@@ -120,11 +128,9 @@ const GetStudents = () => {
                 </View>
               </TouchableOpacity>
               <AdminOnly>
-
                 <TouchableOpacity onPress={() => handleDelete(student.id)}>
                   <Icon name="delete" size={24} color="red" />
                 </TouchableOpacity>
-                
               </AdminOnly>
             </View>
           ))

@@ -1,8 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import Header from './Header';
 
 const Info = () => {
   return (
+    <>
+    <Header />
     <View style={styles.container}>
       <Text style={styles.title}>App Information</Text>
       <Text style={styles.text}>
@@ -12,6 +15,7 @@ const Info = () => {
         All rights reserved by their team.
       </Text>
     </View>
+    </>
   );
 };
 

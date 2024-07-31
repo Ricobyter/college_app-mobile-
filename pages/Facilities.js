@@ -124,12 +124,12 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 20,
-    paddingTop: 50,
-    backgroundColor: '#e0f2f1', // Matching overall theme background
+    paddingTop: 30,
+    backgroundColor: '#e0f2f1',
   },
   headerContainer: {
     marginBottom: 20,
-    backgroundColor: '#00796b', // Matching header background color
+    backgroundColor: '#fff',
     paddingVertical: 10,
     borderRadius: 10,
     alignItems: 'center',
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#00796b',
   },
   dropdownSection: {
     marginBottom: 20,

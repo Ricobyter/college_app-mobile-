@@ -1,9 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; // Import your icon library
+import Header from '../components/Header';
 
 const Research = ({ navigation }) => {
   return (
+    <>
+    <Header />
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Research</Text>
@@ -51,27 +54,28 @@ const Research = ({ navigation }) => {
         </Pressable>
       </View>
     </ScrollView>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
-    paddingTop: 50,
-    backgroundColor: '#e0f2f1', // Light teal background
     flexGrow: 1,
+    padding: 20,
+    paddingTop: 30,
+    backgroundColor: '#e0f2f1',
   },
   headerContainer: {
-    alignItems: 'center',
     marginBottom: 20,
-    backgroundColor: '#00796b', // Dark teal background
+    backgroundColor: '#fff',
     paddingVertical: 10,
     borderRadius: 10,
+    alignItems: 'center',
   },
   headerText: {
-    fontSize: 26, // Increased size for prominence
+    fontSize: 24,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#00796b',
   },
   section: {
     marginBottom: 20,

@@ -12,6 +12,43 @@ The IIITDMJ College App is a mobile application developed using React Native and
 - **Change Password and Reset Password:** Secure features for users to change and reset their passwords.
 - **Native Toast Notifications:** Enhanced user experience with visually appealing toast notifications using `native-toast-notifications`.
 
+## Installation
+
+### Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+- **Node.js** (v14 or higher)
+- **Expo CLI** (for running the app)
+
+### Steps
+
+1. **Clone the Repository**
+
+   ```bash
+   git clone https://github.com/yourusername/iiitdmj-college-app.git
+
+2. **Navigate to the Project Directory**
+
+   ```bash
+   cd iiitdmj-college-app
+
+3. **Install Dependencies**
+
+   ```bash
+   npm install
+
+4. **Set Up Firebase**
+
+   - Obtain the Firebase configuration details (such as `apiKey`, `authDomain`, `projectId`, `storageBucket`, `messagingSenderId`, and `appId`).
+   - Add these configuration details to your env file.
+
+5. **Run the App**
+
+   ```bash
+   npx expo start
+
+
 
 ## Contributing
 

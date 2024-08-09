@@ -6,7 +6,7 @@ import LoadingScreen from './components/LoadingScreen';
 import Toast from 'react-native-toast-message';
 import Sidebar from './components/Sidebar';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import AppStack from './AppStack'; // Import the Stack Navigator
+import AppStack from './AppStack'; 
 
 const Drawer = createDrawerNavigator();
 

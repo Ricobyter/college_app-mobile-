@@ -5,6 +5,7 @@ import { getUser, updateUser } from '../../store/userSlice';
 import * as ImagePicker from 'expo-image-picker';
 import Toast from 'react-native-toast-message';
 import axios from 'axios';
+import Header from '../../components/Header';
 
 const UPLOAD_PRESET = process.env.REACT_APP_UPLOAD_PRESET;
 const CLOUD_NAME = process.env.REACT_APP_CLOUD_NAME
@@ -126,6 +127,8 @@ const UserPersonalInfo = ({ navigation }) => {
   };
 
   return (
+    <>
+    <Header />
     <ScrollView contentContainerStyle={styles.scrollViewContainer}>
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Personal Details</Text>
@@ -196,6 +199,7 @@ const UserPersonalInfo = ({ navigation }) => {
         </Pressable>
       </View>
     </ScrollView>
+    </>
   );
 };
 

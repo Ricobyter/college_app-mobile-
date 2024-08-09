@@ -84,6 +84,13 @@ const AddProfessor = ({ navigation }) => {
       setConfirmPassword('');
       setAbout('');
       setPhone('');
+
+      Toast.show({
+        type: 'success',
+        position: 'bottom',
+        text1: 'Success',
+        text2: 'Professor added successfully!',
+      });
     } catch (err) {
       console.error('Error:', err);
       Alert.alert('Error', message || 'Failed to add professor. Please try again.');

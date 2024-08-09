@@ -6,6 +6,7 @@ import Toast from 'react-native-toast-message';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { FIREBASE_AUTH, FIREBASE_DB } from '../FirebaseConfig'; // Make sure to configure Firebase properly
 import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
+import Header from '../components/Header';
 
 const AddStudent = ({ navigation }) => {
   const [name, setName] = useState('');
@@ -56,7 +57,7 @@ const AddStudent = ({ navigation }) => {
       await setDoc(doc(FIREBASE_DB, 'users', user.uid), userData);
 
 
-      // await dispatch(sendWelcomeEmail({ name, email, password, role: "Student" })).unwrap();
+      await dispatch(sendWelcomeEmail({ name, email, password, role: "Student" })).unwrap();
 
       if (isSent) {
         Toast.show({
@@ -90,7 +91,9 @@ const AddStudent = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <>   
+    <Header/>
+     <View style={styles.container}>
       <Text className ='mb-16 text-3xl text-[#00796b] font-bold'>Add Student</Text>
       <TextInput
         placeholder="Name"
@@ -149,6 +152,7 @@ const AddStudent = ({ navigation }) => {
 
       <Toast />
     </View>
+    </>
   );
 };
 

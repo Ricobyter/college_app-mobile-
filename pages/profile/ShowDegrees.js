@@ -4,6 +4,7 @@ import { View, Text, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity
 import { fetchUserDegrees } from '../../store/userSlice'; // Adjust the path as necessary
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Import icon library
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
+import Header from '../../components/Header';
 
 const ShowDegrees = () => {
   const dispatch = useDispatch();
@@ -33,6 +34,8 @@ const ShowDegrees = () => {
   }
 
   return (
+    <>
+    <Header />
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.addButton}
@@ -56,6 +59,7 @@ const ShowDegrees = () => {
         )}
       </ScrollView>
     </View>
+    </>
   );
 };
 

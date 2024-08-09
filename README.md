@@ -1,8 +1,8 @@
-# IIITDMJ College App
+# IIITDMJ CSE App
 
 ## Overview
 
-The IIITDMJ College App is a mobile application developed using React Native and Firebase. It provides a comprehensive solution for managing college-related functionalities, including secure login, an admin dashboard, automated email notifications, and password management features.
+The IIITDMJ CSE App is a mobile application developed using React Native and Firebase. It provides a comprehensive solution for managing college-related functionalities, including secure login, an admin dashboard, automated email notifications, and password management features.
 
 ## Key Features
 

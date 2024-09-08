@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Pressable, Image, Alert, StyleSheet, ScrollView } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons'; // Use MaterialIcons for consistency
-import * as ImagePicker from 'expo-image-picker';
+import { View, Text, TextInput, Pressable, Alert, StyleSheet, ActivityIndicator, ScrollView } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { sendWelcomeEmail } from '../store/emailSlice';
+import Toast from 'react-native-toast-message';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { FIREBASE_AUTH, FIREBASE_DB } from '../FirebaseConfig'; // Make sure to configure Firebase properly
+import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import Header from '../components/Header';
 
 const AddProfessor = ({ navigation }) => {
@@ -13,42 +15,77 @@ const AddProfessor = ({ navigation }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [about, setAbout] = useState('');
   const [phone, setPhone] = useState('');
-  const [profilePic, setProfilePic] = useState(null);
 
   const dispatch = useDispatch();
-  const emailState = useSelector((state) => state.email);
+  const { isSending, isSent, isNotSent, message } = useSelector((state) => state.email);
+  const { loading, isLoading } = useSelector((state) => state.user);
 
-  const handleImagePicker = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== 'granted') {
-      Alert.alert('Permission to access media library is required!');
+  const handleSubmit = async () => {
+    if (!name || !email || !password || !confirmPassword) {
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Error',
+        text2: 'Please fill all the marked fields!',
+      });
       return;
     }
 
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      const { uri } = result.assets[0];
-      setProfilePic(uri);
-    }
-  };
-
-  const handleSubmit = async () => {
     if (password !== confirmPassword) {
       Alert.alert('Passwords do not match');
       return;
     }
 
+    let photoURL =  'https://img.freepik.com/free-vector/illustration-businessman_53876-5856.jpg?w=740&t=st=1721141254~exp=1721141854~hmac=16b7be7a26efb621a8073b1e8204f34be34595f0d723d5c8ae9279435c66a468';
+
     try {
-      await dispatch(sendWelcomeEmail({ name, email, password })).unwrap();
+      const userCredential = await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password);
+      const user = userCredential.user;
+
+      const userData = {
+        bio: about,
+        phone: phone,
+        designation: 'Professor',
+        email: email,
+        username: name,
+        photoURL: photoURL,
+        educationQualifications : [],
+        createdAt: serverTimestamp(),
+      };
+
+      // Add user's Firestore document
+      await setDoc(doc(FIREBASE_DB, 'users', user.uid), userData);
+
+      await dispatch(sendWelcomeEmail({ name, email, password, role: "Professor" })).unwrap();
+
+      if (isSent) {
+        Toast.show({
+          type: 'success',
+          position: 'bottom',
+          text1: 'Success',
+          text2: 'Professor added successfully!',
+        });
+      }
+
+      if (isNotSent) {
+        Toast.show({
+          type: 'error',
+          position: 'bottom',
+          text1: 'Error',
+          text2: 'Failed to add professor. Please try again',
+        });
+      }
+
+      // Clear form fields
+      setName('');
+      setEmail('');
+      setPassword('');
+      setConfirmPassword('');
+      setAbout('');
+      setPhone('');
     } catch (err) {
-      console.error('Error sending email:', err);
-      Alert.alert('Error sending email', emailState.error);
+      console.error('Error:', err);
+      Alert.alert('Error', message || 'Failed to add professor. Please try again.');
     }
   };
 
@@ -56,74 +93,65 @@ const AddProfessor = ({ navigation }) => {
     <View style={styles.container}>
       <Header />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.headerContainer}>
+        <View style={styles.container}>
           <Text style={styles.headerText}>Add Professor</Text>
+          <TextInput
+            placeholder="Name"
+            value={name}
+            onChangeText={setName}
+            style={styles.input}
+          />
+
+          <TextInput
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            style={styles.input}
+          />
+
+          <TextInput
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            style={styles.input}
+          />
+
+          <TextInput
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            secureTextEntry
+            style={styles.input}
+          />
+
+          <TextInput
+            placeholder="About"
+            value={about}
+            onChangeText={setAbout}
+            multiline
+            style={styles.textArea}
+          />
+
+          <TextInput
+            placeholder="Phone"
+            value={phone}
+            onChangeText={setPhone}
+            keyboardType="phone-pad"
+            style={styles.input}
+          />
+
+          {(isSending || isLoading) ? (
+            <ActivityIndicator size="large" color="#00796b" style={styles.activityIndicator} />
+          ) : (
+            <Pressable onPress={handleSubmit} style={styles.submitButton}>
+              <Text style={styles.submitButtonText}>Add Professor</Text>
+            </Pressable>
+          )}
+
+          <Toast />
         </View>
-
-        <Pressable onPress={handleImagePicker} style={styles.imagePicker}>
-          <View style={styles.imageContainer}>
-            {profilePic ? (
-              <Image source={{ uri: profilePic }} style={styles.profileImage} />
-            ) : (
-              <Icon name="account-circle" size={100} color="#004d40" />
-            )}
-            <Text style={styles.imageText}>Select Profile Picture</Text>
-          </View>
-        </Pressable>
-
-        <TextInput
-          placeholder="Name"
-          value={name}
-          onChangeText={setName}
-          style={styles.input}
-        />
-
-        <TextInput
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          style={styles.input}
-        />
-
-        <TextInput
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          style={styles.input}
-        />
-
-        <TextInput
-          placeholder="Confirm Password"
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-          secureTextEntry
-          style={styles.input}
-        />
-
-        <TextInput
-          placeholder="About"
-          value={about}
-          onChangeText={setAbout}
-          multiline
-          style={styles.textArea}
-        />
-
-        <TextInput
-          placeholder="Phone"
-          value={phone}
-          onChangeText={setPhone}
-          keyboardType="phone-pad"
-          style={styles.input}
-        />
-
-        <Pressable
-          onPress={handleSubmit}
-          style={styles.submitButton}
-        >
-          <Text style={styles.submitButtonText}>Add</Text>
-        </Pressable>
       </ScrollView>
     </View>
   );
@@ -137,36 +165,12 @@ const styles = StyleSheet.create({
   scrollContainer: {
     padding: 20,
   },
-  headerContainer: {
-    alignItems: 'center',
-    marginBottom: 15,
-    marginTop: -5,
-    backgroundColor: '#ffffff', // Matching Programs header background
-    paddingVertical: 10,
-    borderRadius: 10,
-  },
   headerText: {
     fontSize: 26, // Matching Programs header text size
     fontWeight: 'bold',
     color: '#004d40',
-  },
-  imagePicker: {
-    marginBottom: 20,
-    alignItems: 'center',
-  },
-  imageContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  profileImage: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-    marginBottom: 10,
-  },
-  imageText: {
-    marginTop: 10,
-    color: '#004d40', // Matching text color
+    marginBottom: 15,
+    textAlign: 'center',
   },
   input: {
     borderColor: '#00796b', // Matching border color
@@ -195,6 +199,9 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  activityIndicator: {
+    marginVertical: 20,
   },
 });
 

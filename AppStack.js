@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
 import { createStackNavigator } from '@react-navigation/stack';
 import Home from './pages/Home';
 import ForgotPassword from './pages/ForgotPassword';
@@ -39,13 +39,25 @@ import AddStudents from './pages/AddStudents';
 import ShowDegrees from './pages/profile/ShowDegrees';
 import AddDegree from './pages/profile/AddDegree';
 import AddEvent from './pages/AddEvent';
+import { useSelector } from "react-redux";
 
 
 
 const Stack = createStackNavigator();
 
-const AppStack = () => (
-  <Stack.Navigator screenOptions={{ headerShown: false }}>
+const AppStack = () => {
+  const { uid } = useSelector((state) => state.user);
+  const [initialRoute, setInitialRoute] = useState("Home");
+
+  useEffect(() => {
+    if (uid) {
+      setInitialRoute("MainPage");
+    } else {
+      setInitialRoute("Home");
+    }
+  }, [uid]);
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={initialRoute}>
     <Stack.Screen name="Home" component={Home} />
     <Stack.Screen name="Login" component={Login} />
     <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
@@ -89,6 +101,7 @@ const AppStack = () => (
    
     
   </Stack.Navigator>
-);
+ );
+};
 
-export default AppStack
+export default AppStack;

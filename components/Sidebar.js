@@ -4,7 +4,7 @@ import { DrawerContentScrollView } from "@react-navigation/drawer";
 import { useDispatch, useSelector } from "react-redux";
 import { signOut } from "firebase/auth";
 import { FIREBASE_AUTH } from "../FirebaseConfig";
-import { clearUser } from "../store/userSlice";
+import { clearUser, getUser } from "../store/userSlice";
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useNavigation } from "@react-navigation/native";
 import { AdminOnly } from "../utils";
@@ -12,13 +12,17 @@ import { AdminOnly } from "../utils";
 const Sidebar = (props) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const { uid, username, photoURL, isLoading, userEmail, designation } = useSelector((state) => state.user);
+  const { uid, username, photoURL, isLoading,  designation } = useSelector((state) => state.user);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
 
   useEffect(() => {
     setIsLoggedIn(!!uid);
+    if(uid){
+      dispatch(getUser(uid))
+    }
   }, [uid]);
-
+  
   const handleSignOut = async () => {
     try {
       await signOut(FIREBASE_AUTH);

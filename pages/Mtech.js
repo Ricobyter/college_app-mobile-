@@ -5,6 +5,8 @@ import Header from '../components/Header'; // Ensure to install this package for
 
 const Mtech = () => {
   const [expanded, setExpanded] = useState(null);
+  const [isSummaryExpanded, setIsSummaryExpanded] = useState(false); // State for summary expansion
+  const [isLearningExpanded, setIsLearningExpanded] = useState(false); // State for learning section expansion
 
   const courses = [
     {
@@ -47,6 +49,15 @@ const Mtech = () => {
   const handlePress = (index) => {
     setExpanded(expanded === index ? null : index);
   };
+  const toggleSummary = () => {
+    setIsSummaryExpanded(!isSummaryExpanded);
+    setIsLearningExpanded(false); // Collapse learning section when summary is toggled
+  };
+
+  const toggleLearning = () => {
+    setIsLearningExpanded(!isLearningExpanded);
+    setIsSummaryExpanded(false); // Collapse summary section when learning is toggled
+  };
 
   return (
     <View style={styles.container}>
@@ -56,32 +67,42 @@ const Mtech = () => {
           <Text style={styles.headerText}>M.Tech Programs</Text>
         </View>
 
+        {/* Summary Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>A brief summary</Text>
           <Text style={styles.sectionText}>
-            Institute offers a two-year postgraduate degree (M.Tech) programme in Computer Science & Engineering. 
-            The minimum residential requirement for the program is four semesters. The program requires completion 
-            of 70 credits of which at least 28 units shall be through coursework and 32 units through thesis work. 
-            Non-sponsored candidates who are Indian Nationals admitted to the regular full-time M.Tech Program through 
-            GATE are eligible for financial assistance. A teaching assistant can be asked to conduct labs, help an 
-            instructor in grading, and other course-related tasks. Currently, the assistantship amount is Rs. 12400 per month.
+          Institute offers two year post graduate degree (M.Tech) programme in Computer Science & Engineering. The minimum residential requirement for the program is four semesters. 
           </Text>
+          {isSummaryExpanded && (
+            <Text style={styles.sectionText}>
+              The program requires completion of 70 credits of which at least 28 units shall be through course work and 32 units through thesis work. Non-sponsored candidates who are Indian Nationals admitted to the regular full-time M.Tech Program through GATE are eligible for financial assistance. A teaching assistant can be asked to conduct labs, help an instructor in grading, and other course-related tasks. Currently the assistantship amount is Rs. 12400 per month.
+            </Text>
+          )}
+          <TouchableOpacity onPress={toggleSummary} style={styles.moreButton}>
+            <Text style={styles.moreButtonText}>{isSummaryExpanded ? 'Less' : 'More'}</Text>
+          </TouchableOpacity>
         </View>
 
+        {/* What you will learn section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>What you will learn</Text>
           <Text style={styles.sectionText}>
-            MTech degree program exposes students to a wide range of courses, combined with specialized research 
-            which culminates in a thesis. Such a combination gives students the breadth and depth necessary for pursuing 
-            careers in academics as well as in industry.
+          MTech degree program exposes students to a wide range of courses, combined with specialized research which culminates in a thesis.
           </Text>
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Expert teachers</Text>
-          <Text style={styles.sectionText}>- Extensive documentation provided</Text>
-          <Text style={styles.sectionText}>- Good infrastructure</Text>
-          <Text style={styles.sectionText}>- Best learning environment</Text>
+          {isLearningExpanded && (
+            <View>
+              <Text style={styles.sectionText}>
+              Such a combination gives students the breadth and depth necessary for pursuing careers in academics as well as in industry.
+              </Text>
+              <Text style={styles.sectionText}>- Expert teachers</Text>
+              <Text style={styles.sectionText}>- Extensive documentation provided</Text>
+              <Text style={styles.sectionText}>- Good infrastructure</Text>
+              <Text style={styles.sectionText}>- Best learning environment</Text>
+            </View>
+          )}
+          <TouchableOpacity onPress={toggleLearning} style={styles.moreButton}>
+            <Text style={styles.moreButtonText}>{isLearningExpanded ? 'Less' : 'More'}</Text>
+          </TouchableOpacity>
         </View>
 
         {courses.map((semester, index) => (
@@ -110,13 +131,6 @@ const Mtech = () => {
             )}
           </View>
         ))}
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>General Instructions</Text>
-          <Text style={styles.sectionText}>
-            Students are expected to follow the university's academic policies and maintain academic integrity.
-          </Text>
-        </View>
       </ScrollView>
     </View>
   );
@@ -125,40 +139,56 @@ const Mtech = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#e0f2f1',
   },
   scrollContainer: {
     flexGrow: 1,
     padding: 20,
-    paddingTop: 20, // Adjusted to provide space for the Header
+    paddingTop: 20,
   },
   headerContainer: {
+    alignItems: 'center',
     marginBottom: 20,
+    backgroundColor: '#ffffff', // Matching Programs header background
+    paddingVertical: 10,
+    borderRadius: 10,
   },
   headerText: {
-    fontSize: 24,
+    fontSize: 26, // Matching Programs header text size
     fontWeight: 'bold',
     color: '#004d40',
   },
   section: {
     marginBottom: 20,
+    backgroundColor: '#ffffff',
+    paddingVertical: 10,
+    paddingLeft: 10,
+    borderRadius: 10,
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: 'bold',
     color: '#004d40',
     marginBottom: 10,
+    
   },
+  
   sectionText: {
+    fontSize: 17,
+    color: '#004d40',
+  },
+  moreButtonText: {
+    marginTop: 5,
     fontSize: 16,
-    color: '#333',
+    color: '#00796b',
+    textDecorationLine: 'underline',
   },
   dropdownHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 10,
-    backgroundColor: '#e0f2f1',
+    backgroundColor: '#ffffff',
     borderRadius: 5,
   },
   dropdownTitle: {
@@ -171,7 +201,7 @@ const styles = StyleSheet.create({
   },
   table: {
     borderWidth: 1,
-    borderColor: '#004d40',
+    borderColor: '#00796b',
     borderRadius: 5,
     overflow: 'hidden',
   },
@@ -180,27 +210,29 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 5,
     borderBottomWidth: 1,
-    borderBottomColor: '#004d40',
+    borderBottomColor: '#00796b',
   },
   tableHeaderRow: {
-    backgroundColor: '#004d40',
+    backgroundColor: '#00796b',
   },
   tableCell: {
-    flex: 1,
-    textAlign: 'center',
+    fontSize: 15,
+    paddingHorizontal: 5,
+  },
+  tableHeader: {
+    color: '#ffffff',
+    fontWeight: 'bold',
   },
   tableCellLeft: {
-    textAlign: 'left',
+    flex: 1,
   },
   tableCellCenter: {
+    flex: 2,
     textAlign: 'center',
   },
   tableCellRight: {
+    flex: 1,
     textAlign: 'right',
-  },
-  tableHeader: {
-    color: '#fff',
-    fontWeight: 'bold',
   },
 });
 

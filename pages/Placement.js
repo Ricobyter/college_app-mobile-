@@ -38,6 +38,11 @@ const Placement = () => {
     setExpanded(!expanded);
   };
 
+  const handleYearSelect = (year) => {
+    setSelectedYear(year);
+    setExpanded(false); // Close dropdown after selection
+  };
+
   // Get current data based on selectedYear, or default to an empty object if the year is not found
   const currentData = placementData[selectedYear] || {};
 
@@ -74,7 +79,7 @@ const Placement = () => {
           {expanded && (
             <View style={styles.dropdownContent}>
               {years.map((year) => (
-                <TouchableOpacity key={year} onPress={() => setSelectedYear(year)} style={styles.yearItem}>
+                <TouchableOpacity key={year} onPress={() => handleYearSelect(year)} style={styles.yearItem}>
                   <Text style={styles.yearText}>{year}</Text>
                 </TouchableOpacity>
               ))}
@@ -171,9 +176,10 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   dropdownTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#004d40', // Matching Programs text color
+    marginLeft: 5,
   },
   dropdownContent: {
     paddingVertical: 10,

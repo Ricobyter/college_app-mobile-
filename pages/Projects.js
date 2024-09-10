@@ -37,6 +37,11 @@ const Projects = () => {
     setExpanded(expanded === index ? null : index);
   };
 
+  const handleStatusSelect = (status) => {
+    setSelectedStatus(status);
+    setExpanded(null); // Close dropdown after selection
+  };
+
   return (
     <View style={styles.container}>
       <Header />
@@ -64,7 +69,7 @@ const Projects = () => {
           {expanded === 0 && (
             <View style={styles.dropdownContent}>
               {statuses.map((status) => (
-                <TouchableOpacity key={status} onPress={() => setSelectedStatus(status)} style={styles.statusItem}>
+                <TouchableOpacity key={status} onPress={() => handleStatusSelect(status)} style={styles.statusItem}>
                   <Text style={styles.statusText}>{status}</Text>
                 </TouchableOpacity>
               ))}
@@ -91,22 +96,31 @@ const Projects = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#e0f2f1',
   },
   scrollContainer: {
     flexGrow: 1,
     padding: 20,
+    paddingTop: 20,
   },
   headerContainer: {
+    alignItems: 'center',
     marginBottom: 20,
+    backgroundColor: '#ffffff', // Matching Programs header background
+    paddingVertical: 10,
+    borderRadius: 10,
   },
   headerText: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
     color: '#004d40',
   },
   section: {
     marginBottom: 20,
+    backgroundColor: '#ffffff',
+    paddingVertical: 10,
+    paddingLeft: 10,
+    borderRadius: 10,
   },
   sectionTitle: {
     fontSize: 18,
@@ -121,6 +135,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
     backgroundColor: '#ffffff',
+    marginRight: 10,
   },
   dropdownHeader: {
     flexDirection: 'row',
@@ -129,16 +144,19 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#e0f2f1',
     borderRadius: 5,
+    marginRight: 10,
   },
   dropdownTitle: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#004d40',
+    
   },
   dropdownContent: {
     paddingVertical: 10,
     backgroundColor: '#e0f2f1',
     borderRadius: 5,
+    marginRight: 10,
   },
   statusItem: {
     padding: 10,

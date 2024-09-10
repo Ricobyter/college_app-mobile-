@@ -14,7 +14,7 @@ const Research = () => {
       status: 'Ongoing',
     },
     {
-      title: 'IMAGE DENOISING TECHNIQUES FOR NOISE REDUCTION IN OPTICAL COHERENCE TOMOGRAPHY IMAGES',
+      title: 'NOISE REDUCTION TECHNIQUES fOR OCT IMAGES',
       description: 'In OCT images speckle noise is present. Denoising these images is the first step towards detection of diseases like diabetic macular edema and dry age-related macular degeneration.',
       contributor: 'Neha Gour',
       mentor: 'Pritee Khanna',
@@ -70,28 +70,31 @@ const Research = () => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: '#e0f2f1', // Light background to match the theme
+    backgroundColor: '#e0f2f1',
   },
   scrollContainer: {
+    flexGrow: 1,
     padding: 20,
+    paddingTop: 20,
   },
   headerContainer: {
+    alignItems: 'center',
     marginBottom: 20,
-    alignItems: 'left',
+    backgroundColor: '#ffffff', // Consistent with Projects page
+    paddingVertical: 10,
+    borderRadius: 10,
   },
   headerText: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
     color: '#004d40',
   },
   section: {
     marginBottom: 20,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#004d40',
-    marginBottom: 10,
+    backgroundColor: '#ffffff',
+    paddingVertical: 10,
+    paddingLeft: 10,
+    borderRadius: 10,
   },
   sectionText: {
     fontSize: 16,
@@ -101,11 +104,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 15,
-    backgroundColor: '#ffffff',
+    padding: 10,
+    backgroundColor: '#e0f2f1',
     borderRadius: 5,
     borderColor: '#004d40',
     borderWidth: 1,
+    marginRight: 10,
   },
   dropdownTitle: {
     fontSize: 16,
@@ -119,6 +123,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderColor: '#004d40',
     borderWidth: 1,
+    marginRight: 10,
   },
   detailsText: {
     fontSize: 16,

@@ -60,6 +60,11 @@ const Publications = () => {
     setExpanded(expanded === index ? null : index);
   };
 
+  const handleYearSelect = (year) => {
+    setSelectedYear(year);
+    setExpanded(null); // Close the dropdown when a year is selected
+  };
+
   const handleLinkPress = (url) => {
     Linking.openURL(url).catch((err) => console.error('An error occurred', err));
   };
@@ -81,7 +86,7 @@ const Publications = () => {
           {expanded === 0 && (
             <View style={styles.dropdownContent}>
               {years.map((year) => (
-                <TouchableOpacity key={year} onPress={() => setSelectedYear(year)} style={styles.yearItem}>
+                <TouchableOpacity key={year} onPress={() => handleYearSelect(year)} style={styles.yearItem}>
                   <Text style={styles.yearText}>{year}</Text>
                 </TouchableOpacity>
               ))}
@@ -125,23 +130,31 @@ const Publications = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#e0f2f1',
   },
   scrollContainer: {
     flexGrow: 1,
     padding: 20,
-    paddingTop: 20, // Adjusted to provide space for the Header
+    paddingTop: 20,
   },
   headerContainer: {
+    alignItems: 'center',
     marginBottom: 20,
+    backgroundColor: '#ffffff', // Matching Programs header background
+    paddingVertical: 10,
+    borderRadius: 10,
   },
   headerText: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
     color: '#004d40',
   },
   section: {
     marginBottom: 20,
+    backgroundColor: '#ffffff',
+    paddingVertical: 10,
+    paddingLeft: 10,
+    borderRadius: 10,
   },
   sectionTitle: {
     fontSize: 18,
@@ -156,6 +169,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#e0f2f1',
     borderRadius: 5,
+    marginRight: 10,
   },
   dropdownTitle: {
     fontSize: 16,
@@ -166,6 +180,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     backgroundColor: '#e0f2f1',
     borderRadius: 5,
+    marginRight: 10,
   },
   yearItem: {
     padding: 10,
@@ -180,6 +195,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 5,
     elevation: 3,
+    marginRight: 10,
   },
   publicationTitle: {
     fontSize: 16,

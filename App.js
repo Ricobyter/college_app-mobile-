@@ -45,15 +45,5 @@ const App = () => {
     </Provider>
   );
 };
-
 export default App;
 
-// const firebaseConfig = {
-//   apiKey: "AIzaSyAI5pK-VwaGdqdgDsaa3JIjkWfUrnb5r5U",
-//   authDomain: "college-app-3b552.firebaseapp.com",
-//   projectId: "college-app-3b552",
-//   storageBucket: "college-app-3b552.appspot.com",
-//   messagingSenderId: "322528510708",
-//   appId: "1:322528510708:web:5beb590352df75a61454a1",
-//   measurementId: "G-0RWG51W9DV"
-// };

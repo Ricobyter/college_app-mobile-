@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllUsers } from "../store/userSlice";
 import Icon from "react-native-vector-icons/MaterialIcons"; // Using MaterialIcons
 import { useNavigation } from "@react-navigation/native";
+import { AdminOnly } from "../utils";
 
 const AdminDashboard = () => {
   const navigation = useNavigation();
@@ -31,13 +32,14 @@ const AdminDashboard = () => {
 
   const totalUsers = allUsers.length;
   const professors = allUsers.filter(
-    (user) => user.designation === "Professor"
+    (user) =>
+      ["Professor", "Visiting Faculty", "Assistant Professor"].includes(user.designation)
   ).length;
   const students = allUsers.filter(
     (user) => user.designation === "Student"
   ).length;
   const visitingFaculty = allUsers.filter(
-    (user) => user.designation === "V. Faculty"
+    (user) => user.designation === "Visiting Faculty"
   ).length;
 
   return (
@@ -93,15 +95,7 @@ const AdminDashboard = () => {
       <Text style={styles.actionsTitle}>More actions</Text>
 
       <View style={styles.actionsContainer}>
-        <Pressable
-          style={styles.actionButtonBlue}
-          onPress={() => navigation.navigate("AddProfessor")}
-        >
-          <View style={styles.actionButtonContent}>
-            <Text style={styles.actionButtonText}>Add Professor</Text>
-            <Icon name="person-add" size={24} color="white" />
-          </View>
-        </Pressable>
+
 
         <Pressable
           style={styles.actionButtonGreen}
@@ -113,13 +107,37 @@ const AdminDashboard = () => {
           </View>
         </Pressable>
 
+        <AdminOnly>
+
+      
+
         <Pressable
+          style={styles.actionButtonBlue}
+          onPress={() => navigation.navigate("AddProfessor")}
+        >
+          <View style={styles.actionButtonContent}>
+            <Text style={styles.actionButtonText}>Add Professor</Text>
+            <Icon name="person-add" size={24} color="white" />
+          </View>
+        </Pressable>
+        </AdminOnly>
+
+        {/* <Pressable
           style={styles.actionButtonYellow}
           onPress={() => navigation.navigate("AddVF")}
         >
           <View style={styles.actionButtonContent}>
             <Text style={styles.actionButtonText}>Add Visiting Faculty</Text>
             <Icon name="person-add" size={24} color="white" />
+          </View>
+        </Pressable> */}
+                <Pressable
+          style={styles.actionButtonGreen}
+          onPress={() => navigation.navigate("AddEvent")}
+        >
+          <View style={styles.actionButtonContent}>
+            <Text style={styles.actionButtonText}>Add event</Text>
+            <Icon name="event" size={24} color="white" />
           </View>
         </Pressable>
         <Pressable
@@ -131,15 +149,7 @@ const AdminDashboard = () => {
             <Icon name="announcement" size={24} color="white" />
           </View>
         </Pressable>
-        <Pressable
-          style={styles.actionButtonGreen}
-          onPress={() => navigation.navigate("AddEvent")}
-        >
-          <View style={styles.actionButtonContent}>
-            <Text style={styles.actionButtonText}>Add event</Text>
-            <Icon name="event" size={24} color="white" />
-          </View>
-        </Pressable>
+
       </View>
     </ScrollView>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Pressable, Alert, StyleSheet, ActivityIndicator } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { sendWelcomeEmail } from '../store/emailSlice';
@@ -7,26 +7,49 @@ import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { FIREBASE_AUTH, FIREBASE_DB } from '../FirebaseConfig'; // Make sure to configure Firebase properly
 import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import Header from '../components/Header';
+import { Picker } from '@react-native-picker/picker';
+import { fetchSignInMethodsForEmail } from 'firebase/auth'
 
 const AddStudent = ({ navigation }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [rollNo, setRollNo] = useState(''); // New roll number state
   const [about, setAbout] = useState('');
   const [phone, setPhone] = useState('');
+  const [degree, setDegree] = useState(''); 
+  const[sH, setSH] = useState(false)
 
   const dispatch = useDispatch();
   const { isSending, isSent, isNotSent, message } = useSelector((state) => state.email);
   const { loading, isLoading } = useSelector((state) => state.user);
 
+  const generateRandomPassword = () => {
+    const length = 8;
+    const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()';
+    let generatedPassword = '';
+    for (let i = 0, n = charset.length; i < length; ++i) {
+      generatedPassword += charset.charAt(Math.floor(Math.random() * n));
+    }
+    return generatedPassword;
+  };
+
+  useEffect(() => {
+    const generatedPassword = generateRandomPassword();
+    setPassword(generatedPassword);
+    setConfirmPassword(generatedPassword); 
+  }, []);
+
+
   const handleSubmit = async () => {
-    if (!name || !email || !password || !confirmPassword) {
+    setSH(true)
+    if (!name || !email || !password || !confirmPassword || !degree) {
       Toast.show({
         type: 'error',
         position: 'top',
         text1: 'Error',
-        text2: 'Please fill all the marked fields!',
+        text2: 'Please fill all the fields!',
       });
       return;
     }
@@ -36,29 +59,40 @@ const AddStudent = ({ navigation }) => {
       return;
     }
 
-    let photoURL =  'https://img.freepik.com/free-vector/illustration-businessman_53876-5856.jpg?w=740&t=st=1721141254~exp=1721141854~hmac=16b7be7a26efb621a8073b1e8204f34be34595f0d723d5c8ae9279435c66a468';
+    let photoURL = 'https://img.freepik.com/free-vector/illustration-businessman_53876-5856.jpg?w=740&t=st=1721141254~exp=1721141854~hmac=16b7be7a26efb621a8073b1e8204f34be34595f0d723d5c8ae9279435c66a468';
 
     try {
+      // Check if user already exists
+      const signInMethods = await fetchSignInMethodsForEmail(FIREBASE_AUTH, email);
+      if (signInMethods.length > 0) {
+        Toast.show({
+          type: 'error',
+          position: 'top',
+          text1: 'Error',
+          text2: 'User already exists!',
+        });
+        return; // Exit if user already exists
+      }
+
+      // Create the user in Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password);
       const user = userCredential.user;
 
       const userData = {
-        bio: about,
-        phone: phone,
+        bio: '',
+        phone: phone || '',
         designation: 'Student',
         email: email,
         username: name,
         photoURL: photoURL,
-        educationQualifications : [],
+        rollNo: rollNo, 
+        degree: degree, 
         createdAt: serverTimestamp(),
       };
 
-      // Add user's Firestore document
       await setDoc(doc(FIREBASE_DB, 'users', user.uid), userData);
 
-
       await dispatch(sendWelcomeEmail({ name, email, password, role: "Student" })).unwrap();
-
       if (isSent) {
         Toast.show({
           type: 'success',
@@ -82,12 +116,27 @@ const AddStudent = ({ navigation }) => {
       setEmail('');
       setPassword('');
       setConfirmPassword('');
-      setAbout('');
+      setDegree('');
       setPhone('');
+      setRollNo('')
     } catch (err) {
-      console.error('Error:', err);
-      Alert.alert('Error', message || 'Failed to add student. Please try again.');
+      if (err.code === 'auth/email-already-in-use') {
+        Toast.show({
+          type: 'error',
+          position: 'top',
+          text1: 'Error',
+          text2: 'User with this email already exists!',
+        });
+      } else {
+        Toast.show({
+          type: 'error',
+          position: 'top',
+          text1: 'Error',
+          text2: 'Failed to add professor. Please try again.',
+        });
+      }
     }
+    setSH(false)
   };
 
   return (
@@ -109,8 +158,24 @@ const AddStudent = ({ navigation }) => {
         keyboardType="email-address"
         style={styles.input}
       />
-
       <TextInput
+        placeholder="Roll Number"  // Add Roll Number input
+        value={rollNo}
+        onChangeText={setRollNo}
+        style={styles.input}
+      />
+       <Picker
+        selectedValue={degree}
+        onValueChange={(itemValue, itemIndex) => setDegree(itemValue)}
+        style={styles.picker}
+      >
+        <Picker.Item label="B.Tech" value="B.Tech" />
+        <Picker.Item label="M.Tech" value="M.Tech" />
+        <Picker.Item label="PhD" value="PhD" />
+      </Picker>
+
+
+      {/* <TextInput
         placeholder="Password"
         value={password}
         onChangeText={setPassword}
@@ -124,8 +189,8 @@ const AddStudent = ({ navigation }) => {
         onChangeText={setConfirmPassword}
         secureTextEntry
         style={styles.input}
-      />
-
+      /> */}
+{/* 
       <TextInput
         placeholder="About"
         value={about}
@@ -140,9 +205,9 @@ const AddStudent = ({ navigation }) => {
         onChangeText={setPhone}
         keyboardType="phone-pad"
         style={styles.input}
-      />
+      /> */}
 
-      {(isSending||isLoading) ? (
+      {sH ? (
         <ActivityIndicator size="large" color="#00796b" style={styles.activityIndicator} />
       ) : (
         <Pressable onPress={handleSubmit} style={styles.submitButton}>
@@ -173,6 +238,15 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     backgroundColor: '#ffffff',
      width: '100%'
+  },
+  picker: {
+    borderColor: '#00796b',
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 15,
+    width: '100%',
+    backgroundColor: '#ffffff',
   },
   textArea: {
     borderColor: '#00796b',

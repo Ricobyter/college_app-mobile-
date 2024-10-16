@@ -44,7 +44,7 @@ const GetPeople = () => {
         >
           <Text style={styles.buttonText}>Students</Text>
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={[
             styles.button,
             activeComponent === 'VF' && styles.activeButton
@@ -52,7 +52,7 @@ const GetPeople = () => {
           onPress={() => setActiveComponent('VF')}
         >
           <Text style={styles.buttonText}>V. Faculties</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       <View style={styles.componentContainer}>
         {renderComponent()}

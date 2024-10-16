@@ -27,7 +27,7 @@ const UserProfile = ({ navigation }) => {
       dispatch(getUser(uid));
     }
   }, [dispatch, uid]);
-
+  
   if (uid === "") {
     return (
       <View style={styles.centeredView}>

@@ -7,7 +7,7 @@ import { FIREBASE_AUTH } from "../FirebaseConfig";
 import { clearUser, getUser } from "../store/userSlice";
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useNavigation } from "@react-navigation/native";
-import { AdminOnly } from "../utils";
+import { AdminOnly, PermissionOnly } from "../utils";
 
 const Sidebar = (props) => {
   const dispatch = useDispatch();
@@ -87,15 +87,16 @@ const Sidebar = (props) => {
             <Icon name="link" size={20} color="#00796b" />
             <Text style={styles.menuItemText}>Links</Text>
           </Pressable>
-
-          <AdminOnly>
-
+{/* <AdminOnly>          
+</AdminOnly> 
+           */}
+           <PermissionOnly>
           <Pressable style={styles.menuItem} onPress={() => navigation.navigate('AdminDashboard')}>
             <Icon name="tachometer-alt" size={20} color="#00796b" />
             <Text style={styles.menuItemText}>Dashboard</Text>
           </Pressable>
-          
-          </AdminOnly>
+           </PermissionOnly>
+
 
           <Pressable style={styles.menuItem} onPress={() => navigation.navigate('Info')}>
             <Icon name="info-circle" size={20} color="#00796b" />

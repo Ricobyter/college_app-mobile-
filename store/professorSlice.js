@@ -33,6 +33,7 @@ const initialState = {
   designation: '',
   bio: '',
   phone: '',
+  rollNo: '',
   loading: false,
   error: '',
   isLoading: false,
@@ -60,6 +61,7 @@ const professorSlice = createSlice({
         state.phone = action.payload.phone;
         state.userEmail = action.payload.userEmail;
         state.isLoading = false;
+        state.rollNo = action.payload.rollNo;
       })
       .addCase(getUser.rejected, (state, action) => {
         state.loading = false;

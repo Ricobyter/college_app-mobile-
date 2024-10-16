@@ -8,3 +8,13 @@ const {designation} = useSelector((state) => state.user);
   }
   return null;
 };
+
+export const PermissionOnly = ({ children }) => {
+  const { designation } = useSelector((state) => state.user);
+
+  if (["Professor", "Visiting Faculty", "Assistant Professor", "Admin"].includes(designation)) {
+    return <>{children}</>;
+  }
+
+  return null;
+};

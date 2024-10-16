@@ -72,7 +72,7 @@ export const getProfessors = createAsyncThunk(
     try {
       const professorsQuery = query(
         collection(FIREBASE_DB, 'users'),
-        where('designation', '==', 'Professor')
+        where('designation', 'in', ['Professor', 'Visiting Faculty', 'Assistant Professor'])
       );
       const querySnapshot = await getDocs(professorsQuery);
 
@@ -120,7 +120,7 @@ export const getVFaculties = createAsyncThunk(
     try {
       const vFacultyQuery = query(
         collection(FIREBASE_DB, 'users'),
-        where('designation', '==', 'V. Faculty')
+        where('designation', '==', 'Visiting Faculty')
       );
       const querySnapshot = await getDocs(vFacultyQuery);
 

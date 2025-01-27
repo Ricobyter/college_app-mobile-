@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'; // Ensure to install this package for icons
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Header from '../components/Header';
 
 const Projects = () => {
   const [expanded, setExpanded] = useState(null);
@@ -36,70 +37,90 @@ const Projects = () => {
     setExpanded(expanded === index ? null : index);
   };
 
+  const handleStatusSelect = (status) => {
+    setSelectedStatus(status);
+    setExpanded(null); // Close dropdown after selection
+  };
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Projects</Text>
-      </View>
-
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Search Projects</Text>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search by project title"
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-        />
-      </View>
-
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Select Status</Text>
-        <TouchableOpacity onPress={() => handlePress(0)} style={styles.dropdownHeader}>
-          <Text style={styles.dropdownTitle}>{selectedStatus}</Text>
-          <Icon name={expanded === 0 ? 'chevron-up' : 'chevron-down'} size={20} color="#004d40" />
-        </TouchableOpacity>
-        {expanded === 0 && (
-          <View style={styles.dropdownContent}>
-            {statuses.map((status) => (
-              <TouchableOpacity key={status} onPress={() => setSelectedStatus(status)} style={styles.statusItem}>
-                <Text style={styles.statusText}>{status}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        )}
-      </View>
-
-      {filteredProjects.map((project, index) => (
-        <View key={index} style={styles.projectItem}>
-          <Text style={styles.projectTitle}>{project.title}</Text>
-          <Text style={styles.projectDetail}>Faculty: {project.faculty}</Text>
-          <Text style={styles.projectDetail}>Start: {project.start}</Text>
-          <Text style={styles.projectDetail}>End: {project.end}</Text>
-          <Text style={styles.projectDetail}>Funding Agency: {project.agency}</Text>
-          <Text style={styles.projectDetail}>Funding Amount: {project.amount}</Text>
-          <Text style={styles.projectDetail}>Status: {project.status}</Text>
+    <View style={styles.container}>
+      <Header />
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>Projects</Text>
         </View>
-      ))}
-    </ScrollView>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Search Projects</Text>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search by project title"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Select Status</Text>
+          <TouchableOpacity onPress={() => handlePress(0)} style={styles.dropdownHeader}>
+            <Text style={styles.dropdownTitle}>{selectedStatus}</Text>
+            <Icon name={expanded === 0 ? 'chevron-up' : 'chevron-down'} size={20} color="#004d40" />
+          </TouchableOpacity>
+          {expanded === 0 && (
+            <View style={styles.dropdownContent}>
+              {statuses.map((status) => (
+                <TouchableOpacity key={status} onPress={() => handleStatusSelect(status)} style={styles.statusItem}>
+                  <Text style={styles.statusText}>{status}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
+        </View>
+
+        {filteredProjects.map((project, index) => (
+          <View key={index} style={styles.projectItem}>
+            <Text style={styles.projectTitle}>{project.title}</Text>
+            <Text style={styles.projectDetail}>Faculty: {project.faculty}</Text>
+            <Text style={styles.projectDetail}>Start: {project.start}</Text>
+            <Text style={styles.projectDetail}>End: {project.end}</Text>
+            <Text style={styles.projectDetail}>Funding Agency: {project.agency}</Text>
+            <Text style={styles.projectDetail}>Funding Amount: {project.amount}</Text>
+            <Text style={styles.projectDetail}>Status: {project.status}</Text>
+          </View>
+        ))}
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    backgroundColor: '#e0f2f1',
+  },
+  scrollContainer: {
+    flexGrow: 1,
     padding: 20,
-    paddingTop: 50,
-    backgroundColor: '#f5f5f5',
+    paddingTop: 20,
   },
   headerContainer: {
+    alignItems: 'center',
     marginBottom: 20,
+    backgroundColor: '#ffffff', // Matching Programs header background
+    paddingVertical: 10,
+    borderRadius: 10,
   },
   headerText: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
     color: '#004d40',
   },
   section: {
     marginBottom: 20,
+    backgroundColor: '#ffffff',
+    paddingVertical: 10,
+    paddingLeft: 10,
+    borderRadius: 10,
   },
   sectionTitle: {
     fontSize: 18,
@@ -114,6 +135,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
     backgroundColor: '#ffffff',
+    marginRight: 10,
   },
   dropdownHeader: {
     flexDirection: 'row',
@@ -122,16 +144,19 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#e0f2f1',
     borderRadius: 5,
+    marginRight: 10,
   },
   dropdownTitle: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#004d40',
+    
   },
   dropdownContent: {
     paddingVertical: 10,
     backgroundColor: '#e0f2f1',
     borderRadius: 5,
+    marginRight: 10,
   },
   statusItem: {
     padding: 10,

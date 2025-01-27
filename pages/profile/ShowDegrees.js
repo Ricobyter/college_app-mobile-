@@ -37,6 +37,9 @@ const ShowDegrees = () => {
     <>
     <Header />
     <View style={styles.container}>
+            <View style={styles.headerContainer}>
+              <Text style={styles.headerText}>Education</Text>
+            </View>
       <TouchableOpacity
         style={styles.addButton}
         onPress={() => navigation.navigate('AddDegree')} // Navigate to AddDegree screen
@@ -68,6 +71,20 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: '#e0f2f1',
+  },
+  headerContainer: {
+    backgroundColor: '#00796b',
+    paddingVertical: 10,
+    alignItems: 'center',
+    borderRadius: 10,
+    marginHorizontal: 20,
+    marginTop: 30,
+    marginBottom: 30
+  },
+  headerText: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    color: '#fff',
   },
   addButton: {
     flexDirection: 'row',

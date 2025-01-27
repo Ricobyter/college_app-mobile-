@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'; // Ensure to install this package for icons
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Header from '../components/Header';
 
 const Publications = () => {
   const [expanded, setExpanded] = useState(null);
@@ -33,26 +34,25 @@ const Publications = () => {
       ],
     },
     2021: {
-        journals: [
-          {
-            title: 'SD-WAN Flood Tracer: Tracking the Entry Points of DDoS Attack Flows',
-            authors: 'Neelam Dayal, Shashank Srivastava',
-            journal: 'WAN',
-            volume: '186',
-            doi: 'http://dx.doi.org/https://doi.org/10.1016/j.comnet.2021.107813',
-          },
-        ],
-        conferences: [
-          {
-            title: 'Capturing the Aesthetic Design Intention in Product Design',
-            authors: 'S. Soni S., P. Khanna , P. Tandon',
-            conference: 'International Conference on Emerging Technologies in Computer Engineering',
-            year: '2012',
-            location: 'Karlsruhe, Germany',
-
-          },
-        ],
-      },
+      journals: [
+        {
+          title: 'SD-WAN Flood Tracer: Tracking the Entry Points of DDoS Attack Flows',
+          authors: 'Neelam Dayal, Shashank Srivastava',
+          journal: 'WAN',
+          volume: '186',
+          doi: 'http://dx.doi.org/https://doi.org/10.1016/j.comnet.2021.107813',
+        },
+      ],
+      conferences: [
+        {
+          title: 'Capturing the Aesthetic Design Intention in Product Design',
+          authors: 'S. Soni S., P. Khanna , P. Tandon',
+          conference: 'International Conference on Emerging Technologies in Computer Engineering',
+          year: '2012',
+          location: 'Karlsruhe, Germany',
+        },
+      ],
+    },
     // Add other years' data here
   };
 
@@ -60,77 +60,101 @@ const Publications = () => {
     setExpanded(expanded === index ? null : index);
   };
 
+  const handleYearSelect = (year) => {
+    setSelectedYear(year);
+    setExpanded(null); // Close the dropdown when a year is selected
+  };
+
+  const handleLinkPress = (url) => {
+    Linking.openURL(url).catch((err) => console.error('An error occurred', err));
+  };
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Publications</Text>
-      </View>
+    <View style={styles.container}>
+      <Header />
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>Publications</Text>
+        </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Select Year</Text>
-        <TouchableOpacity onPress={() => handlePress(0)} style={styles.dropdownHeader}>
-          <Text style={styles.dropdownTitle}>{selectedYear}</Text>
-          <Icon name={expanded === 0 ? 'chevron-up' : 'chevron-down'} size={20} color="#004d40" />
-        </TouchableOpacity>
-        {expanded === 0 && (
-          <View style={styles.dropdownContent}>
-            {years.map((year) => (
-              <TouchableOpacity key={year} onPress={() => setSelectedYear(year)} style={styles.yearItem}>
-                <Text style={styles.yearText}>{year}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        )}
-      </View>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Select Year</Text>
+          <TouchableOpacity onPress={() => handlePress(0)} style={styles.dropdownHeader}>
+            <Text style={styles.dropdownTitle}>{selectedYear}</Text>
+            <Icon name={expanded === 0 ? 'chevron-up' : 'chevron-down'} size={20} color="#004d40" />
+          </TouchableOpacity>
+          {expanded === 0 && (
+            <View style={styles.dropdownContent}>
+              {years.map((year) => (
+                <TouchableOpacity key={year} onPress={() => handleYearSelect(year)} style={styles.yearItem}>
+                  <Text style={styles.yearText}>{year}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
+        </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Journals ({selectedYear})</Text>
-        {publications[selectedYear]?.journals.map((journal, index) => (
-          <View key={index} style={styles.publicationItem}>
-            <Text style={styles.publicationTitle}>{journal.title}</Text>
-            <Text style={styles.publicationAuthors}>Authors: {journal.authors}</Text>
-            <Text style={styles.publicationDetail}>Journal: {journal.journal}</Text>
-            <Text style={styles.publicationDetail}>Volume: {journal.volume}</Text>
-            <Text style={styles.publicationDetail}>DOI: <Text style={styles.doiLink}>{journal.doi}</Text></Text>
-          </View>
-        ))}
-      </View>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Journals ({selectedYear})</Text>
+          {publications[selectedYear]?.journals.map((journal, index) => (
+            <View key={index} style={styles.publicationItem}>
+              <Text style={styles.publicationTitle}>{journal.title}</Text>
+              <Text style={styles.publicationAuthors}>Authors: {journal.authors}</Text>
+              <Text style={styles.publicationDetail}>Journal: {journal.journal}</Text>
+              <Text style={styles.publicationDetail}>Volume: {journal.volume}</Text>
+              <Text style={styles.publicationDetail}>DOI: <Text style={styles.doiLink} onPress={() => handleLinkPress(journal.doi)}>{journal.doi}</Text></Text>
+            </View>
+          ))}
+        </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Conferences ({selectedYear})</Text>
-        {publications[selectedYear]?.conferences.map((conf, index) => (
-          <View key={index} style={styles.publicationItem}>
-            <Text style={styles.publicationTitle}>{conf.title}</Text>
-            <Text style={styles.publicationAuthors}>Authors: {conf.authors}</Text>
-            <Text style={styles.publicationDetail}>Conference: {conf.conference}</Text>
-            <Text style={styles.publicationDetail}>Year: {conf.year}</Text>
-            <Text style={styles.publicationDetail}>Pages: {conf.pages}</Text>
-            <Text style={styles.publicationDetail}>Publisher: {conf.publisher}</Text>
-            <Text style={styles.publicationDetail}>Location: {conf.location}</Text>
-            <Text style={styles.publicationDetail}>DOI: <Text style={styles.doiLink}>{conf.doi}</Text></Text>
-          </View>
-        ))}
-      </View>
-    </ScrollView>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Conferences ({selectedYear})</Text>
+          {publications[selectedYear]?.conferences.map((conf, index) => (
+            <View key={index} style={styles.publicationItem}>
+              <Text style={styles.publicationTitle}>{conf.title}</Text>
+              <Text style={styles.publicationAuthors}>Authors: {conf.authors}</Text>
+              <Text style={styles.publicationDetail}>Conference: {conf.conference}</Text>
+              <Text style={styles.publicationDetail}>Year: {conf.year}</Text>
+              <Text style={styles.publicationDetail}>Pages: {conf.pages}</Text>
+              <Text style={styles.publicationDetail}>Publisher: {conf.publisher}</Text>
+              <Text style={styles.publicationDetail}>Location: {conf.location}</Text>
+              <Text style={styles.publicationDetail}>DOI: <Text style={styles.doiLink} onPress={() => handleLinkPress(conf.doi)}>{conf.doi}</Text></Text>
+            </View>
+          ))}
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    backgroundColor: '#e0f2f1',
+  },
+  scrollContainer: {
+    flexGrow: 1,
     padding: 20,
-    paddingTop: 50,
-    backgroundColor: '#f5f5f5',
+    paddingTop: 20,
   },
   headerContainer: {
+    alignItems: 'center',
     marginBottom: 20,
+    backgroundColor: '#ffffff', // Matching Programs header background
+    paddingVertical: 10,
+    borderRadius: 10,
   },
   headerText: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
     color: '#004d40',
   },
   section: {
     marginBottom: 20,
+    backgroundColor: '#ffffff',
+    paddingVertical: 10,
+    paddingLeft: 10,
+    borderRadius: 10,
   },
   sectionTitle: {
     fontSize: 18,
@@ -145,6 +169,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#e0f2f1',
     borderRadius: 5,
+    marginRight: 10,
   },
   dropdownTitle: {
     fontSize: 16,
@@ -155,6 +180,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     backgroundColor: '#e0f2f1',
     borderRadius: 5,
+    marginRight: 10,
   },
   yearItem: {
     padding: 10,
@@ -169,6 +195,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 5,
     elevation: 3,
+    marginRight: 10,
   },
   publicationTitle: {
     fontSize: 16,

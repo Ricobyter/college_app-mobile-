@@ -7,7 +7,8 @@ import { FIREBASE_AUTH } from "../FirebaseConfig";
 import { clearUser, getUser } from "../store/userSlice";
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useNavigation } from "@react-navigation/native";
-import { AdminOnly, PermissionOnly } from "../utils";
+import { AdminOnly } from "../utils";
+import { PermissionOnly } from "../utils";
 
 const Sidebar = (props) => {
   const dispatch = useDispatch();
@@ -15,13 +16,14 @@ const Sidebar = (props) => {
   const { uid, username, photoURL, isLoading,  designation } = useSelector((state) => state.user);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+
   useEffect(() => {
     setIsLoggedIn(!!uid);
     if(uid){
       dispatch(getUser(uid))
     }
   }, [uid]);
-
+  
   const handleSignOut = async () => {
     try {
       await signOut(FIREBASE_AUTH);
@@ -56,8 +58,8 @@ const Sidebar = (props) => {
                 )}
               </View>
               <View style={styles.userInfo}>
-              <Text style={styles.username}>
-                  {username.length > 9 ? `${username.substring(0, 9)}...` : username}
+                <Text style={styles.username}>
+                  {username.length > 20 ? `${username.substring(0, 20)}...` : username}
                 </Text>
                 <Text style={styles.userEmail}>{designation}</Text>
               </View>
@@ -87,16 +89,17 @@ const Sidebar = (props) => {
             <Icon name="link" size={20} color="#00796b" />
             <Text style={styles.menuItemText}>Links</Text>
           </Pressable>
-{/* <AdminOnly>          
-</AdminOnly> 
-           */}
-           <PermissionOnly>
+
+          {/* <AdminOnly> */}
+            <PermissionOnly>
           <Pressable style={styles.menuItem} onPress={() => navigation.navigate('AdminDashboard')}>
             <Icon name="tachometer-alt" size={20} color="#00796b" />
             <Text style={styles.menuItemText}>Dashboard</Text>
           </Pressable>
-           </PermissionOnly>
+          </PermissionOnly>
 
+          
+          {/* </AdminOnly> */}
 
           <Pressable style={styles.menuItem} onPress={() => navigation.navigate('Info')}>
             <Icon name="info-circle" size={20} color="#00796b" />
@@ -126,19 +129,15 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     paddingHorizontal: 15,
   },
-  menuContainer: {
-flex: 1
-  },
   userInfoContainer: {
     marginBottom: 20,
+    paddingBottom: 20,
     borderBottomWidth: 1,
     borderBottomColor: '#b2ebf2',
-    paddingBottom: 20,
   },
   notLoggedInContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: 300,
   },
   notLoggedInText: {
     color: '#00796b',
@@ -163,9 +162,9 @@ flex: 1
     borderRadius: 5,
   },
   userImage: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
   },
   userInfo: {
     marginLeft: 10,
@@ -179,24 +178,32 @@ flex: 1
     color: '#004d40',
     fontSize: 16,
   },
+  menuContainer: {
+    flex: 1,
+  },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 10,
+    paddingVertical: 15,
     paddingHorizontal: 10,
-    backgroundColor: '#b2ebf2',
+    backgroundColor: '#ffffff',
     borderRadius: 5,
     marginBottom: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 2,
   },
   menuItemText: {
-    color: '#004d40',
+    color: '#00796b',
     fontSize: 18,
-    marginLeft: 10,
+    marginLeft: 15,
   },
   logoutContainer: {
     borderTopWidth: 1,
     borderTopColor: '#b2ebf2',
-    marginTop: 120,
+    marginTop: 20,
     paddingTop: 20,
   },
   logoutButton: {

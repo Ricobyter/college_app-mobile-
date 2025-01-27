@@ -15,7 +15,7 @@ import { FIREBASE_DB } from "../FirebaseConfig";
 import Toast from "react-native-toast-message";
 import Header from "../components/Header"; // Import Header component
 
-const AddEvent = () => {
+const AddEvent = ({ navigation }) => {
   const [type, setType] = useState("");
   const [title, setTitle] = useState("");
   const [date, setDate] = useState(new Date());
@@ -25,6 +25,15 @@ const AddEvent = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const handleAddEvent = async () => {
+    if (!type || !title || !description) {
+      Toast.show({
+        type: 'error',
+        text1: 'Validation Error',
+        text2: 'Please fill out all fields before submitting.',
+      });
+      return;
+    }
+
     try {
       setIsLoading(true);
       await addDoc(collection(FIREBASE_DB, "events"), {
@@ -46,8 +55,13 @@ const AddEvent = () => {
       setDescription("");
       setLink("");
       setIsLoading(false);
+      navigation.navigate('AdminDashboard'); // Navigate to the dashboard
     } catch (error) {
-      console.error("Error adding event: ", error);
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: `Error adding event: ${error.message}`,
+      });
       setIsLoading(false);
     }
   };
@@ -63,54 +77,64 @@ const AddEvent = () => {
       <Header />
       <View style={styles.container}>
         <Text style={styles.headerText}>Add Event</Text>
-        <Picker
-          selectedValue={type}
-          onValueChange={(itemValue, itemIndex) => setType(itemValue)}
-          style={styles.picker}
-        >
-          <Picker.Item label="Select Type" value="" />
-          <Picker.Item label="Current" value="Current" />
-          <Picker.Item label="Archive" value="Archive" />
-        </Picker>
-        <TextInput
-          style={styles.input}
-          placeholder="Title"
-          value={title}
-          onChangeText={setTitle}
-        />
 
-        {showDatePicker && (
-          <DateTimePicker
-            value={date}
-            mode="date"
-            display="default"
-            onChange={onChangeDate}
-            minimumDate={new Date(2000, 0, 1)}
-            maximumDate={new Date(2100, 11, 31)}
+        <View style={styles.formContainer}>
+          <Picker
+            selectedValue={type}
+            onValueChange={(itemValue) => setType(itemValue)}
+            style={styles.picker}
+          >
+            <Picker.Item label="Select Type" value="" />
+            <Picker.Item label="Current" value="Current" />
+            <Picker.Item label="Archive" value="Archive" />
+          </Picker>
+
+          
+
+          <View style={styles.datePickerContainer}>
+            <Button title="Select Date" onPress={() => setShowDatePicker(true)} color="#00796b" />
+            <Text style={styles.dateText}>{date.toDateString()}</Text>
+            {showDatePicker && (
+              <DateTimePicker
+                value={date}
+                mode="date"
+                display="default"
+                onChange={onChangeDate}
+                minimumDate={new Date(2000, 0, 1)}
+                maximumDate={new Date(2100, 11, 31)}
+                style={styles.datePicker}
+              />
+            )}
+          </View>
+
+          <TextInput
+            style={styles.input}
+            placeholder="Title"
+            value={title}
+            onChangeText={setTitle}
           />
-        )}
-        <TextInput
-          style={styles.input}
-          placeholder="Description"
-          value={description}
-          onChangeText={setDescription}
-          multiline
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Link"
-          value={link}
-          onChangeText={setLink}
-        />
-        <View style={styles.datePickerContainer}>
-          <Button title="Select Date" onPress={() => setShowDatePicker(true)} />
-          <Text style={styles.dateText}>{date.toDateString()}</Text>
+          
+          <TextInput
+            style={styles.input}
+            placeholder="Description"
+            value={description}
+            onChangeText={setDescription}
+            multiline
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Link (Optional)"
+            value={link}
+            onChangeText={setLink}
+          />
+
+          {isLoading ? (
+            <ActivityIndicator size="large" color="#00796b" style={styles.loader} />
+          ) : (
+            <Button title="Add Event" onPress={handleAddEvent} color="#00796b" />
+          )}
         </View>
-        {isLoading ? (
-          <ActivityIndicator size="large" />
-        ) : (
-          <Button title="Add Event" onPress={handleAddEvent} />
-        )}
+
         <Toast />
       </View>
     </>
@@ -121,7 +145,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#e0f2f1", // Background color matching the theme
+    backgroundColor: "#e0f2f1", // Light teal background
   },
   headerText: {
     fontSize: 26,
@@ -129,6 +153,13 @@ const styles = StyleSheet.create({
     color: "#004d40",
     marginBottom: 20,
     textAlign: "center",
+  },
+  formContainer: {
+    backgroundColor: "#ffffff", // White background
+    padding: 20,
+    borderRadius: 10,
+    elevation: 3, // Shadow effect
+    marginBottom: 20,
   },
   picker: {
     height: 50,
@@ -155,6 +186,14 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 16,
     color: "#333",
+  },
+  datePicker: {
+    width: '100%', // Ensure DateTimePicker takes up full width
+    backgroundColor: '#ffffff',
+    marginTop: 10,
+  },
+  loader: {
+    marginTop: 20,
   },
 });
 

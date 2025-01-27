@@ -8,6 +8,7 @@ import { FIREBASE_AUTH, FIREBASE_DB } from '../FirebaseConfig'; // Make sure to 
 import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { fetchSignInMethodsForEmail } from 'firebase/auth'
 import { Picker } from '@react-native-picker/picker';
+import Header from '../components/Header';
 
 
 const AddProfessor = ({ navigation }) => {
@@ -136,9 +137,12 @@ const AddProfessor = ({ navigation }) => {
       setSH(false)
     };
   return (
+    <>
+    <Header/>
+    
     <View style={styles.container}>
             <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Admin Dashboard</Text>
+        <Text style={styles.headerText}>Add Professor</Text>
       </View>
       <TextInput
         placeholder="Name"
@@ -178,6 +182,7 @@ const AddProfessor = ({ navigation }) => {
 
       <Toast />
     </View>
+    </>
   );
 };
 

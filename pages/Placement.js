@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Header from '../components/Header';
+import Header from '../components/Header'; // Import the Header component
 
 const Placement = () => {
   const [selectedYear, setSelectedYear] = useState('2021'); // Default to a valid year
@@ -38,6 +38,11 @@ const Placement = () => {
     setExpanded(!expanded);
   };
 
+  const handleYearSelect = (year) => {
+    setSelectedYear(year);
+    setExpanded(false); // Close dropdown after selection
+  };
+
   // Get current data based on selectedYear, or default to an empty object if the year is not found
   const currentData = placementData[selectedYear] || {};
 
@@ -59,70 +64,70 @@ const Placement = () => {
   const chartX = new Animated.Value(-50); // Adjust this value to shift the chart left
 
   return (
-    <>
-      <Header/>
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Placement Statistics</Text>
-      </View>
-
-      <View style={styles.dropdownSection}>
-        <TouchableOpacity onPress={handlePress} style={styles.dropdownHeader}>
-          <Text style={styles.dropdownTitle}>{selectedYear}</Text>
-          <Icon name={expanded ? 'chevron-up' : 'chevron-down'} size={20} color="#004d40" />
-        </TouchableOpacity>
-        {expanded && (
-          <View style={styles.dropdownContent}>
-            {years.map((year) => (
-              <TouchableOpacity key={year} onPress={() => setSelectedYear(year)} style={styles.yearItem}>
-                <Text style={styles.yearText}>{year}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        )}
-      </View>
-
-      <View style={styles.chartSection}>
-        <Text style={styles.sectionTitle}>Batch {selectedYear}</Text>
-        <View style={styles.statContainer}>
-          <View style={styles.stat}>
-            <Text style={styles.statLabel}>Total Students</Text>
-            <Text style={styles.statValue}>{currentData.totalStudents || 'N/A'}</Text>
-          </View>
-          <View style={styles.stat}>
-            <Text style={styles.statLabel}>Eligible Students</Text>
-            <Text style={styles.statValue}>{currentData.eligibleStudents || 'N/A'}</Text>
-          </View>
-          <View style={styles.stat}>
-            <Text style={styles.statLabel}>Interested Students</Text>
-            <Text style={styles.statValue}>{currentData.interestedStudents || 'N/A'}</Text>
-          </View>
-          <View style={styles.stat}>
-            <Text style={styles.statLabel}>Total Offers</Text>
-            <Text style={styles.statValue}>{currentData.totalOffers || 'N/A'}</Text>
-          </View>
-          <View style={styles.stat}>
-            <Text style={styles.statLabel}>Placed Students</Text>
-            <Text style={styles.statValue}>{currentData.placedStudents || 'N/A'}</Text>
-          </View>
+    <View style={styles.container}>
+      <Header />
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>Placement Statistics</Text>
         </View>
-        <Animated.View
-          style={[styles.chartContainer, { transform: [{ translateX: chartX }] }]}
-        >
-          <BarChart
-            style={styles.chart}
-            data={chartData}
-            width={290} // Increase width to fit the content
-            height={400}
-            yAxisLabel=""
-            chartConfig={chartConfig}
-            verticalLabelRotation={40}
-            fromZero={true}
-          />
-        </Animated.View>
-      </View>
-    </ScrollView>
-    </>
+
+        <View style={styles.dropdownSection}>
+          <TouchableOpacity onPress={handlePress} style={styles.dropdownHeader}>
+            <Text style={styles.dropdownTitle}>{selectedYear}</Text>
+            <Icon name={expanded ? 'chevron-up' : 'chevron-down'} size={20} color="#004d40" />
+          </TouchableOpacity>
+          {expanded && (
+            <View style={styles.dropdownContent}>
+              {years.map((year) => (
+                <TouchableOpacity key={year} onPress={() => handleYearSelect(year)} style={styles.yearItem}>
+                  <Text style={styles.yearText}>{year}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
+        </View>
+
+        <View style={styles.chartSection}>
+          <Text style={styles.sectionTitle}>Batch {selectedYear}</Text>
+          <View style={styles.statContainer}>
+            <View style={styles.stat}>
+              <Text style={styles.statLabel}>Total Students</Text>
+              <Text style={styles.statValue}>{currentData.totalStudents || 'N/A'}</Text>
+            </View>
+            <View style={styles.stat}>
+              <Text style={styles.statLabel}>Eligible Students</Text>
+              <Text style={styles.statValue}>{currentData.eligibleStudents || 'N/A'}</Text>
+            </View>
+            <View style={styles.stat}>
+              <Text style={styles.statLabel}>Interested Students</Text>
+              <Text style={styles.statValue}>{currentData.interestedStudents || 'N/A'}</Text>
+            </View>
+            <View style={styles.stat}>
+              <Text style={styles.statLabel}>Total Offers</Text>
+              <Text style={styles.statValue}>{currentData.totalOffers || 'N/A'}</Text>
+            </View>
+            <View style={styles.stat}>
+              <Text style={styles.statLabel}>Placed Students</Text>
+              <Text style={styles.statValue}>{currentData.placedStudents || 'N/A'}</Text>
+            </View>
+          </View>
+          <Animated.View
+            style={[styles.chartContainer, { transform: [{ translateX: chartX }] }]}
+          >
+            <BarChart
+              style={styles.chart}
+              data={chartData}
+              width={290} // Increase width to fit the content
+              height={400}
+              yAxisLabel=""
+              chartConfig={chartConfig}
+              verticalLabelRotation={40}
+              fromZero={true}
+            />
+          </Animated.View>
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
@@ -130,7 +135,7 @@ const chartConfig = {
   backgroundGradientFrom: '#fff',
   backgroundGradientTo: '#fff',
   decimalPlaces: 0,
-  color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+  color: (opacity = 1) => `rgba(0, 0, 0 ,${opacity})`,
   barPercentage: 0.7,
   style: {
     borderRadius: 16,
@@ -139,22 +144,25 @@ const chartConfig = {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    backgroundColor: '#e0f2f1', // Matching Programs background
+  },
+  scrollContainer: {
     flexGrow: 1,
     padding: 20,
-    paddingTop: 30,
-    backgroundColor: '#e0f2f1',
+    paddingTop: 20,
   },
   headerContainer: {
+    alignItems: 'center',
     marginBottom: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff', // Matching Programs header background
     paddingVertical: 10,
     borderRadius: 10,
-    alignItems: 'center',
   },
   headerText: {
-    fontSize: 24,
+    fontSize: 26, // Matching Programs header text size
     fontWeight: 'bold',
-    color: '#00796b',
+    color: '#004d40',
   },
   dropdownSection: {
     marginBottom: 20,
@@ -168,9 +176,10 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   dropdownTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#004d40', // Matching Programs text color
+    marginLeft: 5,
   },
   dropdownContent: {
     paddingVertical: 10,

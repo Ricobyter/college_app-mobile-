@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { Provider, useSelector } from 'react-redux';
 import store from './store/store';
@@ -7,6 +7,8 @@ import Toast from 'react-native-toast-message';
 import Sidebar from './components/Sidebar';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import AppStack from './AppStack'; 
+import { captureRef } from 'react-native-view-shot';
+// import uploadDataToUsers from './uploadDataToUsers';
 
 const Drawer = createDrawerNavigator();
 
@@ -16,6 +18,7 @@ const Navigator = () => {
 
   useEffect(() => {
     setInitialRoute(uid ? 'AppStack' : 'Home');
+    // uploadDataToUsers();
   }, [uid]);
 
   if (initialRoute === null) {

@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Pressable, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TextInput, Pressable, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { FIREBASE_DB } from '../FirebaseConfig';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import Header from '../components/Header';
 import Toast from 'react-native-toast-message';
 
-
 const AddAnnouncement = ({ navigation }) => {
   const [title, setTitle] = useState('');
   const [date, setDate] = useState('');
   const [description, setDescription] = useState('');
+  const [loading, setLoading] = useState(false); // Loading state
 
   const handleSubmit = async () => {
-    // Check if any input field is empty
     if (!title || !date || !description) {
       Toast.show({
         type: 'error',
@@ -22,28 +21,36 @@ const AddAnnouncement = ({ navigation }) => {
       return;
     }
 
+    setLoading(true); // Start loading
+
     try {
       await addDoc(collection(FIREBASE_DB, 'announcements'), {
         title,
         date,
         description,
-        createdAt: serverTimestamp()
+        createdAt: serverTimestamp(),
       });
+
+      // Show success toast message
       Toast.show({
         type: 'success',
         text1: 'Success',
         text2: 'Announcement added successfully!',
       });
+
+      // Clear form fields
       setTitle('');
       setDate('');
       setDescription('');
-      navigation.navigate('AdminDashboard'); // Navigate back to the dashboard
+      
     } catch (error) {
       Toast.show({
         type: 'error',
         text1: 'Error',
         text2: `Error adding announcement: ${error.message}`,
       });
+    } finally {
+      setLoading(false); // Stop loading after process completes
     }
   };
 
@@ -55,27 +62,17 @@ const AddAnnouncement = ({ navigation }) => {
           <Text style={styles.headerText}>Add Announcement</Text>
         </View>
         <View style={styles.formContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="Title"
-            value={title}
-            onChangeText={setTitle}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Date"
-            value={date}
-            onChangeText={setDate}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Description"
-            value={description}
-            onChangeText={setDescription}
-          />
-          <Pressable style={styles.submitButton} onPress={handleSubmit}>
+          <TextInput style={styles.input} placeholder="Title" value={title} onChangeText={setTitle} />
+          <TextInput style={styles.input} placeholder="Date" value={date} onChangeText={setDate} />
+          <TextInput style={styles.input} placeholder="Description" value={description} onChangeText={setDescription} />
+
+          <Pressable style={styles.submitButton} onPress={handleSubmit} disabled={loading}>
             <View style={styles.actionButtonContent}>
-              <Text style={styles.submitButtonText}>Submit</Text>
+              {loading ? (
+                <ActivityIndicator size="small" color="#00796b" /> // Show loader when submitting
+              ) : (
+                <Text style={styles.submitButtonText}>Submit</Text>
+              )}
             </View>
           </Pressable>
         </View>
@@ -88,7 +85,7 @@ const AddAnnouncement = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#e0f2f1', // Light teal background
+    backgroundColor: '#e0f2f1',
   },
   scrollContainer: {
     padding: 20,
@@ -96,20 +93,20 @@ const styles = StyleSheet.create({
   headerContainer: {
     alignItems: 'center',
     marginBottom: 20,
-    backgroundColor: '#ffffff', // White background
+    backgroundColor: '#ffffff',
     paddingVertical: 10,
     borderRadius: 10,
   },
   headerText: {
-    fontSize: 26, // Matching Programs header text size
+    fontSize: 26,
     fontWeight: 'bold',
     color: '#004d40',
   },
   formContainer: {
-    backgroundColor: '#ffffff', // White background
+    backgroundColor: '#ffffff',
     padding: 20,
     borderRadius: 10,
-    elevation: 3, // Shadow effect
+    elevation: 3,
   },
   input: {
     height: 40,
@@ -117,13 +114,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 15,
     paddingLeft: 8,
-    borderRadius: 5, // Rounded corners for the input fields
+    borderRadius: 5,
   },
   submitButton: {
-    backgroundColor: '#00796b', // Dark teal
+    backgroundColor: '#00796b',
     padding: 15,
     borderRadius: 10,
-    elevation: 3, // Shadow effect
+    elevation: 3,
     alignItems: 'center',
   },
   submitButtonText: {
@@ -133,7 +130,7 @@ const styles = StyleSheet.create({
   },
   actionButtonContent: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
   },
 });

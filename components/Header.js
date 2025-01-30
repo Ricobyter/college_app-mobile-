@@ -41,7 +41,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 25,
+    paddingTop: 30,
+    paddingBottom: 20,
     paddingHorizontal: 10,
     backgroundColor: '#00796b', // Header background color matching theme
     elevation: 5, // Shadow effect for Android

@@ -24,6 +24,7 @@ export default function Home({ navigation }) {
           <Text style={styles.buttonText}>Login</Text>
         </Pressable>
       </View>
+
     </View>
   );
 }

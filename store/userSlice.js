@@ -1,11 +1,26 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { FIREBASE_AUTH, FIREBASE_DB } from '../FirebaseConfig';
-import { collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore';
-import { sendPasswordResetEmail } from 'firebase/auth';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  FIREBASE_AUTH,
+  FIREBASE_DB,
+  FIREBASE_REALTIME_DB
+  
+} from "../FirebaseConfig";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
+import { sendPasswordResetEmail } from "firebase/auth";
+import { ref, get } from "firebase/database";
 
 export const loginUser = createAsyncThunk(
-  'user/loginUser',
+  "user/loginUser",
   async ({ email, password }, { rejectWithValue }) => {
     try {
       const auth = FIREBASE_AUTH;
@@ -20,11 +35,51 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+export const fetchRealtimeData = createAsyncThunk(
+  "user/fetchRealtimeData",
+  async (_, { rejectWithValue }) => {
+    try {
+      const databaseRef = ref(FIREBASE_REALTIME_DB, "college-app-data/users"); // Reference to your Realtime Database path
+      const snapshot = await get(databaseRef); // Fetch data from the Realtime Database
+
+      if (snapshot.exists()) {
+        return snapshot.val(); // Return the data if it exists
+      } else {
+        return rejectWithValue("No data found in the database.");
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const uploadUserData = createAsyncThunk(
+  "users/uploadUserData",
+  async (userData, { rejectWithValue }) => {
+    try {
+      const usersCollection = collection(FIREBASE_DB, "users"); // Reference to the "users" collection
+      const userDocRef = doc(usersCollection, userData.rollNo); // Use rollNo as the document ID
+      const userDocSnapshot = await getDoc(userDocRef);
+
+      if (!userDocSnapshot.exists()) {
+        // If document does not already exist, upload it
+        await setDoc(userDocRef, userData);
+        return `Uploaded: ${userData.username}`;
+      } else {
+        return `Document for Roll No: ${userData.rollNo} already exists. Skipping...`;
+      }
+    } catch (error) {
+      console.error("Error uploading data to Firestore:", error);
+      return rejectWithValue("Failed to upload user data");
+    }
+  }
+);
+
 export const getUser = createAsyncThunk(
-  'user/getUser',
+  "user/getUser",
   async (uid, { rejectWithValue }) => {
     try {
-      const userDoc = await getDoc(doc(FIREBASE_DB, 'users', uid));
+      const userDoc = await getDoc(doc(FIREBASE_DB, "users", uid));
       if (userDoc.exists()) {
         const userData = userDoc.data();
         return {
@@ -33,7 +88,7 @@ export const getUser = createAsyncThunk(
           createdAt: userData.createdAt.toDate().toISOString(),
         };
       } else {
-        return rejectWithValue('User not found');
+        return rejectWithValue("User not found");
       }
     } catch (error) {
       return rejectWithValue(error.message);
@@ -42,10 +97,10 @@ export const getUser = createAsyncThunk(
 );
 
 export const deleteUser = createAsyncThunk(
-  'user/deleteProfessor',
+  "user/deleteProfessor",
   async (professorId, { rejectWithValue }) => {
     try {
-      await deleteDoc(doc(FIREBASE_DB, 'users', professorId));
+      await deleteDoc(doc(FIREBASE_DB, "users", professorId));
       return professorId;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -54,10 +109,10 @@ export const deleteUser = createAsyncThunk(
 );
 
 export const updateUser = createAsyncThunk(
-  'user/updateUser',
+  "user/updateUser",
   async ({ uid, userData }, thunkAPI) => {
     try {
-      const userRef = doc(FIREBASE_DB, 'users', uid);
+      const userRef = doc(FIREBASE_DB, "users", uid);
       await setDoc(userRef, userData, { merge: true });
       return userData;
     } catch (error) {
@@ -67,12 +122,16 @@ export const updateUser = createAsyncThunk(
 );
 
 export const getProfessors = createAsyncThunk(
-  'user/getProfessors',
+  "user/getProfessors",
   async (_, { rejectWithValue }) => {
     try {
       const professorsQuery = query(
-        collection(FIREBASE_DB, 'users'),
-        where('designation', 'in', ['Professor', 'Visiting Faculty', 'Assistant Professor'])
+        collection(FIREBASE_DB, "users"),
+        where("designation", "in", [
+          "Professor",
+          "Visiting Faculty",
+          "Assistant Professor",
+        ])
       );
       const querySnapshot = await getDocs(professorsQuery);
 
@@ -91,12 +150,12 @@ export const getProfessors = createAsyncThunk(
 );
 
 export const getStudents = createAsyncThunk(
-  'user/getStudents',
+  "user/getStudents",
   async (_, { rejectWithValue }) => {
     try {
       const studentQuery = query(
-        collection(FIREBASE_DB, 'users'),
-        where('designation', '==', 'Student')
+        collection(FIREBASE_DB, "users"),
+        where("designation", "==", "Student")
       );
       const querySnapshot = await getDocs(studentQuery);
 
@@ -115,12 +174,12 @@ export const getStudents = createAsyncThunk(
 );
 
 export const getVFaculties = createAsyncThunk(
-  'user/getVFaculties',
+  "user/getVFaculties",
   async (_, { rejectWithValue }) => {
     try {
       const vFacultyQuery = query(
-        collection(FIREBASE_DB, 'users'),
-        where('designation', '==', 'Visiting Faculty')
+        collection(FIREBASE_DB, "users"),
+        where("designation", "==", "Visiting Faculty")
       );
       const querySnapshot = await getDocs(vFacultyQuery);
 
@@ -139,10 +198,10 @@ export const getVFaculties = createAsyncThunk(
 );
 
 export const getAllUsers = createAsyncThunk(
-  'user/getAllUsers',
+  "user/getAllUsers",
   async (_, { rejectWithValue }) => {
     try {
-      const usersQuery = query(collection(FIREBASE_DB, 'users'));
+      const usersQuery = query(collection(FIREBASE_DB, "users"));
       const querySnapshot = await getDocs(usersQuery);
 
       const users = [];
@@ -160,12 +219,12 @@ export const getAllUsers = createAsyncThunk(
 );
 
 export const sendResetEmail = createAsyncThunk(
-  'user/sendResetEmail',
+  "user/sendResetEmail",
   async (email, { rejectWithValue }) => {
     try {
       const auth = FIREBASE_AUTH;
       await sendPasswordResetEmail(auth, email);
-      return 'Password reset email sent successfully';
+      return "Password reset email sent successfully";
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -173,18 +232,19 @@ export const sendResetEmail = createAsyncThunk(
 );
 
 export const addUser = createAsyncThunk(
-  'user/addUser',
+  "user/addUser",
   async ({ userData }, { rejectWithValue }) => {
     try {
-      const defaultProfilePic = 'https://img.freepik.com/free-vector/illustration-businessman_53876-5856.jpg?w=740&t=st=1721141254~exp=1721141854~hmac=16b7be7a26efb621a8073b1e8204f34be34595f0d723d5c8ae9279435c66a468';
+      const defaultProfilePic =
+        "https://img.freepik.com/free-vector/illustration-businessman_53876-5856.jpg?w=740&t=st=1721141254~exp=1721141854~hmac=16b7be7a26efb621a8073b1e8204f34be34595f0d723d5c8ae9279435c66a468";
 
       // Check if profilePic is provided, otherwise use default
       const profilePic = userData.photoURL || defaultProfilePic;
 
-      const userRef = doc(FIREBASE_DB, 'users', userData.uid);
+      const userRef = doc(FIREBASE_DB, "users", userData.uid);
       await setDoc(userRef, {
         ...userData,
-        photoURL: profilePic
+        photoURL: profilePic,
       });
       return userData;
     } catch (error) {
@@ -194,10 +254,10 @@ export const addUser = createAsyncThunk(
 );
 
 export const addDegreeToUser = createAsyncThunk(
-  'user/addDegreeToUser',
+  "user/addDegreeToUser",
   async (degree, { rejectWithValue }) => {
     try {
-      const degreesRef = collection(FIREBASE_DB, 'degrees');
+      const degreesRef = collection(FIREBASE_DB, "degrees");
       const docRef = await addDoc(degreesRef, degree);
       return { id: docRef.id, ...degree };
     } catch (error) {
@@ -207,19 +267,22 @@ export const addDegreeToUser = createAsyncThunk(
 );
 
 export const fetchUserDegrees = createAsyncThunk(
-  'user/fetchUserDegrees',
+  "user/fetchUserDegrees",
   async (userId, { rejectWithValue }) => {
     try {
-      const q = query(collection(FIREBASE_DB, 'degrees'), where('userId', '==', userId));
+      const q = query(
+        collection(FIREBASE_DB, "degrees"),
+        where("userId", "==", userId)
+      );
       const querySnapshot = await getDocs(q);
-      const degrees = querySnapshot.docs.map(doc => {
+      const degrees = querySnapshot.docs.map((doc) => {
         const data = doc.data();
         return {
           id: doc.id,
           ...data,
-          createdAt: data.createdAt.toDate().toISOString(), 
-          startYear: data.startYear.toDate().getFullYear(), 
-          endYear: data.endYear.toDate().getFullYear(), 
+          createdAt: data.createdAt.toDate().toISOString(),
+          startYear: data.startYear.toDate().getFullYear(),
+          endYear: data.endYear.toDate().getFullYear(),
         };
       });
       return degrees;
@@ -245,45 +308,46 @@ export const fetchUserDegrees = createAsyncThunk(
 // );
 
 const initialState = {
-  userEmail: '',
-  uid: '',
-  username: '',
-  photoURL: '',
+  userEmail: "",
+  uid: "",
+  username: "",
+  photoURL: "",
   educationQualifications: [],
-  birthPlace: '',
-  designation: '',
-  bio: '',
+  birthPlace: "",
+  designation: "",
+  bio: "",
   loading: false,
-  error: '',
+  error: "",
   isLoading: false,
-  phone: '',
+  phone: "",
   professors: [],
-  students : [],
-  degrees : [],
+  students: [],
+  degrees: [],
   vFaculties: [],
-  allUsers: []  // Add allUsers to the state
+  realtimeData: null,
+  allUsers: [], // Add allUsers to the state,
 };
 
 const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState,
   reducers: {
     clearUser(state) {
-      state.userEmail = '';
-      state.uid = '';
-      state.username = '';
-      state.photoURL = '';
+      state.userEmail = "";
+      state.uid = "";
+      state.username = "";
+      state.photoURL = "";
       state.educationQualifications = [];
-      state.birthPlace = '';
-      state.designation = '';
+      state.birthPlace = "";
+      state.designation = "";
       state.loading = false;
-      state.error = '';
+      state.error = "";
       state.isLoading = false;
-      state.bio = '';
-      state.phone = '';
-      degrees =[];
+      state.bio = "";
+      state.phone = "";
+      degrees = [];
       state.professors = [];
-      state.students=[];
+      state.students = [];
       state.vFaculties = [];
       state.allUsers = []; // Clear allUsers
     },
@@ -294,9 +358,21 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchRealtimeData.pending, (state) => {
+        state.loading = true;
+        state.error = "";
+      })
+      .addCase(fetchRealtimeData.fulfilled, (state, action) => {
+        state.loading = false;
+        state.realtimeData = action.payload; // Update the state with the fetched data
+      })
+      .addCase(fetchRealtimeData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
-        state.error = '';
+        state.error = "";
         state.isLoading = true;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
@@ -312,7 +388,7 @@ const userSlice = createSlice({
       })
       .addCase(getUser.pending, (state) => {
         state.loading = true;
-        state.error = '';
+        state.error = "";
         state.isLoading = true;
       })
       .addCase(getUser.fulfilled, (state, action) => {
@@ -333,7 +409,9 @@ const userSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(deleteUser.fulfilled, (state, action) => {
-        state.professors = state.professors.filter(professor => professor.id !== action.payload);
+        state.professors = state.professors.filter(
+          (professor) => professor.id !== action.payload
+        );
       })
       .addCase(deleteUser.rejected, (state, action) => {
         state.error = action.payload;
@@ -351,7 +429,7 @@ const userSlice = createSlice({
       })
       .addCase(getProfessors.pending, (state) => {
         state.loading = true;
-        state.error = '';
+        state.error = "";
         state.isLoading = true;
       })
       .addCase(getProfessors.fulfilled, (state, action) => {
@@ -366,7 +444,7 @@ const userSlice = createSlice({
       })
       .addCase(getStudents.pending, (state) => {
         state.loading = true;
-        state.error = '';
+        state.error = "";
         state.isLoading = true;
       })
       .addCase(getStudents.fulfilled, (state, action) => {
@@ -381,7 +459,7 @@ const userSlice = createSlice({
       })
       .addCase(getVFaculties.pending, (state) => {
         state.loading = true;
-        state.error = '';
+        state.error = "";
         state.isLoading = true;
       })
       .addCase(getVFaculties.fulfilled, (state, action) => {
@@ -396,7 +474,7 @@ const userSlice = createSlice({
       })
       .addCase(getAllUsers.pending, (state) => {
         state.loading = true;
-        state.error = '';
+        state.error = "";
         state.isLoading = true;
       })
       .addCase(getAllUsers.fulfilled, (state, action) => {
@@ -411,7 +489,7 @@ const userSlice = createSlice({
       })
       .addCase(addUser.pending, (state) => {
         state.loading = true;
-        state.error = '';
+        state.error = "";
         state.isLoading = true;
       })
       .addCase(addUser.fulfilled, (state, action) => {
@@ -440,7 +518,7 @@ const userSlice = createSlice({
       .addCase(fetchUserDegrees.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      })
+      });
   },
 });
 

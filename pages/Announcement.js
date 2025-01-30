@@ -1,30 +1,41 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import React, { useEffect, useState, useCallback } from 'react';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert, ActivityIndicator, RefreshControl } from 'react-native';
 import { collection, getDocs, orderBy, query, doc, deleteDoc } from 'firebase/firestore';
 import { FIREBASE_DB } from '../FirebaseConfig';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Toast from 'react-native-toast-message';
-import Header from '../components/Header'; // Import Header component
+import Header from '../components/Header';
 import { AdminOnly } from '../utils';
 
 const Announcement = () => {
   const [announcements, setAnnouncements] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false); // Refresh state
+
+  const fetchAnnouncements = async () => {
+    try {
+      const q = query(collection(FIREBASE_DB, 'announcements'), orderBy('createdAt', 'desc'));
+      const querySnapshot = await getDocs(q);
+      const fetchedAnnouncements = [];
+      querySnapshot.forEach((doc) => {
+        fetchedAnnouncements.push({ ...doc.data(), id: doc.id });
+      });
+      setAnnouncements(fetchedAnnouncements);
+    } catch (error) {
+      console.error('Error fetching announcements: ', error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false); // Stop refreshing animation
+    }
+  };
 
   useEffect(() => {
-    const fetchAnnouncements = async () => {
-      try {
-        const q = query(collection(FIREBASE_DB, 'announcements'), orderBy('createdAt', 'desc'));
-        const querySnapshot = await getDocs(q);
-        const fetchedAnnouncements = [];
-        querySnapshot.forEach((doc) => {
-          fetchedAnnouncements.push({ ...doc.data(), id: doc.id });
-        });
-        setAnnouncements(fetchedAnnouncements);
-      } catch (error) {
-        console.error('Error fetching announcements: ', error);
-      }
-    };
+    fetchAnnouncements();
+  }, []);
 
+  // Pull-to-refresh function
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
     fetchAnnouncements();
   }, []);
 
@@ -47,15 +58,8 @@ const Announcement = () => {
       'Delete Announcement',
       'Are you sure you want to delete this announcement?',
       [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Delete',
-          onPress: () => handleDelete(id),
-          style: 'destructive',
-        },
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Delete', onPress: () => handleDelete(id), style: 'destructive' },
       ],
       { cancelable: false }
     );
@@ -69,24 +73,35 @@ const Announcement = () => {
           <View style={styles.headerContainer}>
             <Text style={styles.headerText}>Announcements</Text>
           </View>
-          <ScrollView contentContainerStyle={styles.scrollContainer}>
-            {announcements.map((announcement) => (
-              <View key={announcement.id} style={styles.announcementCard}>
-                <View style={styles.cardHeader}>
-                  <Text style={styles.announcementTitle}>{announcement.title}</Text>
 
-                  <AdminOnly>
-                  <TouchableOpacity onPress={() => confirmDelete(announcement.id)}>
-                    <Icon name="delete" size={24} color="#d32f2f" />
-                  </TouchableOpacity>
-                  </AdminOnly>
+          {loading ? (
+            <ActivityIndicator size="large" color="#00796b" style={styles.loader} />
+          ) : (
+            <ScrollView
+              contentContainerStyle={styles.scrollContainer}
+              refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={["#00796b"]} />}
+            >
+              {announcements.length > 0 ? (
+                announcements.map((announcement) => (
+                  <View key={announcement.id} style={styles.announcementCard}>
+                    <View style={styles.cardHeader}>
+                      <Text style={styles.announcementTitle}>{announcement.title}</Text>
 
-                </View>
-                <Text style={styles.announcementDate}>{announcement.date}</Text>
-                <Text style={styles.announcementDescription}>{announcement.description}</Text>
-              </View>
-            ))}
-          </ScrollView>
+                      <AdminOnly>
+                        <TouchableOpacity onPress={() => confirmDelete(announcement.id)}>
+                          <Icon name="delete" size={24} color="#d32f2f" />
+                        </TouchableOpacity>
+                      </AdminOnly>
+                    </View>
+                    <Text style={styles.announcementDate}>{announcement.date}</Text>
+                    <Text style={styles.announcementDescription}>{announcement.description}</Text>
+                  </View>
+                ))
+              ) : (
+                <Text style={styles.noAnnouncements}>No announcements available.</Text>
+              )}
+            </ScrollView>
+          )}
         </View>
       </View>
       <Toast />
@@ -97,7 +112,7 @@ const Announcement = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#e0f2f1', // Background color matching the theme
+    backgroundColor: '#e0f2f1',
   },
   contentContainer: {
     flex: 1,
@@ -106,24 +121,28 @@ const styles = StyleSheet.create({
   headerContainer: {
     alignItems: 'center',
     marginBottom: 20,
-    backgroundColor: '#ffffff', // Matching Programs header background
+    backgroundColor: '#ffffff',
     paddingVertical: 10,
     borderRadius: 10,
   },
   headerText: {
-    fontSize: 26, // Matching Programs header text size
+    fontSize: 26,
     fontWeight: 'bold',
     color: '#004d40',
+  },
+  loader: {
+    marginTop: 20,
+    alignSelf: 'center',
   },
   scrollContainer: {
     flexGrow: 1,
   },
   announcementCard: {
-    backgroundColor: '#ffffff', // Card background color
+    backgroundColor: '#ffffff',
     padding: 15,
     borderRadius: 10,
     marginBottom: 15,
-    elevation: 3, // Shadow effect for Android
+    elevation: 3,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -144,6 +163,12 @@ const styles = StyleSheet.create({
   announcementDescription: {
     fontSize: 16,
     color: '#333',
+  },
+  noAnnouncements: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+    marginTop: 20,
   },
 });
 

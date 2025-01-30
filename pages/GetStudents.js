@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getStudents, deleteUser } from "../store/userSlice"; // Adjust the path as necessary
-import LoadingScreen from "../components/LoadingScreen"; // Adjust the path as necessary
-import { View, Text, TextInput, ScrollView, StyleSheet, Image, TouchableOpacity, Alert, RefreshControl } from "react-native";
-import Icon from 'react-native-vector-icons/MaterialIcons'; // Import the icon library
+import { getStudents, deleteUser } from "../store/userSlice";
+import LoadingScreen from "../components/LoadingScreen";
+import { View, Text, TextInput, StyleSheet, Image, TouchableOpacity, RefreshControl, FlatList, ActivityIndicator } from "react-native";
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from "@react-navigation/native";
 import { AdminOnly } from "../utils";
 
@@ -12,68 +12,46 @@ const GetStudents = () => {
   const { students, loading, error } = useSelector((state) => state.user);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredStudents, setFilteredStudents] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(4);
   const [refreshing, setRefreshing] = useState(false);
+  const [visibleStudents, setVisibleStudents] = useState(10); // Number of students initially shown
+
   const navigation = useNavigation();
 
+  const fetchStudents = async () => {
+    setRefreshing(true);
+    await dispatch(getStudents());
+    setRefreshing(false);
+  };
+
   useEffect(() => {
-    dispatch(getStudents());
+    fetchStudents();
   }, [dispatch]);
 
   useEffect(() => {
+    let sortedStudents = [...students].sort((a, b) =>
+      a.username.toLowerCase().localeCompare(b.username.toLowerCase())
+    );
+
     if (searchQuery) {
       setFilteredStudents(
-        students.filter(student =>
+        sortedStudents.filter(student =>
           student.username.toLowerCase().includes(searchQuery.toLowerCase())
         )
       );
     } else {
-      setFilteredStudents(students);
+      setFilteredStudents(sortedStudents);
     }
-    setCurrentPage(1);
   }, [searchQuery, students]);
 
   const handleDelete = (studentId) => {
-    Alert.alert(
-      "Delete Student",
-      "Are you sure you want to delete this student?",
-      [
-        {
-          text: "Cancel",
-          style: "cancel"
-        },
-        {
-          text: "Yes",
-          onPress: () => {
-            dispatch(deleteUser(studentId));
-          }
-        }
-      ]
-    );
+    dispatch(deleteUser(studentId));
   };
 
-  // Pagination calculations
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentStudents = filteredStudents.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);
-
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
+  // Load more students when scrolled to bottom
+  const loadMoreStudents = () => {
+    if (visibleStudents < filteredStudents.length) {
+      setVisibleStudents((prev) => prev + 10); // Load 10 more students
     }
-  };
-
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const onRefresh = () => {
-    setRefreshing(true);
-    dispatch(getStudents()).then(() => setRefreshing(false));
   };
 
   if (loading) {
@@ -89,80 +67,58 @@ const GetStudents = () => {
   }
 
   return (
-    <>
-      <ScrollView
-        style={styles.container}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-      >
-        <View style={styles.searchContainer}>
-          <Icon
-            name="search"
-            size={20}
-            color="#004d40"
-            style={styles.searchIcon}
-          />
-          <TextInput
-            placeholder="Search Students"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            style={styles.searchInput}
-          />
-        </View>
-
-        {currentStudents && currentStudents.length > 0 ? (
-          currentStudents.map((student) => (
-            <View key={student.id} style={styles.studentCard}>
-              <TouchableOpacity
-                style={styles.cardContent}
-                onPress={() => navigation.navigate("ProfessorProfile", { professorId: student.id })}
-              >
-                <View style={styles.imageContainer}>
-                  <Image
-                    source={{ uri: student.photoURL || "https://via.placeholder.com/100" }}
-                    style={styles.profileImage}
-                  />
-                </View>
-                <View style={styles.detailsContainer}>
-                  <Text style={styles.studentName}>{student.username}</Text>
-                  <Text style={styles.studentEmail}>{student.designation}</Text>
-                </View>
-              </TouchableOpacity>
-              <AdminOnly>
-                <TouchableOpacity onPress={() => handleDelete(student.id)}>
-                  <Icon name="delete" size={24} color="red" />
-                </TouchableOpacity>
-              </AdminOnly>
-            </View>
-          ))
-        ) : (
-          <Text style={styles.noStudentsText}>No students found</Text>
-        )}
-      </ScrollView>
-
-      <View style={styles.paginationContainer}>
-        <TouchableOpacity
-          onPress={handlePreviousPage}
-          disabled={currentPage === 1}
-          style={[
-            styles.paginationButton,
-            currentPage === 1 && styles.paginationButtonDisabled,
-          ]}
-        >
-          <Text style={styles.paginationButtonText}>Previous</Text>
-        </TouchableOpacity>
-        <Text style={styles.pageNumberText}>{currentPage} / {totalPages}</Text>
-        <TouchableOpacity
-          onPress={handleNextPage}
-          disabled={currentPage === totalPages}
-          style={[
-            styles.paginationButton,
-            currentPage === totalPages && styles.paginationButtonDisabled,
-          ]}
-        >
-          <Text style={styles.paginationButtonText}>Next</Text>
-        </TouchableOpacity>
+    <View style={styles.container}>
+      {/* Search Input */}
+      <View style={styles.searchContainer}>
+        <Icon name="search" size={20} color="#004d40" style={styles.searchIcon} />
+        <TextInput
+          placeholder="Search Students"
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          style={styles.searchInput}
+        />
       </View>
-    </>
+
+      {/* Student List */}
+      <FlatList
+        data={filteredStudents.slice(0, visibleStudents)}
+        keyExtractor={(student) => student.id}
+        renderItem={({ item }) => (
+          <View style={styles.studentCard}>
+            <TouchableOpacity
+              style={styles.cardContent}
+              onPress={() => navigation.navigate("ProfessorProfile", { professorId: item.id })}
+            >
+              <View style={styles.imageContainer}>
+                <Image
+                  source={{ uri: item.photoURL || "https://via.placeholder.com/100" }}
+                  style={styles.profileImage}
+                />
+              </View>
+              <View style={styles.detailsContainer}>
+                <Text style={styles.studentName}>{item.username}</Text>
+                <Text style={styles.studentEmail}>{item.designation}</Text>
+              </View>
+            </TouchableOpacity>
+
+            {/* Admin Delete Option */}
+            {/* <AdminOnly>
+              <TouchableOpacity onPress={() => handleDelete(item.id)}>
+                <Icon name="delete" size={24} color="red" />
+              </TouchableOpacity>
+            </AdminOnly> */}
+          </View>
+        )}
+        ListFooterComponent={() =>
+          visibleStudents < filteredStudents.length ? (
+            <ActivityIndicator size="large" color="#00796b" style={styles.loader} />
+          ) : null
+        }
+        onEndReached={loadMoreStudents} // Load more when user reaches the end
+        onEndReachedThreshold={0.5} // Trigger loading earlier
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={fetchStudents} colors={["#00796b"]} />}
+      />
+    </View>
   );
 };
 
@@ -170,21 +126,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    paddingTop: 30,
     backgroundColor: '#e0f2f1',
-    paddingBottom: 50
-  },
-  headerContainer: {
-    marginBottom: 20,
-    backgroundColor: '#00796b', // Header background color matching Gallery
-    paddingVertical: 10,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  headerText: {
-    fontSize: 24, // Same as in Gallery
-    fontWeight: 'bold',
-    color: '#fff',
   },
   searchContainer: {
     flexDirection: 'row',
@@ -239,10 +181,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#004d40',
   },
-  noStudentsText: {
-    fontSize: 16,
-    color: '#004d40',
-    textAlign: 'center',
+  loader: {
+    marginVertical: 20,
+    alignSelf: "center",
   },
   centeredView: {
     flex: 1,
@@ -252,31 +193,6 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 18,
-    color: '#004d40',
-  },
-  paginationContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 10,
-    backgroundColor: '#e0f2f1',
-  },
-  paginationButton: {
-    backgroundColor: '#00796b', // Shade of green
-    padding: 10,
-    borderRadius: 5,
-    marginHorizontal: 10,
-  },
-  paginationButtonDisabled: {
-    backgroundColor: '#b2dfdb', // Lighter shade of green for disabled state
-  },
-  paginationButtonText: {
-    color: '#ffffff',
-    fontSize: 16,
-  },
-  pageNumberText: {
-    marginHorizontal: 20,
-    fontSize: 16,
     color: '#004d40',
   },
 });

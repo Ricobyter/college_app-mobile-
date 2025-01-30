@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getProfessors, deleteUser } from "../store/userSlice"; // Adjust the path as necessary
-import LoadingScreen from "../components/LoadingScreen"; // Adjust the path as necessary
-import { View, Text, TextInput, ScrollView, StyleSheet, Image, TouchableOpacity, Alert } from "react-native";
-import Icon from 'react-native-vector-icons/MaterialIcons'; // Import the icon library
+import { getProfessors, deleteUser } from "../store/userSlice"; // Adjust path as necessary
+import LoadingScreen from "../components/LoadingScreen"; // Adjust path as necessary
+import { View, Text, TextInput, FlatList, StyleSheet, Image, TouchableOpacity, Alert, RefreshControl } from "react-native";
+import Icon from 'react-native-vector-icons/MaterialIcons'; // Import icon library
 import { useNavigation } from "@react-navigation/native";
 import { AdminOnly } from "../utils";
 
@@ -12,26 +12,26 @@ const GetProfessors = () => {
   const { professors, loading, error } = useSelector((state) => state.user);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredProfessors, setFilteredProfessors] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(4); // Number of items per page
-  const navigation = useNavigation()
+  const [visibleProfessors, setVisibleProfessors] = useState(10); // Initial number of items to display
+  const [refreshing, setRefreshing] = useState(false);
+  const navigation = useNavigation();
 
   useEffect(() => {
     dispatch(getProfessors());
   }, [dispatch]);
 
   useEffect(() => {
-    // Filter professors based on search query
-    if (searchQuery) {
-      setFilteredProfessors(
-        professors.filter(professor =>
-          professor.username.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-      );
-    } else {
-      setFilteredProfessors(professors);
-    }
-    setCurrentPage(1); // Reset to first page on new search
+    // Filter and sort professors alphabetically by username
+    let updatedProfessors = professors.filter(professor =>
+      professor.username.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    updatedProfessors = updatedProfessors.sort((a, b) =>
+      a.username.localeCompare(b.username)
+    );
+
+    setFilteredProfessors(updatedProfessors);
+    setVisibleProfessors(10); // Reset visible items on new search
   }, [searchQuery, professors]);
 
   const handleDelete = (professorId) => {
@@ -39,37 +39,24 @@ const GetProfessors = () => {
       "Delete Professor",
       "Are you sure you want to delete this professor?",
       [
-        {
-          text: "Cancel",
-          style: "cancel"
-        },
-        {
-          text: "Yes",
-          onPress: () => {
-            dispatch(deleteUser(professorId));
-          }
-        }
+        { text: "Cancel", style: "cancel" },
+        { text: "Yes", onPress: () => dispatch(deleteUser(professorId)) }
       ]
     );
   };
 
-  // Pagination calculations
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentProfessors = filteredProfessors.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredProfessors.length / itemsPerPage);
-
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
+  // Load more items when scrolling
+  const handleLoadMore = () => {
+    if (visibleProfessors < filteredProfessors.length) {
+      setVisibleProfessors(prevCount => prevCount + 10); // Load next batch of items
     }
   };
 
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
+  // Refresh the list
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    dispatch(getProfessors()).then(() => setRefreshing(false));
+  }, [dispatch]);
 
   if (loading) {
     return <LoadingScreen />;
@@ -84,78 +71,53 @@ const GetProfessors = () => {
   }
 
   return (
-    <>
-      <ScrollView style={styles.container} >
-        <View style={styles.searchContainer}>
-          <Icon
-            name="search"
-            size={20}
-            color="#004d40"
-            style={styles.searchIcon}
-          />
-          <TextInput
-            placeholder="Search Professors"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            style={styles.searchInput}
-          />
-        </View>
-
-        {currentProfessors && currentProfessors.length > 0 ? (
-          currentProfessors.map((professor) => (
-            <View key={professor.id} style={styles.professorCard}>
-              <TouchableOpacity
-                style={styles.cardContent}
-                onPress={() => navigation.navigate("ProfessorProfile", { professorId: professor.id })}
-              >
-                <View style={styles.imageContainer}>
-                  <Image
-                    source={{ uri: professor.photoURL || "https://via.placeholder.com/100" }}
-                    style={styles.profileImage}
-                  />
-                </View>
-                <View style={styles.detailsContainer}>
-                  <Text style={styles.professorName}>{professor.username}</Text>
-                  <Text style={styles.professorEmail}>{professor.designation}</Text>
-                </View>
-              </TouchableOpacity>
-              
-              <AdminOnly>
-                <TouchableOpacity onPress={() => handleDelete(professor.id)}>
-                  <Icon name="delete" size={24} color="red" />
-                </TouchableOpacity>
-              </AdminOnly>
-            </View>
-          ))
-        ) : (
-          <Text style={styles.noProfessorsText}>No professors found</Text>
-        )}
-      </ScrollView>
-
-      <View style={styles.paginationContainer}>
-        <TouchableOpacity
-          onPress={handlePreviousPage}
-          disabled={currentPage === 1}
-          style={[
-            styles.paginationButton,
-            currentPage === 1 && styles.paginationButtonDisabled,
-          ]}
-        >
-          <Text style={styles.paginationButtonText}>Previous</Text>
-        </TouchableOpacity>
-        <Text style={styles.pageNumberText}>{currentPage} / {totalPages}</Text>
-        <TouchableOpacity
-          onPress={handleNextPage}
-          disabled={currentPage === totalPages}
-          style={[
-            styles.paginationButton,
-            currentPage === totalPages && styles.paginationButtonDisabled,
-          ]}
-        >
-          <Text style={styles.paginationButtonText}>Next</Text>
-        </TouchableOpacity>
+    <View style={styles.container}>
+      {/* Search Input */}
+      <View style={styles.searchContainer}>
+        <Icon name="search" size={20} color="#004d40" style={styles.searchIcon} />
+        <TextInput
+          placeholder="Search Professors"
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          style={styles.searchInput}
+        />
       </View>
-    </>
+
+      {/* Professor List with Infinite Scroll */}
+      <FlatList
+        data={filteredProfessors.slice(0, visibleProfessors)}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <View key={item.id} style={styles.professorCard}>
+            <TouchableOpacity
+              style={styles.cardContent}
+              onPress={() => navigation.navigate("ProfessorProfile", { professorId: item.id })}
+            >
+              <View style={styles.imageContainer}>
+                <Image
+                  source={{ uri: item.photoURL || "https://via.placeholder.com/100" }}
+                  style={styles.profileImage}
+                />
+              </View>
+              <View style={styles.detailsContainer}>
+                <Text style={styles.professorName}>{item.username}</Text>
+                <Text style={styles.professorEmail}>{item.designation}</Text>
+              </View>
+            </TouchableOpacity>
+
+            <AdminOnly>
+              <TouchableOpacity onPress={() => handleDelete(item.id)}>
+                <Icon name="delete" size={24} color="red" />
+              </TouchableOpacity>
+            </AdminOnly>
+          </View>
+        )}
+        onEndReached={handleLoadMore} // Load more when scrolling reaches end
+        onEndReachedThreshold={0.5} // Trigger loading when 50% of remaining list is seen
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        ListEmptyComponent={<Text style={styles.noProfessorsText}>No professors found</Text>}
+      />
+    </View>
   );
 };
 
@@ -165,19 +127,6 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 30,
     backgroundColor: '#e0f2f1',
-    paddingBottom: 50
-  },
-  headerContainer: {
-    marginBottom: 20,
-    backgroundColor: '#00796b', // Header background color matching Gallery
-    paddingVertical: 10,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  headerText: {
-    fontSize: 24, // Same as in Gallery
-    fontWeight: 'bold',
-    color: '#fff',
   },
   searchContainer: {
     flexDirection: 'row',
@@ -245,31 +194,6 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 18,
-    color: '#004d40',
-  },
-  paginationContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 10,
-    backgroundColor: '#e0f2f1',
-  },
-  paginationButton: {
-    backgroundColor: '#00796b', // Shade of green
-    padding: 10,
-    borderRadius: 5,
-    marginHorizontal: 10,
-  },
-  paginationButtonDisabled: {
-    backgroundColor: '#b2dfdb', // Lighter shade of green for disabled state
-  },
-  paginationButtonText: {
-    color: '#ffffff',
-    fontSize: 16,
-  },
-  pageNumberText: {
-    marginHorizontal: 20,
-    fontSize: 16,
     color: '#004d40',
   },
 });

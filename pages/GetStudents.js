@@ -5,16 +5,20 @@ import LoadingScreen from "../components/LoadingScreen";
 import { View, Text, TextInput, StyleSheet, Image, TouchableOpacity, RefreshControl, FlatList, ActivityIndicator } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from "@react-navigation/native";
+import { Picker } from '@react-native-picker/picker';
+
 import { AdminOnly } from "../utils";
 
 const GetStudents = () => {
   const dispatch = useDispatch();
   const { students, loading, error } = useSelector((state) => state.user);
   const [searchQuery, setSearchQuery] = useState('');
+  
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [visibleStudents, setVisibleStudents] = useState(10); // Number of students initially shown
-
+  const [selectedYear, setSelectedYear] = useState("2024");
+  const [selectedDegree, setSelectedDegree] = useState("B.Tech");
   const navigation = useNavigation();
 
   const fetchStudents = async () => {
@@ -32,25 +36,29 @@ const GetStudents = () => {
       a.username.toLowerCase().localeCompare(b.username.toLowerCase())
     );
 
+    let filteredByYear = sortedStudents.filter(student =>
+      student.rollNo.toLowerCase().startsWith(selectedYear.slice(2) + "b")
+    );
+
     if (searchQuery) {
       setFilteredStudents(
-        sortedStudents.filter(student =>
-          student.username.toLowerCase().includes(searchQuery.toLowerCase())
+        filteredByYear.filter(student =>
+          student.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          student.rollNo.toLowerCase().includes(searchQuery.toLowerCase())
         )
       );
     } else {
-      setFilteredStudents(sortedStudents);
+      setFilteredStudents(filteredByYear);
     }
-  }, [searchQuery, students]);
+  }, [searchQuery, students, selectedYear]);
 
   const handleDelete = (studentId) => {
     dispatch(deleteUser(studentId));
   };
 
-  // Load more students when scrolled to bottom
   const loadMoreStudents = () => {
     if (visibleStudents < filteredStudents.length) {
-      setVisibleStudents((prev) => prev + 10); // Load 10 more students
+      setVisibleStudents((prev) => prev + 10);
     }
   };
 
@@ -72,11 +80,37 @@ const GetStudents = () => {
       <View style={styles.searchContainer}>
         <Icon name="search" size={20} color="#004d40" style={styles.searchIcon} />
         <TextInput
-          placeholder="Search Students"
+          placeholder="Enter name or roll no."
           value={searchQuery}
           onChangeText={setSearchQuery}
           style={styles.searchInput}
         />
+      </View>
+      <View style={styles.filterContainer}>
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={selectedYear}
+            style={styles.picker}
+            onValueChange={(itemValue) => setSelectedYear(itemValue)}
+          >
+            <Picker.Item label="2024" value="2024" />
+            <Picker.Item label="2023" value="2023" />
+            <Picker.Item label="2022" value="2022" />
+            <Picker.Item label="2021" value="2021" />
+          </Picker>
+        </View>
+
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={selectedDegree}
+            style={styles.picker}
+            onValueChange={(itemValue) => setSelectedDegree(itemValue)}
+          >
+            <Picker.Item label="B.Tech" value="B.Tech" />
+            <Picker.Item label="M.Tech" value="M.Tech" />
+            <Picker.Item label="PhD" value="PhD" />
+          </Picker>
+        </View>
       </View>
 
       {/* Student List */}
@@ -194,6 +228,19 @@ const styles = StyleSheet.create({
   errorText: {
     fontSize: 18,
     color: '#004d40',
+  },
+  filterContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  pickerContainer: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+    borderRadius: 8,
+    padding: 5,
+    elevation: 1,
+    marginHorizontal: 5,
   },
 });
 

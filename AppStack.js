@@ -45,20 +45,34 @@ import { useSelector } from "react-redux";
 
 const Stack = createStackNavigator();
 
-const AppStack = () => {
+const HomeScreen = ({ navigation }) => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigation.replace("MainPage");
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [navigation]);
+
+  return <Home />;
+};
+
+const AppStack = ({navigation}) => {
   const { uid } = useSelector((state) => state.user);
   const [initialRoute, setInitialRoute] = useState("Home");
 
   useEffect(() => {
-    if (uid) {
+    const timer = setTimeout(() => {
       setInitialRoute("MainPage");
-    } else {
-      setInitialRoute("Home");
-    }
-  }, [uid]);
+    }, 2500);
+
+    return () => clearTimeout(timer);
+  }, []);
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={initialRoute}>
-      <Stack.Screen name="Home" component={Home} />
+    <Stack.Navigator screenOptions={{ headerShown: false }}
+    //  initialRouteName={initialRoute}
+     >
+      <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
       <Stack.Screen name="MainPage" component={MainPage} />

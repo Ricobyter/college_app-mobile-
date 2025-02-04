@@ -60,7 +60,7 @@ const MainPage = ({ navigation }) => {
         <View style={styles.quickLinksContainer}>
           <Text style={styles.sectionTitle}>Important Shortcuts</Text>
           <View style={styles.quickLinksGrid}>
-            <Pressable style={styles.quickLinkItem} onPress={() => navigation.navigate("Programs")}>
+            <Pressable style={styles.quickLinkItem} onPress={() => navigation.navigate("Home")}>
               <Icon name="graduation-cap" size={30} color="#00796b" />
               <Text style={styles.quickLinkText}>Programs</Text>
             </Pressable>

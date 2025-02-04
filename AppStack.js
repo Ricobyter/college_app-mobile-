@@ -40,7 +40,7 @@ import AddAnnouncement from "./pages/AddAnnouncement";
 import AddDegree from "./pages/profile/AddDegree";
 import ShowDegrees from "./pages/profile/ShowDegrees";
 import AddEvent from "./pages/AddEvent";
-import RealtimeDataPage from "./pages/RealtimeData";
+// import RealtimeDataPage from "./pages/RealtimeData";
 import { useSelector } from "react-redux";
 
 const Stack = createStackNavigator();
@@ -49,7 +49,7 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       navigation.replace("MainPage");
-    }, 2000);
+    }, 4000);
 
     return () => clearTimeout(timer);
   }, [navigation]);
@@ -115,7 +115,7 @@ const AppStack = ({navigation}) => {
       <Stack.Screen name="Info" component={Info} />
       <Stack.Screen name="Notification" component={Notification} />
       <Stack.Screen name="ShowDegrees" component={ShowDegrees} />
-      <Stack.Screen name="RealtimeData" component={RealtimeDataPage} />
+      {/* <Stack.Screen name="RealtimeData" component={RealtimeDataPage} /> */}
       
     </Stack.Navigator>
   );

@@ -46,8 +46,8 @@ const Links = () => {
         url: 'https://www.iiitdmj.ac.in/academics/calendar.php#acad_cal',
       },
       {
-        title: 'Holidays 2023',
-        url: 'https://www.iiitdmj.ac.in/downloads/Closed-Holiday-2023.pdf',
+        title: 'Holidays 2025',
+        url: 'https://www.iiitdmj.ac.in/downloads/Closed-Holiday-2025.pdf',
       },
       {
         title: 'About Us',
@@ -55,7 +55,7 @@ const Links = () => {
       },
       {
         title: 'E & ICT Academy',
-        url: 'https://www.iiitdmj.ac.in/ict.iiitdmj.ac.in/index.html',
+        url: 'https://www.iiitdmj.ac.in/ict.iiitdmj.ac.in/',
       },
       {
         title: 'Web Team',

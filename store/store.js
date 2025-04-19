@@ -3,11 +3,13 @@ import { configureStore } from '@reduxjs/toolkit';
 import userReducer from './userSlice';
 import emailReducer from './emailSlice'
 import professorReducer from './professorSlice'
+import announcementDataReducer from "./announcementDataSlice";
  const store = configureStore({
   reducer: {
     user: userReducer,
     email: emailReducer,
-    professor: professorReducer
+    professor: professorReducer,
+    announcements: announcementDataReducer,
   },
 });
 

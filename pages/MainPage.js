@@ -60,7 +60,7 @@ const MainPage = ({ navigation }) => {
         <View style={styles.quickLinksContainer}>
           <Text style={styles.sectionTitle}>Important Shortcuts</Text>
           <View style={styles.quickLinksGrid}>
-            <Pressable style={styles.quickLinkItem} onPress={() => navigation.navigate("Home")}>
+            <Pressable style={styles.quickLinkItem} onPress={() => navigation.navigate("Programs")}>
               <Icon name="graduation-cap" size={30} color="#00796b" />
               <Text style={styles.quickLinkText}>Programs</Text>
             </Pressable>
@@ -85,9 +85,13 @@ const MainPage = ({ navigation }) => {
         {/* Highlighted Sections */}
         <View style={styles.highlightedSection}>
           <Text style={styles.sectionTitle}>Featured</Text>
-          <Pressable style={styles.highlightedCard} onPress={() => navigation.navigate('News')}>
+          <Pressable style={styles.highlightedCard} onPress={() => navigation.navigate('EventsScreen')}>
             <Icon name="newspaper-o" size={30} color="#00796b" />
-            <Text style={styles.highlightedText}>News & Events</Text>
+            <Text style={styles.highlightedText}>Events</Text>
+          </Pressable>
+          <Pressable style={styles.highlightedCard} onPress={() => navigation.navigate('Announcement')}>
+            <Icon name="newspaper-o" size={30} color="#00796b" />
+            <Text style={styles.highlightedText}>Announcements</Text>
           </Pressable>
           <Pressable style={styles.highlightedCard} onPress={() => navigation.navigate('Contacts')}>
             <Icon name="phone" size={30} color="#00796b" />

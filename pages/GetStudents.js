@@ -36,8 +36,13 @@ const GetStudents = () => {
       a.username.toLowerCase().localeCompare(b.username.toLowerCase())
     );
 
+    // Determine prefix based on degree type
+    let degreePrefix = selectedDegree === "B.Tech" ? "b" :
+                       selectedDegree === "M.Tech" ? "m" :
+                       selectedDegree === "PhD" ? "p" : "";
+
     let filteredByYear = sortedStudents.filter(student =>
-      student.rollNo.toLowerCase().startsWith(selectedYear.slice(2) + "b")
+      student.rollNo.toLowerCase().startsWith(selectedYear.slice(2) + degreePrefix)
     );
 
     if (searchQuery) {

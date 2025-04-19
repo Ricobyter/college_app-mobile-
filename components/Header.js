@@ -3,6 +3,7 @@ import { View, Text, Image, Pressable, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
+import { LoginOnly } from '../utils';
 
 const Header = () => {
   const navigation = useNavigation();
@@ -29,9 +30,11 @@ const Header = () => {
         />
         <Text style={styles.headerTitle}>IIITDM Jabalpur</Text>
       </View>
-      <Pressable onPress={() => navigation.navigate('Announcement')} style={styles.infoButton}>
+      {/* <LoginOnly> */}
+      <Pressable onPress={() => navigation.navigate('Notice')} style={styles.infoButton}>
         <Icon name="bell" size={23} color="#fff" />
       </Pressable>
+      {/* </LoginOnly> */}
     </View>
   );
 };

@@ -3,7 +3,9 @@ import { View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import GetProfessors from './GetProfessors';
 import GetStudents from './GetStudents';
 import GetVF from './GetVF';
+import GetStaff from './GetStaff';
 import Header from '../components/Header';
+import LoginOnly from '../utils';
 
 const GetPeople = () => {
   const [activeComponent, setActiveComponent] = useState('Professors');
@@ -15,7 +17,7 @@ const GetPeople = () => {
       case 'Students':
         return <GetStudents />;
       case 'VF':
-        return <GetVF />;
+        return <GetStaff />;
       default:
         return <GetProfessors />;
     }
@@ -35,6 +37,10 @@ const GetPeople = () => {
         >
           <Text style={styles.buttonText}>Professors</Text>
         </TouchableOpacity>
+        
+        {/* <LoginOnly> */}
+
+       
         <TouchableOpacity
           style={[
             styles.button,
@@ -44,15 +50,17 @@ const GetPeople = () => {
         >
           <Text style={styles.buttonText}>Students</Text>
         </TouchableOpacity>
-        {/* <TouchableOpacity
+        {/* </LoginOnly> */}
+
+        <TouchableOpacity
           style={[
             styles.button,
             activeComponent === 'VF' && styles.activeButton
           ]}
           onPress={() => setActiveComponent('VF')}
         >
-          <Text style={styles.buttonText}>V. Faculties</Text>
-        </TouchableOpacity> */}
+          <Text style={styles.buttonText}>Staff</Text>
+        </TouchableOpacity>
       </View>
       <View style={styles.componentContainer}>
         {renderComponent()}

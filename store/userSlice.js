@@ -173,6 +173,31 @@ export const getStudents = createAsyncThunk(
   }
 );
 
+// Fetch Office Assistants
+export const getStaff = createAsyncThunk(
+  "user/getStaff",
+  async (_, { rejectWithValue }) => {
+    try {
+      const staffQuery = query(
+        collection(FIREBASE_DB, "users"),
+        where("designation", "==", "Office Assistant")
+      );
+      const querySnapshot = await getDocs(staffQuery);
+
+      const staff = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const { createdAt, ...rest } = data;
+        staff.push({ id: doc.id, ...rest });
+      });
+
+      return staff;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 export const getVFaculties = createAsyncThunk(
   "user/getVFaculties",
   async (_, { rejectWithValue }) => {
@@ -325,6 +350,7 @@ const initialState = {
   degrees: [],
   vFaculties: [],
   realtimeData: null,
+  staff: [],
   allUsers: [], // Add allUsers to the state,
 };
 
@@ -453,6 +479,20 @@ const userSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(getStudents.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(getStaff.pending, (state) => {
+        state.loading = true;
+        state.error = "";
+        state.isLoading = true;
+      })
+      .addCase(getStaff.fulfilled, (state, action) => {
+        state.loading = false;
+        state.staff = action.payload;
+      })
+      .addCase(getStaff.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         state.isLoading = false;

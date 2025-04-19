@@ -33,6 +33,7 @@ import Info from "./components/Info";
 import Notification from "./components/Notification";
 import GetStudents from "./pages/GetStudents";
 import GetVF from "./pages/GetVF";
+import GetStaff from "./pages/GetStaff";
 import GetPeople from "./pages/GetPeople";
 import Links from "./pages/Link";
 import Announcement from "./pages/Announcement";
@@ -42,6 +43,8 @@ import ShowDegrees from "./pages/profile/ShowDegrees";
 import AddEvent from "./pages/AddEvent";
 // import RealtimeDataPage from "./pages/RealtimeData";
 import { useSelector } from "react-redux";
+import EventsScreen from "./pages/EventScreen";
+import NoticesScreen from "./pages/NoticeScreen";
 
 const Stack = createStackNavigator();
 
@@ -82,6 +85,7 @@ const AppStack = ({navigation}) => {
       <Stack.Screen name="GetProfessors" component={GetProfessors} />
       <Stack.Screen name="GetStudents" component={GetStudents} />
       <Stack.Screen name="GetVF" component={GetVF} />
+      <Stack.Screen name="GetStaff" component={GetStaff} />
       <Stack.Screen name="GetPeople" component={GetPeople} />
       <Stack.Screen name="ProfessorProfile" component={ProfessorProfile} />
       <Stack.Screen name="ChangePassword" component={ChangePassword} />
@@ -97,6 +101,7 @@ const AppStack = ({navigation}) => {
       <Stack.Screen name="AddAnnouncement" component={AddAnnouncement} />
       <Stack.Screen name="AddDegree" component={AddDegree} />
       <Stack.Screen name="AddEvent" component={AddEvent} />
+      <Stack.Screen name="EventsScreen" component={EventsScreen} />
       <Stack.Screen name="Announcement" component={Announcement} />
       <Stack.Screen name="Programs" component={Programs} />
       <Stack.Screen name="Btech" component={Btech} />
@@ -114,8 +119,8 @@ const AppStack = ({navigation}) => {
       <Stack.Screen name="Gallery" component={Gallery} />
       <Stack.Screen name="Info" component={Info} />
       <Stack.Screen name="Notification" component={Notification} />
+      <Stack.Screen name="Notice" component={NoticesScreen} />
       <Stack.Screen name="ShowDegrees" component={ShowDegrees} />
-      {/* <Stack.Screen name="RealtimeData" component={RealtimeDataPage} /> */}
       
     </Stack.Navigator>
   );
